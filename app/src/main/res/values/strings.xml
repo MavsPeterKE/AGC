@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">AGC</string>
+    <string name="title_login">Arcade Login</string>
+    <string name="title_welcome">Arcade</string>
+    <string name="title_welcome2">Game</string>
+    <string name="title_welcome3">Count</string>
+    <string name="helper_bot">Helper Bot</string>
+    <string name="username_hint">Username</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="hint_password">Password</string>
+    <string name="title_bt_login">login</string>
+    <string name="title_home">Game Count</string>
+    <string name="title_screen">Screens</string>
+    <string name="title_eod">End of Day</string>
+    <string name="game_count">Game Count</string>
+    <string name="btn_save">Start Game</string>
+    <string name="end_game">End Game</string>
+    <string name="arcade_tech_title">Arcade Technologie 2020</string>
+    <string name="title_username">Username</string>
+    <string name="password">Password</string>
+    <string name="title_add_game">ADD \n GAME</string>
+    <string name="title_end_day">End of Day</string>
+    <string name="title_comment_issue">Add comments/Issues</string>
+    <string name="title_total">Total</string>
+    <string name="loading_game_date">No Game Data to show. Please Sync Data</string>
+    <string name="no_screens_data">No Screens Data to show. You have not added any games</string>
+
+    <string-array name="games">
+        <item>FiFa</item>
+        <item>MK</item>
+        <item>Backe</item>
+    </string-array>
+</resources>

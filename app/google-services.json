@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1052569982046",
+    "firebase_url": "https://arcgbot-28fb3.firebaseio.com",
+    "project_id": "arcgbot-28fb3",
+    "storage_bucket": "arcgbot-28fb3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052569982046:android:da164b048d0677661290cf",
+        "android_client_info": {
+          "package_name": "com.example.arcgbot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052569982046-04j3tcl7kenrl5vfkgsvf8a4u4rs0r1h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1brej_VasVwr-875UYfxHsZmAUIBJ0WM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052569982046-04j3tcl7kenrl5vfkgsvf8a4u4rs0r1h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
