@@ -13,6 +13,9 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.view.fragment.FragmentEOD;
 import com.example.arcgbot.view.fragment.FragmentGameCount;
 import com.example.arcgbot.view.fragment.FragmentScreens;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +31,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         setBottomNavigation();
-        // TODO: 1/23/21 Check if data is synced then call sync 
+        // TODO: 1/23/21 Check if data is synced then call sync
+        AppCenter.start(getApplication(), "1ba0e29d-98b2-4701-a1f3-6ecca5232bb3",
+                Analytics.class, Crashes.class);
     }
 
     private void setBottomNavigation() {
