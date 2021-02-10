@@ -12,6 +12,7 @@ public abstract class ActivityBindingModule {
     @ContributesAndroidInjector
     abstract HomeActivity bindHomeActivity();
 
+
     @ContributesAndroidInjector
     abstract LoginActivity bindLoginActivity();
 }
