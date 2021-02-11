@@ -24,6 +24,8 @@ public class LoginViewModel extends ViewModel {
     public MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     private UserRepository userRepository;
     public ObservableField<String> usernameMutableLiveData = new ObservableField<>();
+    public ObservableField<String> errorTitle = new ObservableField<>();
+    public ObservableField<String> errorMsg = new ObservableField<>();
     public ObservableField<String> passwordMutableLiveData = new ObservableField<>();
     public MutableLiveData<String> loginInputObservable = new MutableLiveData<>(null);
     public MutableLiveData<Boolean> progressVisible = new MutableLiveData<>(false);
@@ -61,7 +63,19 @@ public class LoginViewModel extends ViewModel {
         return userRepository.getLoginSubject();
     }
 
+    public void closeError(){
+        clickEventsLiveData.setValue(Constants.Events.CLOSE_ERROR_SHEET);
+    }
+
     public void updateProgressValue(boolean isVisible){
         progressVisible.setValue(isVisible);
+    }
+
+    public void setErrorTitle(String title){
+        errorTitle.set(title);
+    }
+
+    public void setErrorMsg(String msg){
+        errorMsg.set(msg);
     }
 }

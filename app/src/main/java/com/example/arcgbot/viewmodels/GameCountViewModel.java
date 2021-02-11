@@ -108,6 +108,12 @@ public class GameCountViewModel extends ViewModel {
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
     }
 
+    public void closeError() {
+        gameCount++;
+        gameCountObservable.set(String.valueOf(gameCount));
+        clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
+    }
+
     public void minusGame() {
         if (gameCount!=0){
             gameCount--;
