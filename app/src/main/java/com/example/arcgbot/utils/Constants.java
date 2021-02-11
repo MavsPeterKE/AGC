@@ -2,7 +2,7 @@ package com.example.arcgbot.utils;
 
 public class Constants {
 
-    public static final String BASE_URL   = "https://b83b4eb04d48.ngrok.io";
+    public static final String BASE_URL   = "https://cfa421b786a7.ngrok.io/";
     public static final String SUCCESS = "success";
 
     public static final class Events{
@@ -10,10 +10,12 @@ public class Constants {
         public static final String BOTTOM_SHEET = "close_sheet";
         public static final String MINUS_GAME_COUNT = "minus";
         public static final String ADD_GAME_COUNT = "add";
+        public static final String CLOSE_ = "add";
         public static final String SYNC_GAME_DATA = "game_data_sync";
         public static final String START_GAME = "START GAME";
         public static final String END_GAME =  "END GAME";
         public static final String LOGIN = "login";
+        public static final String CLOSE_ERROR_SHEET = "close_error_sheet" ;
     }
 
     public static final class RoomConfigs {

@@ -19,6 +19,7 @@ import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.LoginViewModel;
 import com.example.arcgbot.viewmodels.ScreensViewModel;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
     ViewModelFactory viewModelFactory;
     LoginViewModel viewModel;
     ActivityLoginBinding activityLoginBinding;
+    private BottomSheetBehavior sheetErrorBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,32 @@ public class LoginActivity extends DaggerAppCompatActivity {
             }
         });
 
+        sheetErrorBehavior = BottomSheetBehavior.from(activityLoginBinding.errorBottomSheet.getRoot());
+        sheetErrorBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@androidx.annotation.NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@androidx.annotation.NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
         observeLoginInput();
     }
 
@@ -73,14 +101,20 @@ public class LoginActivity extends DaggerAppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this,HomeActivity.class));
                 }else {
-                    Toast.makeText(LoginActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
+                    String title = loginModel.message.contains("resolve host")?"Connection Error":
+                            "Login Credentials Error";
+                    viewModel.setErrorTitle("Login Credentials Error");
+                    viewModel.setErrorMsg("Wrong Username/Password");
+                    showErrorBottomSheetAction();
                 }
             }
 
             @Override
             public void onError(@NonNull Throwable e) {
                 viewModel.updateProgressValue(false);
-                Toast.makeText(LoginActivity.this, "Login Error", Toast.LENGTH_SHORT).show();
+                viewModel.setErrorTitle("Server Connection Error");
+                viewModel.setErrorMsg(e.getMessage());
+                showErrorBottomSheetAction();
             }
 
             @Override
@@ -90,6 +124,13 @@ public class LoginActivity extends DaggerAppCompatActivity {
         };
     }
 
+    private void showErrorBottomSheetAction() {
+        if (sheetErrorBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetErrorBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            sheetErrorBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+    }
 
     private void observeLoginInput() {
         viewModel.loginInputObservable.observe(this, flag -> {

@@ -47,7 +47,7 @@ public class FragmentGameCount extends DaggerFragment {
     }
 
     private void init() {
-        createSuperVisorBottomSheet();
+        createBottomSheet();
         observeClickEvents();
     }
 
@@ -59,7 +59,7 @@ public class FragmentGameCount extends DaggerFragment {
             public void onChanged(String action) {
                 switch (action){
                     case Constants.Events.GAME_ITEM_CLICK:
-                        showSupervisorBottomSheetAction();
+                        showGameBottomSheetAction();
                         break;
                     case Constants.Events.SYNC_GAME_DATA:
                      //   fragmentGameCountBinding.noGameData.progressBarSync.setVisibility(View.VISIBLE);
@@ -69,7 +69,7 @@ public class FragmentGameCount extends DaggerFragment {
         });
     }
 
-    private void showSupervisorBottomSheetAction() {
+    private void showGameBottomSheetAction() {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         } else {
@@ -77,8 +77,7 @@ public class FragmentGameCount extends DaggerFragment {
         }
     }
 
-
-    private void createSuperVisorBottomSheet() {
+    private void createBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(fragmentGameCountBinding.bottomSheet.getRoot());
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -112,7 +111,7 @@ public class FragmentGameCount extends DaggerFragment {
         mViewModel.getClickEventsLiveData().observe(getViewLifecycleOwner(), value -> {
             switch (value) {
                 case Constants.Events.BOTTOM_SHEET:
-                    showSupervisorBottomSheetAction();
+                    showGameBottomSheetAction();
                     break;
                 case Constants.Events.START_GAME:
                     clickCount += 1;
@@ -121,7 +120,7 @@ public class FragmentGameCount extends DaggerFragment {
                         //reset data
                         mViewModel.setHideGameInputs(false);
                     }else {
-                        showSupervisorBottomSheetAction();
+                        showGameBottomSheetAction();
                         setViews();
                     }
             }

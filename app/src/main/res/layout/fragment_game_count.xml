@@ -67,7 +67,6 @@
                 app:model="@{model}"
                />
 
-
         <include
             android:id="@+id/no_game_data"
             layout="@layout/no_games_data"
