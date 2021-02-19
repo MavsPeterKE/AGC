@@ -8,6 +8,7 @@ import com.example.arcgbot.retrofit.responseStructures.LoginStructure;
 import com.example.arcgbot.retrofit.responseStructures.ScreenStructure;
 
 import java.util.HashMap;
+import java.util.List;
 
 import io.reactivex.Single;
 import retrofit2.http.Body;
@@ -16,10 +17,10 @@ import retrofit2.http.POST;
 
 public interface RetrofitService {
 
-    @GET("screens")
+    @GET("api/v1/screens/")
     Single<APIListResponse<ScreenStructure>> getScreens();
 
-    @GET("games")
+    @GET("api/v1/games/")
     Single<APIListResponse<GameStructure>> getGames();
 
     @POST("o/token/")

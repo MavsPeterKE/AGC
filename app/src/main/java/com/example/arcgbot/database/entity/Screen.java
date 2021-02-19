@@ -17,6 +17,9 @@ public class Screen extends BaseObservable {
     @ColumnInfo(name = "screen_lable")
     private String screenLable;
 
+    @ColumnInfo(name = "active")
+    private boolean active;
+
     public long getId() {
         return id;
     }
@@ -27,6 +30,14 @@ public class Screen extends BaseObservable {
 
     public String getScreenLable() {
         return screenLable;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public void setScreenLable(String screenLable) {

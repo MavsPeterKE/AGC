@@ -30,7 +30,7 @@
             app:srcCompat="@drawable/games" />
 
         <TextView
-            android:id="@+id/textView29"
+            android:id="@+id/tvSyncTitleHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -51,10 +51,10 @@
             android:onClick="@{() -> model.startDataSync()}"
             android:text="Sync Data"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/textView29"
+            app:layout_constraintEnd_toEndOf="@+id/tvSyncTitleHint"
             app:layout_constraintHorizontal_bias="0.621"
-            app:layout_constraintStart_toStartOf="@+id/textView29"
-            app:layout_constraintTop_toBottomOf="@+id/textView29"
+            app:layout_constraintStart_toStartOf="@+id/tvSyncTitleHint"
+            app:layout_constraintTop_toBottomOf="@+id/tvSyncTitleHint"
             app:layout_constraintVertical_bias="0.055" />
 
         <ProgressBar

@@ -3,8 +3,10 @@ package com.example.arcgbot.di.module;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.arcgbot.retrofit.AuthenticationInterceptor;
 import com.example.arcgbot.retrofit.RetrofitService;
 import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.Prefs;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -58,6 +60,14 @@ public class RetrofitModule {
         /*if (uildConfig.DEBUGB) {
 
         }*/
+
+        //Add Access Token if not empty
+        String accessToken = Prefs.getString(Constants.PrefsKeys.ACCESS_TOKEN);
+        if (!TextUtils.isEmpty(accessToken) || !accessToken.equals("")) {
+            AuthenticationInterceptor authenticationInterceptor =
+                    new AuthenticationInterceptor(accessToken);
+            okHttpClientBuilder.addInterceptor(authenticationInterceptor);
+        }
 
 
         ConnectionPool connectionPool = new ConnectionPool();

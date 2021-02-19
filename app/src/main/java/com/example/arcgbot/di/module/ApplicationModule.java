@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
 
-@Module(includes = {ViewModelModule.class, RetrofitModule.class})
+@Module(includes = {ViewModelModule.class, RetrofitModule.class,RepositoryModule.class})
 public class ApplicationModule {
 
     @Singleton

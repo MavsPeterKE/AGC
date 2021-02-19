@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.GameCount;
+import com.example.arcgbot.database.entity.Screen;
 import com.example.arcgbot.models.GameModel;
+import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.view.adapter.GameCountAdapter;
 
@@ -24,11 +27,12 @@ public class GameCountViewModel extends ViewModel {
     public ObservableField<String> obervableButtonText = new ObservableField("Start Game");
     private GameModel selectedGame;
     private int gameCount;
+    private GameRepository gameRepository;
 
     @Inject
-    public GameCountViewModel() {
+    public GameCountViewModel(GameRepository gameRepository) {
         gameCountAdapter = new GameCountAdapter(R.layout.game_item, this);
-        addTestData();
+        this.gameRepository = gameRepository;
     }
 
     private void addTestData() {
@@ -78,18 +82,32 @@ public class GameCountViewModel extends ViewModel {
         model4.playTime = "1h 45min";
         gameCounts.add(model4);
 
-        setGameCountdapter(gameCounts);
+        //setGameCountdapter(gameCounts);
     }
 
     public GameCountAdapter getGameCountAdapter() {
         return gameCountAdapter;
     }
 
-    public void setGameCountdapter(List<GameModel> gameCountList) {
-        isGamesAvailable.set(!gameCountList.isEmpty());
-        this.gameCountAdapter.setGameCountList(gameCountList);
+    public void setGameCountdapter(List<Screen> screens) {
+        List<GameModel> gameModels = new ArrayList<>();
+        for (Screen screen: screens){
+            GameModel gameModel = new GameModel();
+            gameModel.screenLable = screen.getScreenLable();
+            gameModel.GameCount = "0";
+            gameModel.payableAmount = "0.00";
+            gameModel.GameName = "Idle";
+            gameModel.players = "No Players";
+            //gameCountModel.player1+` Vs ` +gameCountModel.player2 + `  : `+gameCountModel.playTime
+            gameModels.add(gameModel);
+
+        }
+        isGamesAvailable.set(!screens.isEmpty());
+        this.gameCountAdapter.setGameCountList(gameModels);
         this.gameCountAdapter.notifyDataSetChanged();
     }
+
+    public GameRepository gameRepository(){return gameRepository;}
 
     public void onGameItemClick(GameModel gameModel) {
         selectedGame = gameModel;
@@ -145,5 +163,9 @@ public class GameCountViewModel extends ViewModel {
 
     public void startDataSync(){
         clickEventsLiveData.setValue(Constants.Events.SYNC_GAME_DATA);
+    }
+
+    public void syncGamesData(){
+        gameRepository.startScreensApiRequest();
     }
 }

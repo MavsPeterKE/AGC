@@ -11,9 +11,9 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "game_count_table")
 public class GameCount extends BaseObservable {
     @NonNull
-    @PrimaryKey()
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private String screenId;
+    private String gameId;
 
     @ColumnInfo(name = "start_time")
     private String startTime;
@@ -28,8 +28,8 @@ public class GameCount extends BaseObservable {
     private String playerPhone;
 
 
-    @ColumnInfo(name = "game_id")
-    private String gameId;
+    @ColumnInfo(name = "screen_id")
+    private String screenId;
 
     @NonNull
     public String getScreenId() {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,11 +13,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.GameType;
+import com.example.arcgbot.database.entity.Screen;
 import com.example.arcgbot.databinding.FragmentGameCountBinding;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,6 +34,7 @@ public class FragmentGameCount extends DaggerFragment {
     private GameCountViewModel mViewModel;
     private FragmentGameCountBinding fragmentGameCountBinding;
     private BottomSheetBehavior sheetBehavior;
+    private Spinner gamesSpinner;
 
     public static FragmentGameCount newInstance() {
         return new FragmentGameCount();
@@ -42,6 +48,7 @@ public class FragmentGameCount extends DaggerFragment {
         mViewModel = new ViewModelProvider(this, viewModelFactory).get(GameCountViewModel.class);
         fragmentGameCountBinding.setModel(mViewModel);
         fragmentGameCountBinding.executePendingBindings();
+        gamesSpinner = fragmentGameCountBinding.bottomSheet.spinner;
         init();
         return fragmentGameCountBinding.getRoot();
     }
@@ -49,6 +56,25 @@ public class FragmentGameCount extends DaggerFragment {
     private void init() {
         createBottomSheet();
         observeClickEvents();
+        observeScreenData();
+    }
+
+    private void observeScreenData() {
+        mViewModel.gameRepository().getScreensLiveData().observe(getViewLifecycleOwner(), screen -> {
+            if (!screen.isEmpty()){
+                fragmentGameCountBinding.noGameData.progressBarSync.setVisibility(View.VISIBLE);
+            }
+            mViewModel.setGameCountdapter(screen);
+        });
+
+        mViewModel.gameRepository().getGamesLiveData().observe(getViewLifecycleOwner(), new Observer<List<GameType>>() {
+            @Override
+            public void onChanged(List<GameType> gameTypes) {
+                if (!gameTypes.isEmpty()){
+                    
+                }
+            }
+        });
     }
 
     @Override
@@ -62,7 +88,9 @@ public class FragmentGameCount extends DaggerFragment {
                         showGameBottomSheetAction();
                         break;
                     case Constants.Events.SYNC_GAME_DATA:
-                     //   fragmentGameCountBinding.noGameData.progressBarSync.setVisibility(View.VISIBLE);
+                        fragmentGameCountBinding.noGameData.progressBarSync.setVisibility(View.VISIBLE);
+                        fragmentGameCountBinding.noGameData.tvSyncTitleHint.setText(getString(R.string.syncing_data));
+                        mViewModel.syncGamesData();
                         break;
                 }
             }

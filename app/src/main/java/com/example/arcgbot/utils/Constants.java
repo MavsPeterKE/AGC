@@ -2,7 +2,7 @@ package com.example.arcgbot.utils;
 
 public class Constants {
 
-    public static final String BASE_URL   = "https://cfa421b786a7.ngrok.io/";
+    public static final String BASE_URL   = "https://5c3dd2429bf7.ngrok.io";
     public static final String SUCCESS = "success";
 
     public static final class Events{
@@ -30,4 +30,9 @@ public class Constants {
         public static final String VALID_LOGIN = "Correct Login ";
     }
 
+    public class PrefsKeys {
+        public static final String LOGIN_SUCCESS = "login_success";
+        public static final String PASSWORD_ERROR = "Password Required ";
+        public static final String ACCESS_TOKEN = "access_token";
+    }
 }

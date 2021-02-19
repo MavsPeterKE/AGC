@@ -8,14 +8,14 @@ import androidx.room.PrimaryKey;
 
 
 @Entity(tableName = "game_types_table")
-public class GameTypes extends BaseObservable {
+public class GameType extends BaseObservable {
     @NonNull
     @PrimaryKey()
     @ColumnInfo(name = "id")
     private long id;
 
     @ColumnInfo(name = "game_name")
-    private String screenId;
+    private String gameName;
 
     @ColumnInfo(name = "charges")
     private double charges;
@@ -28,12 +28,12 @@ public class GameTypes extends BaseObservable {
         this.id = id;
     }
 
-    public String getScreenId() {
-        return screenId;
+    public String getGameName() {
+        return gameName;
     }
 
-    public void setScreenId(String screenId) {
-        this.screenId = screenId;
+    public void setGameName(String screenId) {
+        this.gameName = screenId;
     }
 
     public double getCharges() {

@@ -5,6 +5,7 @@ import com.example.arcgbot.retrofit.RetrofitService;
 import com.example.arcgbot.retrofit.responseStructures.APIResponse;
 import com.example.arcgbot.retrofit.responseStructures.LoginStructure;
 import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.Prefs;
 import com.example.arcgbot.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -19,6 +21,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
+@Singleton
 public class UserRepository {
     private PublishSubject<LoginModel> loginSubject;
     private CompositeDisposable disposable;
@@ -39,16 +42,15 @@ public class UserRepository {
                     @Override
                     public void onSuccess(LoginStructure userStructureAPIResponse) {
                         LoginModel loginResponseModel = getLoginResponseModel(userStructureAPIResponse);
+                        Prefs.putString(Constants.PrefsKeys.ACCESS_TOKEN,"Bearer "+userStructureAPIResponse.accessToken);
                         loginSubject.onNext(loginResponseModel);
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        APIResponse response = Utils.getApiResponse(e);
                         LoginModel loginResponseModel = new LoginModel();
-                        loginResponseModel.message = response.strMessage.toString();
-                        loginResponseModel.code = response.statusCode;
+                        loginResponseModel.message = e.getMessage();
                         loginResponseModel.loginStructure = null;
                         loginSubject.onNext(loginResponseModel);
                     }

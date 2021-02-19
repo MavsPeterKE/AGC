@@ -32,7 +32,7 @@ public class Utils {
                 APIResponse apiResponse2 = new APIResponse();
                 apiResponse2.strMessage = e.getMessage();
                 if (e.getMessage() != null) {
-                    apiResponse2.statusCode = e.getMessage().contains("401") ? 401 : 0;
+                    apiResponse2.statusCode = e.getMessage().contains("Invalid") ? 401 : 0;
                 }
                 result = apiResponse2;
             }

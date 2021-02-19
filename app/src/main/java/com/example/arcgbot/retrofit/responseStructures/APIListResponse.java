@@ -13,7 +13,10 @@ public class APIListResponse<T> extends BaseModel {
     @SerializedName("data")
     public List<T> data = new ArrayList<T>();
 
-    @SerializedName("message")
+    @SerializedName("errors")
     public Object strMessage = "";
+
+    @SerializedName("success")
+    public boolean success;
 
 }

@@ -71,11 +71,7 @@ public class LoginViewModel extends ViewModel {
         progressVisible.setValue(isVisible);
     }
 
-    public void setErrorTitle(String title){
-        errorTitle.set(title);
-    }
-
-    public void setErrorMsg(String msg){
-        errorMsg.set(msg);
+    public void closeErrorBottomSheet(){
+        clickEventsLiveData.setValue(Constants.Events.CLOSE_ERROR_SHEET);
     }
 }

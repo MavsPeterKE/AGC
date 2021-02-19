@@ -1,5 +1,8 @@
 package com.example.arcgbot.di.module;
 
+import com.example.arcgbot.database.dao.GameDao;
+import com.example.arcgbot.database.dao.ScreenDao;
+import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.repository.UserRepository;
 import com.example.arcgbot.retrofit.RetrofitService;
 
@@ -16,15 +19,25 @@ public class RepositoryModule {
 
     @Singleton
     @Provides
-    ExecutorService providesExecutorService() {
+    ExecutorService provideExecutor() {
         return Executors.newSingleThreadExecutor();
     }
 
 
     @Provides
-    UserRepository provideAppAuthRepository(RetrofitService retrofitService) {
+    UserRepository provideAuthRepository(RetrofitService retrofitService) {
         return new UserRepository(retrofitService);
     }
+
+    @Provides
+    GameRepository provideGameRepository(RetrofitService retrofitService, ScreenDao screenDao, GameDao gameDao,ExecutorService executorService) {
+        return new GameRepository(retrofitService,screenDao,gameDao,executorService);
+    }
+
+/*    @Provides
+    GameRepository provideGameRepository(RetrofitService retrofitService, ExecutorService executorService, ScreenDao screenDao) {
+        return new GameRepository(retrofitService,executorService,screenDao);
+    }*/
 
 
 }
