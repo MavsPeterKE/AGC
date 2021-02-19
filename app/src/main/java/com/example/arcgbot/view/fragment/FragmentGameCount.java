@@ -34,7 +34,6 @@ public class FragmentGameCount extends DaggerFragment {
     private GameCountViewModel mViewModel;
     private FragmentGameCountBinding fragmentGameCountBinding;
     private BottomSheetBehavior sheetBehavior;
-    private Spinner gamesSpinner;
 
     public static FragmentGameCount newInstance() {
         return new FragmentGameCount();
@@ -48,7 +47,6 @@ public class FragmentGameCount extends DaggerFragment {
         mViewModel = new ViewModelProvider(this, viewModelFactory).get(GameCountViewModel.class);
         fragmentGameCountBinding.setModel(mViewModel);
         fragmentGameCountBinding.executePendingBindings();
-        gamesSpinner = fragmentGameCountBinding.bottomSheet.spinner;
         init();
         return fragmentGameCountBinding.getRoot();
     }
@@ -67,14 +65,7 @@ public class FragmentGameCount extends DaggerFragment {
             mViewModel.setGameCountdapter(screen);
         });
 
-        mViewModel.gameRepository().getGamesLiveData().observe(getViewLifecycleOwner(), new Observer<List<GameType>>() {
-            @Override
-            public void onChanged(List<GameType> gameTypes) {
-                if (!gameTypes.isEmpty()){
-                    
-                }
-            }
-        });
+        mViewModel.gameRepository().getGamesLiveData().observe(getViewLifecycleOwner(), gameTypes -> mViewModel.setGamesList(gameTypes));
     }
 
     @Override

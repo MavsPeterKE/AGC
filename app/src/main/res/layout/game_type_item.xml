@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="gameType"
+            type="com.example.arcgbot.database.entity.GameType" />
+
+        <variable
+            name="viewModel"
+            type="com.example.arcgbot.viewmodels.GameCountViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+    >
+
+        <com.example.arcgbot.utils.FocusableRelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:layout_gravity="center_vertical"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false">
+
+            <com.example.arcgbot.utils.SmoothCheckBox
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:checked="@{gameType.selected}"
+                app:color_checked="@color/green"
+                app:color_tick="@color/white" />
+        </com.example.arcgbot.utils.FocusableRelativeLayout>
+
+        <com.ctrlplusz.anytextview.AnyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="@{gameType.gameName}"
+            android:textSize="18sp"
+            app:typeface="Sarabun-Light.ttf" />
+    </LinearLayout>
+
+</layout>

@@ -14,4 +14,11 @@ public abstract class GameDao extends BaseDao<GameType> {
 
     @Query("SELECT * FROM game_types_table")
     public abstract LiveData<List<GameType>> getGameTypes();
+
+    @Query("UPDATE game_types_table SET isSelected=0")
+    public abstract void deselectAllGame();
+
+
+    @Query("UPDATE game_types_table SET isSelected=:isSelected WHERE id=:id")
+    public abstract void updateSelected(boolean isSelected,long id);
 }

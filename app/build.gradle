@@ -100,4 +100,7 @@ dependencies {
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     androidTestImplementation('com.microsoft.appcenter:espresso-test-extension:1.4')
+
+    implementation 'com.ctrlplusz.anytextview:library:1.2'
+
 }

@@ -20,7 +20,6 @@
         app:behavior_hideable="true"
         android:background="@drawable/layout_border"
         android:padding="10dp"
-        android:clickable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -92,6 +91,7 @@
             android:backgroundTint="@{model.isGameStarted?@color/holo_red_dark:@color/green}"
             android:onClick="@{() -> model.startGame()}"
             android:text="@={model.obervableButtonText}"
+            tools:text="Start Game"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
@@ -124,20 +124,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/cancel" />
 
-        <Spinner
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/spinner"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
-            android:entries="@array/games"
             android:visibility="@{model.isGameStarted?View.GONE:View.VISIBLE}"
             android:layout_marginTop="20dp"
             android:layout_marginStart="16dp"
+            app:setAdapter="@{model.gameTypeAdapter}"
             app:layout_constraintEnd_toEndOf="@+id/editTextPhone"
             app:layout_constraintStart_toStartOf="@+id/editTextPhone"
-            app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextPhone"  />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

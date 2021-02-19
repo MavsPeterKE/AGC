@@ -20,6 +20,9 @@ public class GameType extends BaseObservable {
     @ColumnInfo(name = "charges")
     private double charges;
 
+    @ColumnInfo(name = "isSelected")
+    private boolean isSelected;
+
     public long getId() {
         return id;
     }
@@ -42,5 +45,13 @@ public class GameType extends BaseObservable {
 
     public void setCharges(double charges) {
         this.charges = charges;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

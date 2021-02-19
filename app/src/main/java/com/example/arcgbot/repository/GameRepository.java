@@ -106,7 +106,8 @@ public class GameRepository {
 
     private void setGameToDB(List<GameType> gameTypeList) {
         executorService.submit(() -> {
-            gameDao.insert(gameTypeList);
+            long []x = gameDao.insert(gameTypeList);
+            int j = 12;
         });
     }
 
@@ -137,6 +138,18 @@ public class GameRepository {
 
     public LiveData<List<GameType>> getGamesLiveData(){
         return gameDao.getGameTypes();
+    }
+
+    public void updateSelectedGame(GameType gameType) {
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                gameDao.deselectAllGame();
+                gameDao.updateSelected(true,gameType.getId());
+
+
+            }
+        });
     }
 }
 

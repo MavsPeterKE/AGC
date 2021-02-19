@@ -5,13 +5,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.annimon.stream.Stream;
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.GameCount;
+import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.database.entity.Screen;
 import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.view.adapter.GameCountAdapter;
+import com.example.arcgbot.view.adapter.GameTypeAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,73 +23,31 @@ import javax.inject.Inject;
 
 public class GameCountViewModel extends ViewModel {
     private GameCountAdapter gameCountAdapter;
+    private GameTypeAdapter gameTypeAdapter;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     private ObservableField<String> gameCountObservable = new ObservableField();
     private ObservableField<Boolean> isGameStarted = new ObservableField();
+    public ObservableField<Boolean> isGameSelected = new ObservableField();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     public ObservableField<String> obervableButtonText = new ObservableField("Start Game");
     private GameModel selectedGame;
     private int gameCount;
     private GameRepository gameRepository;
+    List<GameType> gameTypeList = new ArrayList<>();
 
     @Inject
     public GameCountViewModel(GameRepository gameRepository) {
         gameCountAdapter = new GameCountAdapter(R.layout.game_item, this);
+        gameTypeAdapter = new GameTypeAdapter(R.layout.game_type_item, this);
         this.gameRepository = gameRepository;
-    }
-
-    private void addTestData() {
-        List<GameModel> gameCounts = new ArrayList<>();
-        GameModel model = new GameModel();
-        model.screenLable = "Screen 1 TCL";
-        model.GameCount = "4";
-        model.GameName = "FiFa 21";
-        model.startTime = "2.30 pm";
-        model.playTime = "1h";
-        model.payableAmount = String.valueOf(Integer.parseInt(model.GameCount) * 30);
-        model.player1 = "Fred";
-        model.player2 = "Peter";
-        gameCounts.add(model);
-
-        GameModel model2 = new GameModel();
-        model2.screenLable = "Screen 2 Hsc";
-        model2.GameCount = "5";
-        model2.GameName = "NDA";
-        model2.startTime = "11.30 pm";
-        model2.payableAmount = String.valueOf(Integer.parseInt(model.GameCount) * 50);
-        model2.player1 = "PMC";
-        model2.player2 = "Derick";
-        model2.playTime = "1h 30min";
-        gameCounts.add(model2);
-
-        GameModel model3 = new GameModel();
-        model3.screenLable = "Screen 3 TCL";
-        model3.GameCount = "10";
-        model3.GameName = "FIFA 20";
-        model3.startTime = "09.30 pm";
-        model3.payableAmount = String.valueOf(Integer.parseInt(model.GameCount) * 50);
-        model3.player1 = "PMC";
-        model3.player2 = "Derick";
-        model3.playTime = "2h";
-        gameCounts.add(model3);
-
-
-        GameModel model4 = new GameModel();
-        model4.screenLable = "Screen 4 TCL";
-        model4.GameCount = "8";
-        model4.GameName = "FIFA 21";
-        model4.startTime = "08.30 pm";
-        model4.payableAmount = String.valueOf(Integer.parseInt(model.GameCount) * 30);
-        model4.player1 = "Owen";
-        model4.player2 = "Maina";
-        model4.playTime = "1h 45min";
-        gameCounts.add(model4);
-
-        //setGameCountdapter(gameCounts);
     }
 
     public GameCountAdapter getGameCountAdapter() {
         return gameCountAdapter;
+    }
+
+    public GameTypeAdapter getGameTypeAdapter() {
+        return gameTypeAdapter;
     }
 
     public void setGameCountdapter(List<Screen> screens) {
@@ -107,6 +68,12 @@ public class GameCountViewModel extends ViewModel {
         this.gameCountAdapter.notifyDataSetChanged();
     }
 
+    public void setGamesList(List<GameType> gamesList) {
+        gameTypeList = gamesList;
+        this.gameTypeAdapter.setGameTypeList(gamesList);
+        this.gameCountAdapter.notifyDataSetChanged();
+    }
+
     public GameRepository gameRepository(){return gameRepository;}
 
     public void onGameItemClick(GameModel gameModel) {
@@ -114,6 +81,10 @@ public class GameCountViewModel extends ViewModel {
         gameCount = Integer.parseInt(selectedGame.GameCount);
         gameCountObservable.set(selectedGame.GameCount);
         clickEventsLiveData.setValue(Constants.Events.GAME_ITEM_CLICK);
+    }
+
+    public void onGameTypeClick(GameType gameType){
+       gameRepository.updateSelectedGame(gameType);
     }
 
     public void closeSheet() {

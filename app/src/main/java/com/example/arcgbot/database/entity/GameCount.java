@@ -2,7 +2,6 @@ package com.example.arcgbot.database.entity;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -10,10 +9,9 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "game_count_table")
 public class GameCount extends BaseObservable {
-    @NonNull
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private String gameId;
+    private int gameId;
 
     @ColumnInfo(name = "start_time")
     private String startTime;
@@ -29,14 +27,17 @@ public class GameCount extends BaseObservable {
 
 
     @ColumnInfo(name = "screen_id")
-    private String screenId;
+    private long screenId;
+
+    @ColumnInfo(name = "game_id")
+    private long gameTypeId;
 
     @NonNull
-    public String getScreenId() {
+    public long getScreenId() {
         return screenId;
     }
 
-    public void setScreenId(@NonNull String screenId) {
+    public void setScreenId(long screenId) {
         this.screenId = screenId;
     }
 
@@ -72,11 +73,19 @@ public class GameCount extends BaseObservable {
         this.playerPhone = playerPhone;
     }
 
-    public String getGameId() {
+    public int getGameId() {
         return gameId;
     }
 
-    public void setGameId(String gameType) {
-        this.gameId = gameType;
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public long getGameTypeId() {
+        return gameTypeId;
+    }
+
+    public void setGameTypeId(long gameTypeId) {
+        this.gameTypeId = gameTypeId;
     }
 }
