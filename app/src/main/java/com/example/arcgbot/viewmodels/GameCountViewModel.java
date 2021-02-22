@@ -167,7 +167,7 @@ public class GameCountViewModel extends ViewModel {
         game.setScreenId(selectedGameScreen.screenId);
         game.setGamesCount(gameCount);
         game.setPlayerPhone(player_phone);
-        game.setPlayerNames(players);
+        game.setPlayerNames(players+" Vs "+player_phone);
         game.setGameTypeId(selectedGameType.getId());
         game.setStartTime(getCurrentTime());
         game.setHashKey(selectedGameScreen.hashKey);

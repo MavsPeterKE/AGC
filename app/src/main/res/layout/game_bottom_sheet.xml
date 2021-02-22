@@ -18,8 +18,8 @@
         android:orientation="vertical"
         android:background="@drawable/layout_border"
         android:padding="10dp"
-        android:clickable="false"
-        android:focusable="false"
+        android:clickable="true"
+        android:focusable="true"
         app:behavior_peekHeight="0dp"
         app:behavior_hideable="true"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -74,7 +74,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:ems="10"
-            android:hint="Players (Mavs vs Bazuu)"
+            android:hint="Player 1"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -109,8 +109,8 @@
             android:layout_marginRight="16dp"
             android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
             android:ems="10"
-            android:hint="Phone Number"
-            android:inputType="phone"
+            android:hint="Player 2"
+            android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
 
