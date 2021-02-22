@@ -16,7 +16,9 @@ public abstract class GameCountDao extends BaseDao<GameCount> {
     @Query("SELECT * FROM game_count_table")
     public abstract LiveData<List<GameCount>> getAllGames();
 
-    @Transaction
-    @Query("DELETE FROM game_count_table WHERE game_type_id=:gameId")
-    public abstract void updateCompletedGames(long gameId);
+    @Query("DELETE FROM game_count_table WHERE game_id=:gameId")
+    public abstract int updateCompletedGames(long gameId);
+
+    @Query("UPDATE game_count_table SET games_count=:count WHERE game_id=:gameId")
+    public abstract void updateGameCount(long gameId, int count);
 }

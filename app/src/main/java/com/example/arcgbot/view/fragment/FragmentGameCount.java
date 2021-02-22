@@ -99,6 +99,7 @@ public class FragmentGameCount extends DaggerFragment {
 
     private void createBottomSheet() {
         sheetBehavior = BottomSheetBehavior.from(fragmentGameCountBinding.bottomSheet.getRoot());
+        sheetBehavior.setHideable(false);
         sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {

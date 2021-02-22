@@ -68,6 +68,7 @@ public class GameCountViewModel extends ViewModel {
             gameModel.isScreenActive = gameView.screen.isActive();
             gameModel.currentTime = getCurrentTime();
             gameModel.gameId = gameCount!=null?gameCount.getGameId():0;
+            gameModel.hashKey = ("#"+getCurrentTime()+"#"+gameModel.GameName+gameModel);
             gameModels.add(gameModel);
 
         }
@@ -109,12 +110,18 @@ public class GameCountViewModel extends ViewModel {
         gameCount++;
         gameCountObservable.set(String.valueOf(gameCount));
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
+        if (obervableButtonText.get().equals(Constants.Events.END_GAME)){
+            gameRepository.updateGameCountValue(selectedGameScreen.gameId,gameCount);
+        }
     }
 
     public void closeError() {
         gameCount++;
         gameCountObservable.set(String.valueOf(gameCount));
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
+        if (obervableButtonText.get().equals(Constants.Events.END_GAME)){
+            gameRepository.updateGameCountValue(selectedGameScreen.gameId,gameCount);
+        }
     }
 
     public void minusGame() {
@@ -163,6 +170,7 @@ public class GameCountViewModel extends ViewModel {
         game.setPlayerNames(players);
         game.setGameTypeId(selectedGameType.getId());
         game.setStartTime(getCurrentTime());
+        game.setHashKey(selectedGameScreen.hashKey);
         String time = getCurrentTime();
         gameRepository.updateGameCount(game);
 

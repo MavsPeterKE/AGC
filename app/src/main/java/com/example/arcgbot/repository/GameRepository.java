@@ -178,6 +178,11 @@ public class GameRepository {
 
     }
 
+    public void updateGameCountValue(long gameId,int count){
+        executorService.submit(() -> gameCountDao.updateGameCount(gameId,count));
+
+    }
+
     public void resetActiveScreen(long id) {
         executorService.submit(() -> screenDao.resetActiveScreen(id));
     }
@@ -189,7 +194,8 @@ public class GameRepository {
         completedGame.setScreenLable(gameModel.screenLable);
         completedGame.setPayableAmount(Double.parseDouble(gameModel.payableAmount));
         executorService.submit(() -> {
-            gameCountDao.updateCompletedGames(gameModel.gameId);
+            int x = gameCountDao.updateCompletedGames(gameModel.gameId);
+            Log.e("detachGameFromScreen: ",x +"  deleted" );
             completeGameDao.insert(completedGame);
         });
 

@@ -25,6 +25,7 @@ public class RoomModule {
     AppDataBase provideAppDataBase(Application application) {
         return Room.databaseBuilder(application, AppDataBase.class, DATABASE_NAME)
                 .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build();
     }
 

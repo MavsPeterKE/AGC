@@ -40,8 +40,8 @@ public class GameCount extends BaseObservable {
     @ColumnInfo(name = "payable_amount")
     private double payableAmount;
 
-    @ColumnInfo(name = "is_game_completed")
-    boolean isGameCompleted;
+    @ColumnInfo(name = "hash_key")
+    private String hashKey;
 
     @NonNull
     public long getScreenId() {
@@ -120,15 +120,15 @@ public class GameCount extends BaseObservable {
         return payableAmount;
     }
 
-    public boolean isGameCompleted() {
-        return isGameCompleted;
-    }
-
-    public void setGameCompleted(boolean gameCompleted) {
-        isGameCompleted = gameCompleted;
-    }
-
     public void setPayableAmount(double payableAmount) {
         this.payableAmount = payableAmount;
+    }
+
+    public String getHashKey() {
+        return hashKey;
+    }
+
+    public void setHashKey(String hashKey) {
+        this.hashKey = hashKey;
     }
 }

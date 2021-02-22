@@ -15,4 +15,5 @@ public class GameModel {
     public String playTime;
     public String currentTime;
     public boolean isScreenActive;
+    public String hashKey;
 }
