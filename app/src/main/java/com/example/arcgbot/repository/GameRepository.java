@@ -65,6 +65,13 @@ public class GameRepository {
 
     }
 
+    public void clearGameData(){
+        executorService.submit(() -> {
+            gameCountDao.clearData();
+            completeGameDao.clearData();
+        });
+    }
+
     /**
      * Start Sync Screens from server
      */

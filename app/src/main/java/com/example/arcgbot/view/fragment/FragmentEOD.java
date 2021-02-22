@@ -1,5 +1,6 @@
 package com.example.arcgbot.view.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,17 +10,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.arcgbot.R;
 import com.example.arcgbot.databinding.FragmentEodBinding;
-import com.example.arcgbot.databinding.FragmentScreensBinding;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.EODViewModel;
-import com.example.arcgbot.viewmodels.ScreensViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,10 +49,10 @@ public class FragmentEOD extends DaggerFragment {
         fragmentEodBinding.setModel(mViewModel);
         fragmentEodBinding.executePendingBindings();
         mViewModel.repository.getTotalRevenue().observe(getViewLifecycleOwner(), aDouble -> {
-            mViewModel.gameRevenue.set(String.valueOf(aDouble!=null?aDouble:0.00));
+            mViewModel.gameRevenue.set(String.valueOf(aDouble != null ? aDouble : 0.00));
         });
 
-        mViewModel.repository.getGameTotal().observe(getViewLifecycleOwner(), integer -> mViewModel.gameCount.set((integer!=null?integer:0) +" Games"));
+        mViewModel.repository.getGameTotal().observe(getViewLifecycleOwner(), integer -> mViewModel.gameCount.set((integer != null ? integer : 0) + " Games"));
         fragmentEodBinding.button2.setOnClickListener(view -> {
             startEndOfDay();
         });
@@ -64,13 +64,23 @@ public class FragmentEOD extends DaggerFragment {
     private void startEndOfDay() {
         StringBuilder stringBuilder = getMsgStringBuilder();
         // Performs action on click
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
-        sendIntent.setType("text/plain");
-        sendIntent.setPackage("com.whatsapp");
-        startActivity(Intent.createChooser(sendIntent, ""));
-        startActivity(sendIntent);
+        try {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+            sendIntent.setType("text/plain");
+            sendIntent.setPackage("com.whatsapp");
+            startActivity(Intent.createChooser(sendIntent, ""));
+            startActivity(sendIntent);
+        }catch (Exception e){
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+            sendIntent.setType("text/plain");
+            Intent shareIntent = Intent.createChooser(sendIntent, "AGC End Day");
+            startActivity(shareIntent);
+        }
+
     }
 
     @NotNull
@@ -79,21 +89,21 @@ public class FragmentEOD extends DaggerFragment {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*Arcade Gaming EOD*");
         stringBuilder.append("\n");
-        stringBuilder.append("*Games Played:* "+fragmentEodBinding.tvGameCount.getText().toString().trim());
+        stringBuilder.append("*Games Played:* " + fragmentEodBinding.tvGameCount.getText().toString().trim());
         stringBuilder.append("\n");
-        stringBuilder.append("*Total Revenue:* "+fragmentEodBinding.tvGameRevenue.getText().toString().trim());
+        stringBuilder.append("*Total Revenue:* " + fragmentEodBinding.tvGameRevenue.getText().toString().trim());
         stringBuilder.append("\n\n");
         stringBuilder.append("*Business Issue:* ");
         stringBuilder.append("\n");
-        Matcher matcher = Utils.getRegexMatcher(Constants.MPESA_DEPOSIT_REGEX,issues);
-        if (matcher.find()){
+        Matcher matcher = Utils.getRegexMatcher(Constants.MPESA_DEPOSIT_REGEX, issues);
+        if (matcher.find()) {
             try {
-                stringBuilder.append(matcher.group(1) +" -  "+matcher.group(5));
+                stringBuilder.append(matcher.group(1) + " -  " + matcher.group(5));
                 stringBuilder.append("\n");
-                stringBuilder.append("Deposit on :" +" - ");
+                stringBuilder.append("Deposit on :" + " - ");
                 stringBuilder.append("\n");
-                stringBuilder.append(matcher.group(3)+" "+matcher.group(4));
-            }catch (Exception e){
+                stringBuilder.append(matcher.group(3) + " " + matcher.group(4));
+            } catch (Exception e) {
                 stringBuilder.append(issues);
             }
         }

@@ -14,6 +14,7 @@ import com.example.arcgbot.databinding.ActivityLoginBinding;
 import com.example.arcgbot.models.LoginModel;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.Prefs;
+import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.LoginViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -48,56 +49,66 @@ public class LoginActivity extends DaggerAppCompatActivity {
 
     private void init() {
         if (Prefs.getBoolean(Constants.PrefsKeys.LOGIN_SUCCESS)){
-            goToGameCountHome();
+            if (Prefs.getString(Constants.PrefsKeys.CURRENT_DATE).equals(Utils.getTodayDate())){
+                goToGameCountHome();
+            }else {
+                setUpLogin();
+                viewModel.gameRepository.clearGameData();
+            }
+
         }else {
-            activityLoginBinding = DataBindingUtil.setContentView(this,
-                    R.layout.activity_login);
-            viewModel = new ViewModelProvider(this, viewModelFactory).get(LoginViewModel.class);
-            activityLoginBinding.setViewmodel(viewModel);
-            viewModel.clickEventsLiveData.observe(this, new Observer<String>() {
-                @Override
-                public void onChanged(String action) {
-                    switch (action){
-                        case LOGIN:
-                            viewModel.validateLoginInputs();
-                            break;
-                        case CLOSE_ERROR_SHEET:
-                            showErrorBottomSheetAction();
-                            break;
-                    }
-
-                }
-            });
-
-            sheetErrorBehavior = BottomSheetBehavior.from(activityLoginBinding.errorBottomSheet.getRoot());
-            sheetErrorBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                @Override
-                public void onStateChanged(@androidx.annotation.NonNull View bottomSheet, int newState) {
-                    switch (newState) {
-                        case BottomSheetBehavior.STATE_HIDDEN:
-                            break;
-                        case BottomSheetBehavior.STATE_EXPANDED: {
-                        }
-                        break;
-                        case BottomSheetBehavior.STATE_COLLAPSED: {
-                        }
-                        break;
-                        case BottomSheetBehavior.STATE_DRAGGING:
-                            break;
-                        case BottomSheetBehavior.STATE_SETTLING:
-                            break;
-                    }
-                }
-
-                @Override
-                public void onSlide(@androidx.annotation.NonNull View bottomSheet, float slideOffset) {
-
-                }
-            });
-
-            observeLoginInput();
+            setUpLogin();
         }
 
+    }
+
+    private void setUpLogin() {
+        activityLoginBinding = DataBindingUtil.setContentView(this,
+                R.layout.activity_login);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(LoginViewModel.class);
+        activityLoginBinding.setViewmodel(viewModel);
+        viewModel.clickEventsLiveData.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String action) {
+                switch (action){
+                    case LOGIN:
+                        viewModel.validateLoginInputs();
+                        break;
+                    case CLOSE_ERROR_SHEET:
+                        showErrorBottomSheetAction();
+                        break;
+                }
+
+            }
+        });
+
+        sheetErrorBehavior = BottomSheetBehavior.from(activityLoginBinding.errorBottomSheet.getRoot());
+        sheetErrorBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@androidx.annotation.NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@androidx.annotation.NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        observeLoginInput();
     }
 
     @NotNull
@@ -109,6 +120,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
                 if (loginModel.message.equals(Constants.SUCCESS)) {
                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     Prefs.putBoolean(Constants.PrefsKeys.LOGIN_SUCCESS,true);
+                    Prefs.putString(Constants.PrefsKeys.CURRENT_DATE, Utils.getTodayDate());
                     goToGameCountHome();
                 } else {
                     String title = loginModel.message.contains("resolve host") ? "Connection Error" :

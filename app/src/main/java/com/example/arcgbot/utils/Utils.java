@@ -7,6 +7,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,6 +93,12 @@ public class Utils {
 
     public static Matcher getRegexMatcher(String regexPattern, String textToMatch) {
         return Pattern.compile(regexPattern).matcher(textToMatch);
+    }
+
+    public static String getTodayDate() {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
+        return dateFormat.format(c);
     }
 
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.models.LoginModel;
+import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.repository.UserRepository;
 import com.example.arcgbot.utils.Constants;
 
@@ -29,10 +30,12 @@ public class LoginViewModel extends ViewModel {
     public ObservableField<String> passwordMutableLiveData = new ObservableField<>();
     public MutableLiveData<String> loginInputObservable = new MutableLiveData<>(null);
     public MutableLiveData<Boolean> progressVisible = new MutableLiveData<>(false);
+    public GameRepository gameRepository;
 
     @Inject
-    public LoginViewModel(UserRepository userRepository) {
+    public LoginViewModel(UserRepository userRepository, GameRepository gameRepository) {
         this.userRepository = userRepository;
+        this.gameRepository = gameRepository;
     }
 
     public void loginUser(){

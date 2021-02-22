@@ -21,4 +21,7 @@ public abstract class GameCountDao extends BaseDao<GameCount> {
 
     @Query("UPDATE game_count_table SET games_count=:count WHERE game_id=:gameId")
     public abstract void updateGameCount(long gameId, int count);
+
+    @Query("DELETE FROM game_count_table")
+    public abstract void clearData();
 }
