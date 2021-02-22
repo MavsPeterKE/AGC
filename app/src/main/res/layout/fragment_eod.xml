@@ -8,6 +8,11 @@
         <import type="android.view.View" />
 
 
+        <variable
+            name="model"
+            type="com.example.arcgbot.viewmodels.EODViewModel" />
+
+
 
     </data>
 
@@ -118,7 +123,7 @@
             android:id="@+id/textView26"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 Games"
+            android:text="@{model.gameCount}"
             android:textSize="26sp"
             android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="@+id/textView16"
@@ -130,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginLeft="18dp"
-            android:text="Ksh. 0.00"
+            android:text="@{model.gameRevenue}"
             android:textColor="@color/white"
             android:textSize="26sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView26"

@@ -212,6 +212,20 @@ public class GameRepository {
         }
         return count;
     }
+
+    public double getTotalRevenue() {
+        Callable<Double> callable = () -> completeGameDao.getTotalAmountPlayed();
+        Future<Double> future = executorService.submit(callable);
+        double count = 0;
+        try {
+            count= future.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }
 
 

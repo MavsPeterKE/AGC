@@ -14,6 +14,7 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.databinding.FragmentEodBinding;
 import com.example.arcgbot.databinding.FragmentScreensBinding;
 import com.example.arcgbot.utils.ViewModelFactory;
+import com.example.arcgbot.viewmodels.EODViewModel;
 import com.example.arcgbot.viewmodels.ScreensViewModel;
 
 import javax.inject.Inject;
@@ -24,7 +25,7 @@ import dagger.android.support.DaggerFragment;
 public class FragmentEOD extends DaggerFragment {
     @Inject
     ViewModelFactory viewModelFactory;
-    private ScreensViewModel mViewModel;
+    private EODViewModel mViewModel;
     private FragmentEodBinding fragmentEodBinding;
 
     public static FragmentEOD newInstance() {
@@ -36,7 +37,8 @@ public class FragmentEOD extends DaggerFragment {
                              @Nullable Bundle savedInstanceState) {
         fragmentEodBinding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_eod, container, false);
-        mViewModel = new ViewModelProvider(this, viewModelFactory).get(ScreensViewModel.class);
+        mViewModel = new ViewModelProvider(this, viewModelFactory).get(EODViewModel.class);
+        fragmentEodBinding.setModel(mViewModel);
         fragmentEodBinding.executePendingBindings();
         return fragmentEodBinding.getRoot();
     }
