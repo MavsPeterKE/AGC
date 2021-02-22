@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
 public class GameType extends BaseObservable {
     @NonNull
     @PrimaryKey()
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "type_id")
     private long id;
 
     @ColumnInfo(name = "game_name")

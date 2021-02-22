@@ -8,12 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.CompletedGame;
 import com.example.arcgbot.databinding.FragmentScreensBinding;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.ScreensViewModel;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -38,6 +42,14 @@ public class FragmentScreens extends DaggerFragment {
         mViewModel = new ViewModelProvider(this, viewModelFactory).get(ScreensViewModel.class);
         fragmentScreensBinding.setScreenviewmodel(mViewModel);
         fragmentScreensBinding.executePendingBindings();
+
+        mViewModel.gameRepository.getCompletedGames().observe(getViewLifecycleOwner(), new Observer<List<CompletedGame>>() {
+            @Override
+            public void onChanged(List<CompletedGame> completedGames) {
+                mViewModel.setGameCountdapter(completedGames);
+            }
+        });
+
         return fragmentScreensBinding.getRoot();
     }
 

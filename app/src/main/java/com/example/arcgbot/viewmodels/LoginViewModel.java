@@ -38,7 +38,7 @@ public class LoginViewModel extends ViewModel {
     public void loginUser(){
         HashMap<String,Object> params = new HashMap<>();
         params.put("grant_type","password");
-        params.put("client_id","rzMyRau5kb9ZxJNVncXMxHuEdvMf4m9xk2WmwAYp");
+        params.put("client_id","R6FqYEQYLVt7f18x9SAC2J9rGu6CIDsAnhIKtEL6");
         params.put("username",usernameMutableLiveData.get());
         params.put("password",passwordMutableLiveData.get());
         userRepository.startUserLoginApiRequest(params);

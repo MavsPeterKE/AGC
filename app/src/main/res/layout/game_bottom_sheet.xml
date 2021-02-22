@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="model"
             type="com.example.arcgbot.viewmodels.GameCountViewModel" />
@@ -28,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@={model.gameCountObservable}"
+            tools:text="25"
             android:textColor="@color/holo_red_dark"
             android:textSize="40sp"
             android:textStyle="bold"
@@ -68,7 +68,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="20dp"
-            android:visibility="@{model.isGameStarted?View.GONE:View.VISIBLE}"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:ems="10"
@@ -105,7 +105,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:visibility="@{model.isGameStarted?View.GONE:View.VISIBLE}"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
             android:ems="10"
             android:hint="Phone Number"
             android:inputType="phone"
@@ -131,13 +131,41 @@
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
-            android:visibility="@{model.isGameStarted?View.GONE:View.VISIBLE}"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
             android:layout_marginTop="20dp"
             android:layout_marginStart="16dp"
             app:setAdapter="@{model.gameTypeAdapter}"
             app:layout_constraintEnd_toEndOf="@+id/editTextPhone"
             app:layout_constraintStart_toStartOf="@+id/editTextPhone"
             app:layout_constraintTop_toBottomOf="@+id/editTextPhone"  />
+
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@{`Started at 12.30 :`+model.selectedScreen.startTime}"
+            android:visibility="@{model.selectedScreen.isScreenActive?View.VISIBLE:View.INVISIBLE}"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName2"
+            app:layout_constraintHorizontal_bias="0.496"
+            tools:text="12.30 am"
+            app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@{`Current Time: `+model.selectedScreen.currentTime}"
+            android:visibility="@{model.selectedScreen.isScreenActive?View.VISIBLE:View.INVISIBLE}"
+            android:textSize="13sp"
+            android:textColor="@color/black"
+            tools:text="12.30 am"
+            app:layout_constraintEnd_toEndOf="@+id/textView30"
+            app:layout_constraintStart_toStartOf="@+id/textView30"
+            app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

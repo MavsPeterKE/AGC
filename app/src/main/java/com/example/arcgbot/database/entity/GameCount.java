@@ -10,11 +10,17 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "game_count_table")
 public class GameCount extends BaseObservable {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private int gameId;
+    @ColumnInfo(name = "game_id")
+    private long gameId;
 
     @ColumnInfo(name = "start_time")
     private String startTime;
+
+    @ColumnInfo(name = "stop_time")
+    private String stopTime;
+
+    @ColumnInfo(name = "start_time_minutes")
+    private int startTimeMinutes;
 
     @ColumnInfo(name = "games_count")
     private int gamesCount;
@@ -25,12 +31,17 @@ public class GameCount extends BaseObservable {
     @ColumnInfo(name = "player_phone")
     private String playerPhone;
 
-
     @ColumnInfo(name = "screen_id")
     private long screenId;
 
-    @ColumnInfo(name = "game_id")
+    @ColumnInfo(name = "game_type_id")
     private long gameTypeId;
+
+    @ColumnInfo(name = "payable_amount")
+    private double payableAmount;
+
+    @ColumnInfo(name = "is_game_completed")
+    boolean isGameCompleted;
 
     @NonNull
     public long getScreenId() {
@@ -73,11 +84,11 @@ public class GameCount extends BaseObservable {
         this.playerPhone = playerPhone;
     }
 
-    public int getGameId() {
+    public long getGameId() {
         return gameId;
     }
 
-    public void setGameId(int gameId) {
+    public void setGameId(long gameId) {
         this.gameId = gameId;
     }
 
@@ -87,5 +98,37 @@ public class GameCount extends BaseObservable {
 
     public void setGameTypeId(long gameTypeId) {
         this.gameTypeId = gameTypeId;
+    }
+
+    public String getStopTime() {
+        return stopTime;
+    }
+
+    public void setStopTime(String stopTime) {
+        this.stopTime = stopTime;
+    }
+
+    public int getStartTimeMinutes() {
+        return startTimeMinutes;
+    }
+
+    public void setStartTimeMinutes(int startTimeMinutes) {
+        this.startTimeMinutes = startTimeMinutes;
+    }
+
+    public double getPayableAmount() {
+        return payableAmount;
+    }
+
+    public boolean isGameCompleted() {
+        return isGameCompleted;
+    }
+
+    public void setGameCompleted(boolean gameCompleted) {
+        isGameCompleted = gameCompleted;
+    }
+
+    public void setPayableAmount(double payableAmount) {
+        this.payableAmount = payableAmount;
     }
 }

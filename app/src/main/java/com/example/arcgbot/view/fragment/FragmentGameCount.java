@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,15 +14,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
-import com.example.arcgbot.database.entity.GameType;
-import com.example.arcgbot.database.entity.Screen;
 import com.example.arcgbot.databinding.FragmentGameCountBinding;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -34,6 +31,10 @@ public class FragmentGameCount extends DaggerFragment {
     private GameCountViewModel mViewModel;
     private FragmentGameCountBinding fragmentGameCountBinding;
     private BottomSheetBehavior sheetBehavior;
+    String player_phone;
+    String players;
+    EditText edPlayersInput;
+    EditText edPlayerPhone;
 
     public static FragmentGameCount newInstance() {
         return new FragmentGameCount();
@@ -59,10 +60,10 @@ public class FragmentGameCount extends DaggerFragment {
 
     private void observeScreenData() {
         mViewModel.gameRepository().getScreensLiveData().observe(getViewLifecycleOwner(), screen -> {
-            if (!screen.isEmpty()){
+            if (!screen.isEmpty()) {
                 fragmentGameCountBinding.noGameData.progressBarSync.setVisibility(View.VISIBLE);
             }
-            mViewModel.setGameCountdapter(screen);
+            mViewModel.setGameCountAdapter(screen);
         });
 
         mViewModel.gameRepository().getGamesLiveData().observe(getViewLifecycleOwner(), gameTypes -> mViewModel.setGamesList(gameTypes));
@@ -74,7 +75,7 @@ public class FragmentGameCount extends DaggerFragment {
         mViewModel.getClickEventsLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String action) {
-                switch (action){
+                switch (action) {
                     case Constants.Events.GAME_ITEM_CLICK:
                         showGameBottomSheetAction();
                         break;
@@ -122,6 +123,10 @@ public class FragmentGameCount extends DaggerFragment {
 
             }
         });
+        edPlayerPhone = fragmentGameCountBinding.bottomSheet.editTextPhone;
+        edPlayersInput = fragmentGameCountBinding.bottomSheet.editTextTextPersonName2;
+
+
     }
 
     int clickCount = 0;
@@ -134,20 +139,44 @@ public class FragmentGameCount extends DaggerFragment {
                     break;
                 case Constants.Events.START_GAME:
                     clickCount += 1;
-                    String btnText = fragmentGameCountBinding.bottomSheet.button.getText().toString();
-                    if (btnText.contains(Constants.Events.END_GAME)){
-                        //reset data
-                        mViewModel.setHideGameInputs(false);
-                    }else {
-                        showGameBottomSheetAction();
-                        setViews();
+                    if(isInputsValid()){
+                        String btnText = fragmentGameCountBinding.bottomSheet.button.getText().toString();
+                        if (btnText.contains(Constants.Events.END_GAME)) {
+                            //reset data
+                            mViewModel.EndGameCount();
+                            showGameBottomSheetAction();
+                        } else {
+                            mViewModel.updateGameData(player_phone,players);
+                            showGameBottomSheetAction();
+                        }
                     }
+
             }
         });
     }
 
+    private boolean isInputsValid() {
+        player_phone = edPlayerPhone.getText().toString();
+        players = edPlayersInput.getText().toString();
+        if (players.isEmpty() || players.equals("")) {
+            edPlayersInput.setError("Required");
+            return false;
+        }else if(player_phone.isEmpty() || player_phone.equals("")){
+            edPlayerPhone.setError("Required");
+            return false;
+        }else if (mViewModel.selectedGameType == null){
+            Toast.makeText(getActivity(), "Select Game Type", Toast.LENGTH_SHORT).show();
+            return false;
+        }else {
+            edPlayerPhone.setError(null);
+            edPlayersInput.setError(null);
+            return true;
+        }
+
+    }
+
     private void setViews() {
-        mViewModel.setHideGameInputs(clickCount >= 1);
+        mViewModel.setHideGameInputs();
 
     }
 }

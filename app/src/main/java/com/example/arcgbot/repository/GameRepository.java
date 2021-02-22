@@ -1,11 +1,19 @@
 package com.example.arcgbot.repository;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 
+import com.example.arcgbot.database.dao.CompleteGameDao;
+import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
 import com.example.arcgbot.database.dao.ScreenDao;
+import com.example.arcgbot.database.entity.CompletedGame;
+import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.database.entity.Screen;
+import com.example.arcgbot.database.views.GameView;
+import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.models.LoginModel;
 import com.example.arcgbot.retrofit.RetrofitService;
 import com.example.arcgbot.retrofit.responseStructures.APIListResponse;
@@ -19,7 +27,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,14 +49,19 @@ public class GameRepository {
     private ExecutorService executorService;
     private ScreenDao screenDao;
     private GameDao gameDao;
+    private GameCountDao gameCountDao;
+    private CompleteGameDao completeGameDao;
 
     @Inject
-    public GameRepository(RetrofitService retrofitService, ScreenDao screenDao, GameDao gameDao,ExecutorService executorService) {
+    public GameRepository(RetrofitService retrofitService, ScreenDao screenDao, GameDao gameDao,
+                          GameCountDao gameCountDao, CompleteGameDao completeGameDao,ExecutorService executorService) {
         this.retrofitService = retrofitService;
         disposable = new CompositeDisposable();
         this.executorService = executorService;
         this.screenDao = screenDao;
         this.gameDao = gameDao;
+        this.gameCountDao = gameCountDao;
+        this.completeGameDao = completeGameDao;
 
     }
 
@@ -132,7 +148,7 @@ public class GameRepository {
         return loginSubject;
     }
 
-    public LiveData<List<Screen>> getScreensLiveData(){
+    public LiveData<List<GameView>> getScreensLiveData(){
         return screenDao.getAllScreens();
     }
 
@@ -141,15 +157,60 @@ public class GameRepository {
     }
 
     public void updateSelectedGame(GameType gameType) {
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                gameDao.deselectAllGame();
-                gameDao.updateSelected(true,gameType.getId());
+        executorService.submit(() -> {
+            gameDao.deselectAllGame();
+            gameDao.updateSelected(true,gameType.getId());
 
 
-            }
         });
+    }
+
+    public void updateGameCount(GameCount gameCount) {
+        if (gameCount.getGamesCount() == 0){
+            gameCount.setGamesCount(1);
+        }
+        executorService.submit(() -> {
+            long insert = gameCountDao.insert(gameCount);
+            screenDao.updateActiveScreen(gameCount.getScreenId());
+            gameDao.deselectGames();
+            Log.e("updateGameCount:_ ",insert +" inserted" );
+        });
+
+    }
+
+    public void resetActiveScreen(long id) {
+        executorService.submit(() -> screenDao.resetActiveScreen(id));
+    }
+
+    public void detachGameFromScreen(GameModel gameModel) {
+        CompletedGame completedGame = new CompletedGame();
+        completedGame.setDuration(gameModel.startTime+" - "+gameModel.endTime);
+        completedGame.setGamesCount(Integer.parseInt(gameModel.GameCount));
+        completedGame.setScreenLable(gameModel.screenLable);
+        completedGame.setPayableAmount(Double.parseDouble(gameModel.payableAmount));
+        executorService.submit(() -> {
+            gameCountDao.updateCompletedGames(gameModel.gameId);
+            completeGameDao.insert(completedGame);
+        });
+
+    }
+
+    public LiveData<List<CompletedGame>> getCompletedGames(){
+        return completeGameDao.getAllCompletedGames();
+    }
+
+    public int getGameTotal() {
+        Callable<Integer> callable = () -> completeGameDao.getTotalGamesPlayed();
+        Future<Integer> future = executorService.submit(callable);
+        int count = 0;
+        try {
+            count= future.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 }
 

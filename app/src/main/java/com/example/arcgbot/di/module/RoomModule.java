@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.room.Room;
 
 import com.example.arcgbot.database.AppDataBase;
+import com.example.arcgbot.database.dao.CompleteGameDao;
+import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
 import com.example.arcgbot.database.dao.ScreenDao;
 
@@ -36,6 +38,19 @@ public class RoomModule {
     @Provides
     GameDao provideGameTypeDao(AppDataBase appDataBase) {
         return appDataBase.gameTypeDao();
+    }
+
+
+    @Singleton
+    @Provides
+    GameCountDao provideGameCountDao(AppDataBase appDataBase) {
+        return appDataBase.gameCountDao();
+    }
+
+    @Singleton
+    @Provides
+    CompleteGameDao provideCompleteGameDao(AppDataBase appDataBase) {
+        return appDataBase.completeGameDao();
     }
 
 

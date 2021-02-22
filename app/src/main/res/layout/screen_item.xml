@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
-            android:text="@{screen.startTime+`-`+screen.endTime}"
+            android:text="@{screen.duration}"
             app:layout_constraintStart_toStartOf="@+id/textView25"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="11am - 12 am" />

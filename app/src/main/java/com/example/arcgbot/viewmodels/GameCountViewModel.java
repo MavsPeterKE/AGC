@@ -5,19 +5,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.annimon.stream.Stream;
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
-import com.example.arcgbot.database.entity.Screen;
+import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.view.adapter.GameCountAdapter;
 import com.example.arcgbot.view.adapter.GameTypeAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -30,10 +32,11 @@ public class GameCountViewModel extends ViewModel {
     public ObservableField<Boolean> isGameSelected = new ObservableField();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     public ObservableField<String> obervableButtonText = new ObservableField("Start Game");
-    private GameModel selectedGame;
+    private GameModel selectedGameScreen;
     private int gameCount;
     private GameRepository gameRepository;
     List<GameType> gameTypeList = new ArrayList<>();
+    public GameType selectedGameType;
 
     @Inject
     public GameCountViewModel(GameRepository gameRepository) {
@@ -50,16 +53,21 @@ public class GameCountViewModel extends ViewModel {
         return gameTypeAdapter;
     }
 
-    public void setGameCountdapter(List<Screen> screens) {
+    public void setGameCountAdapter(List<GameView> screens) {
         List<GameModel> gameModels = new ArrayList<>();
-        for (Screen screen: screens){
+        for (GameView gameView: screens){
+            GameCount gameCount = gameView.gameCount;
             GameModel gameModel = new GameModel();
-            gameModel.screenLable = screen.getScreenLable();
-            gameModel.GameCount = "0";
-            gameModel.payableAmount = "0.00";
-            gameModel.GameName = "Idle";
-            gameModel.players = "No Players";
-            //gameCountModel.player1+` Vs ` +gameCountModel.player2 + `  : `+gameCountModel.playTime
+            gameModel.screenId = (gameView.screen!=null?gameView.screen.getId():0);
+            gameModel.screenLable = gameView.screen.getScreenLable();
+            gameModel.GameCount = String.valueOf(gameCount!=null?gameCount.getGamesCount():0);
+            gameModel.payableAmount = String.valueOf(gameView.payableAmount);
+            gameModel.GameName = gameView.gameType!=null?gameView.gameType.getGameName():"No Active Game";
+            gameModel.players = gameCount!=null?gameCount.getPlayerNames():"Idle";
+            gameModel.startTime = gameCount!=null?gameCount.getStartTime():"";
+            gameModel.isScreenActive = gameView.screen.isActive();
+            gameModel.currentTime = getCurrentTime();
+            gameModel.gameId = gameCount!=null?gameCount.getGameId():0;
             gameModels.add(gameModel);
 
         }
@@ -77,14 +85,20 @@ public class GameCountViewModel extends ViewModel {
     public GameRepository gameRepository(){return gameRepository;}
 
     public void onGameItemClick(GameModel gameModel) {
-        selectedGame = gameModel;
-        gameCount = Integer.parseInt(selectedGame.GameCount);
-        gameCountObservable.set(selectedGame.GameCount);
+        selectedGameScreen = gameModel;
+        gameCount = Integer.parseInt(selectedGameScreen.GameCount);
+        gameCountObservable.set(selectedGameScreen.GameCount);
         clickEventsLiveData.setValue(Constants.Events.GAME_ITEM_CLICK);
+        setHideGameInputs();
     }
 
     public void onGameTypeClick(GameType gameType){
        gameRepository.updateSelectedGame(gameType);
+        selectedGameType = gameType;
+    }
+
+    public GameModel getSelectedScreen() {
+        return selectedGameScreen;
     }
 
     public void closeSheet() {
@@ -127,9 +141,10 @@ public class GameCountViewModel extends ViewModel {
         return isGameStarted;
     }
 
-    public void setHideGameInputs(boolean b) {
-        isGameStarted.set(b);
-        obervableButtonText.set(b?Constants.Events.END_GAME:Constants.Events.START_GAME);
+    public void setHideGameInputs() {
+        boolean isGameActive = selectedGameScreen !=null? selectedGameScreen.isScreenActive : false;
+        isGameStarted.set(isGameActive);
+        obervableButtonText.set(isGameActive?Constants.Events.END_GAME:Constants.Events.START_GAME);
     }
 
     public void startDataSync(){
@@ -138,5 +153,28 @@ public class GameCountViewModel extends ViewModel {
 
     public void syncGamesData(){
         gameRepository.startScreensApiRequest();
+    }
+
+    public void updateGameData(String player_phone, String players) {
+        GameCount game = new GameCount();
+        game.setScreenId(selectedGameScreen.screenId);
+        game.setGamesCount(gameCount);
+        game.setPlayerPhone(player_phone);
+        game.setPlayerNames(players);
+        game.setGameTypeId(selectedGameType.getId());
+        game.setStartTime(getCurrentTime());
+        String time = getCurrentTime();
+        gameRepository.updateGameCount(game);
+
+    }
+
+    private String getCurrentTime(){
+        return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+    }
+
+    public void EndGameCount() {
+        gameRepository.resetActiveScreen(selectedGameScreen.screenId);
+        selectedGameScreen.endTime = getCurrentTime();
+        gameRepository.detachGameFromScreen(selectedGameScreen);
     }
 }

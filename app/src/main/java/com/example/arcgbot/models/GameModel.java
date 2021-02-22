@@ -1,6 +1,8 @@
 package com.example.arcgbot.models;
 
 public class GameModel {
+    public long screenId;
+    public long gameId;
     public String screenLable;
     public String GameCount;
     public String GameName;
@@ -11,4 +13,6 @@ public class GameModel {
     public String players;
     public String player2;
     public String playTime;
+    public String currentTime;
+    public boolean isScreenActive;
 }

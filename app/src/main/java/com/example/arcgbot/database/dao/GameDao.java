@@ -19,6 +19,10 @@ public abstract class GameDao extends BaseDao<GameType> {
     public abstract void deselectAllGame();
 
 
-    @Query("UPDATE game_types_table SET isSelected=:isSelected WHERE id=:id")
+    @Query("UPDATE game_types_table SET isSelected=:isSelected WHERE type_id=:id")
     public abstract void updateSelected(boolean isSelected,long id);
+
+
+    @Query("UPDATE game_types_table SET isSelected=0")
+    public abstract void deselectGames();
 }
