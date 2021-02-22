@@ -4,6 +4,8 @@ public class Constants {
 
     public static final String BASE_URL   = "https://a093ccd36725.ngrok.io";
     public static final String SUCCESS = "success";
+    public static final String MPESA_DEPOSIT_REGEX = "^(\\w+\\s+\\d+\\.\\d+)(\\s+\\w+\\s\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+)(\\d+\\/\\d+\\/+\\d+)\\s\\w+\\s+(\\d+\\:\\d+\\s+\\w+)\\.\\s+\\w+\\-\\w+\\s+\\w+\\s+(\\w+)";
+
 
     public static final class Events{
         public static final String GAME_ITEM_CLICK = "game_item";

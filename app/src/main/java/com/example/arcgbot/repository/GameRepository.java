@@ -199,32 +199,12 @@ public class GameRepository {
         return completeGameDao.getAllCompletedGames();
     }
 
-    public int getGameTotal() {
-        Callable<Integer> callable = () -> completeGameDao.getTotalGamesPlayed();
-        Future<Integer> future = executorService.submit(callable);
-        int count = 0;
-        try {
-            count= future.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return count;
+    public LiveData<Integer> getGameTotal() {
+       return completeGameDao.getTotalGamesPlayed();
     }
 
-    public double getTotalRevenue() {
-        Callable<Double> callable = () -> completeGameDao.getTotalAmountPlayed();
-        Future<Double> future = executorService.submit(callable);
-        double count = 0;
-        try {
-            count= future.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return count;
+    public LiveData<Double> getTotalRevenue() {
+      return completeGameDao.getTotalAmountPlayed();
     }
 }
 

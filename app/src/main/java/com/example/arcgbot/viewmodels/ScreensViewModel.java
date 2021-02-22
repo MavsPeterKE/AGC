@@ -28,7 +28,6 @@ public class ScreensViewModel extends ViewModel {
     public ScreensViewModel(GameRepository gameRepository) {
         screenAdapter = new ScreenAdapter(R.layout.screen_item, this);
         this.gameRepository = gameRepository;
-        gameCount.set(gameRepository.getGameTotal() +" Games");
     }
 
     public ScreenAdapter getScreenAdapterAdapter() {
@@ -37,6 +36,7 @@ public class ScreensViewModel extends ViewModel {
 
     public void setGameCountdapter(List<CompletedGame> completedGameList) {
         List<ScreenItem> screenItemList = new ArrayList<>();
+        int totalGameCount = 0;
         for (CompletedGame game : completedGameList){
             ScreenItem screenItem = new ScreenItem();
             screenItem.GameCount = String.valueOf(game.getGamesCount());
@@ -44,8 +44,10 @@ public class ScreensViewModel extends ViewModel {
             screenItem.payableAmount = game.getPayableAmount()+"0";
             screenItem.screenLable = game.getScreenLable();
             screenItemList.add(screenItem);
+            totalGameCount+=game.getGamesCount();
 
         }
+        gameCount.set(totalGameCount+ " Games");
         isGamesAvailable.set(screenItemList!=null?screenItemList.size()>0:false);
         this.screenAdapter.setGameCountList(screenItemList);
         this.screenAdapter.notifyDataSetChanged();

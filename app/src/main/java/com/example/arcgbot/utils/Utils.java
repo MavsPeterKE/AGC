@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.ResponseBody;
 
@@ -84,6 +86,10 @@ public class Utils {
         }
 
         return result;
+    }
+
+    public static Matcher getRegexMatcher(String regexPattern, String textToMatch) {
+        return Pattern.compile(regexPattern).matcher(textToMatch);
     }
 
 

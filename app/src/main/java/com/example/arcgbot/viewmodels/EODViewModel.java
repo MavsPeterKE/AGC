@@ -19,15 +19,23 @@ public class EODViewModel extends ViewModel {
     private MutableLiveData<String> gameItemClickLiveData = new MutableLiveData();
     public ObservableField<String> gameCount = new ObservableField("O Games");
     public ObservableField<String> gameRevenue = new ObservableField("Ksh. O.00");
+    public GameRepository repository;
 
     @Inject
     public EODViewModel(GameRepository repository) {
-        gameCount.set(repository.getGameTotal()+ " Games");
-        gameRevenue.set("Ksh. "+repository.getTotalRevenue()+"0");
+        this.repository = repository;
     }
 
     public void onGameItemClick(GameModel gameModel){
         gameItemClickLiveData.setValue(GAME_ITEM_CLICK);
+    }
+
+    public GameRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(GameRepository repository) {
+        this.repository = repository;
     }
 
     public MutableLiveData<String> getGameItemClickLiveData() {

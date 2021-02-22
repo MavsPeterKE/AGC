@@ -16,8 +16,8 @@ public abstract class CompleteGameDao extends BaseDao<CompletedGame> {
     public abstract LiveData<List<CompletedGame>> getAllCompletedGames();
 
     @Query("SELECT sum(games_count) FROM  complete_games_table ")
-    public abstract int getTotalGamesPlayed();
+    public abstract LiveData<Integer> getTotalGamesPlayed();
 
     @Query("SELECT sum(payable_amount) FROM  complete_games_table ")
-    public abstract double getTotalAmountPlayed();
+    public abstract LiveData<Double> getTotalAmountPlayed();
 }

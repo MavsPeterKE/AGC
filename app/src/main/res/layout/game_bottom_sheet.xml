@@ -19,6 +19,8 @@
         app:behavior_hideable="true"
         android:background="@drawable/layout_border"
         android:padding="10dp"
+        android:clickable="false"
+        android:focusable="false"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 

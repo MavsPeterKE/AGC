@@ -120,7 +120,7 @@
             app:layout_constraintTop_toTopOf="@+id/view5" />
 
         <TextView
-            android:id="@+id/textView26"
+            android:id="@+id/tvGameCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{model.gameCount}"
@@ -130,17 +130,17 @@
             app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
         <TextView
-            android:id="@+id/textView27"
+            android:id="@+id/tvGameRevenue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginLeft="18dp"
-            android:text="@{model.gameRevenue}"
+            android:text="@{`Ksh. `+model.gameRevenue+`0`}"
             android:textColor="@color/white"
             android:textSize="26sp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView26"
-            app:layout_constraintStart_toEndOf="@+id/textView26"
-            app:layout_constraintTop_toTopOf="@+id/textView26"
+            app:layout_constraintBottom_toBottomOf="@+id/tvGameCount"
+            app:layout_constraintStart_toEndOf="@+id/tvGameCount"
+            app:layout_constraintTop_toTopOf="@+id/tvGameCount"
             app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
