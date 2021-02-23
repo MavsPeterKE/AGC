@@ -49,6 +49,7 @@
             android:paddingBottom="15dp"
             android:text="@{gameType.gameName}"
             android:textSize="18sp"
+            android:textColor="#424242"
             app:typeface="Sarabun-Light.ttf" />
     </LinearLayout>
 
