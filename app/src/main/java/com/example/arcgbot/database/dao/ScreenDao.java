@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
+import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.database.entity.Screen;
 import com.example.arcgbot.database.views.GameView;
 
@@ -24,4 +25,8 @@ public abstract class ScreenDao extends BaseDao<Screen> {
     @Transaction
     @Query("UPDATE screen_table SET active=0 WHERE id=:id")
     public abstract void resetActiveScreen(long id);
+
+    @Transaction
+    @Query("SELECT * FROM gameview WHERE game_id=:gameId")
+    public abstract LiveData<GameView> getGameViewById(long gameId);
 }

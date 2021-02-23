@@ -86,7 +86,7 @@ public class GameCountViewModel extends ViewModel {
     public GameRepository gameRepository(){return gameRepository;}
 
     public void onGameItemClick(GameModel gameModel) {
-        selectedGameScreen = gameModel;
+        selectedGameScreen =gameModel;
         gameCount = Integer.parseInt(selectedGameScreen.GameCount);
         gameCountObservable.set(selectedGameScreen.GameCount);
         clickEventsLiveData.setValue(Constants.Events.GAME_ITEM_CLICK);
@@ -111,7 +111,7 @@ public class GameCountViewModel extends ViewModel {
         gameCountObservable.set(String.valueOf(gameCount));
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
         if (obervableButtonText.get().equals(Constants.Events.END_GAME)){
-            gameRepository.updateGameCountValue(selectedGameScreen.gameId,gameCount);
+            gameRepository.updateGameCountValue(selectedGameScreen.gameId,Integer.parseInt(gameCountObservable.get()));
         }
     }
 
@@ -120,7 +120,7 @@ public class GameCountViewModel extends ViewModel {
         gameCountObservable.set(String.valueOf(gameCount));
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
         if (obervableButtonText.get().equals(Constants.Events.END_GAME)){
-            gameRepository.updateGameCountValue(selectedGameScreen.gameId,gameCount);
+            gameRepository.updateGameCountValue(selectedGameScreen.gameId,Integer.parseInt(gameCountObservable.get()));
         }
     }
 
@@ -165,7 +165,7 @@ public class GameCountViewModel extends ViewModel {
     public void updateGameData(String player_phone, String players) {
         GameCount game = new GameCount();
         game.setScreenId(selectedGameScreen.screenId);
-        game.setGamesCount(gameCount);
+        game.setGamesCount( Integer.parseInt(gameCountObservable.get()));
         game.setPlayerPhone(player_phone);
         game.setPlayerNames(players+" Vs "+player_phone);
         game.setGameTypeId(selectedGameType.getId());
@@ -184,5 +184,25 @@ public class GameCountViewModel extends ViewModel {
         gameRepository.resetActiveScreen(selectedGameScreen.screenId);
         selectedGameScreen.endTime = getCurrentTime();
         gameRepository.detachGameFromScreen(selectedGameScreen);
+    }
+
+    public long getSelectedGameId() {
+        return selectedGameScreen!=null?selectedGameScreen.gameId:0;
+    }
+
+    public void updateSelectedGame(GameView gameView) {
+        GameCount gameCount = gameView.gameCount;
+        selectedGameScreen.screenId = (gameView.screen!=null?gameView.screen.getId():0);
+        selectedGameScreen.screenLable = gameView.screen.getScreenLable();
+        selectedGameScreen.GameCount = String.valueOf(gameCount!=null?gameCount.getGamesCount():0);
+        selectedGameScreen.payableAmount = String.valueOf(gameView.payableAmount);
+        selectedGameScreen.GameName = gameView.gameType!=null?gameView.gameType.getGameName():"No Active Game";
+        selectedGameScreen.players = gameCount!=null?gameCount.getPlayerNames():"Idle";
+        selectedGameScreen.startTime = gameCount!=null?gameCount.getStartTime():"";
+        selectedGameScreen.isScreenActive = gameView.screen.isActive();
+        selectedGameScreen.currentTime = getCurrentTime();
+        selectedGameScreen.gameId = gameCount!=null?gameCount.getGameId():0;
+        selectedGameScreen.hashKey = ("#"+getCurrentTime()+"#"+selectedGameScreen.GameName+selectedGameScreen);
+
     }
 }

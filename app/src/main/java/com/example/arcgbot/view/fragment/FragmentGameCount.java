@@ -92,6 +92,12 @@ public class FragmentGameCount extends DaggerFragment {
     private void showGameBottomSheetAction() {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            mViewModel.gameRepository().getGamesLiveDataById(mViewModel.getSelectedGameId()).observe(getViewLifecycleOwner(), gameView -> {
+                if (gameView!=null){
+                    mViewModel.updateSelectedGame(gameView);
+                }
+
+            });
         } else {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }

@@ -95,7 +95,8 @@ public class FragmentEOD extends DaggerFragment {
         stringBuilder.append("\n\n");
         stringBuilder.append("*Business Issue:* ");
         stringBuilder.append("\n");
-        Matcher matcher = Utils.getRegexMatcher(Constants.MPESA_DEPOSIT_REGEX, issues);
+        stringBuilder.append(issues);
+       /* Matcher matcher = Utils.getRegexMatcher(Constants.MPESA_DEPOSIT_REGEX, issues);
         if (matcher.find()) {
             try {
                 stringBuilder.append(matcher.group(1) + " -  " + matcher.group(5));
@@ -106,7 +107,7 @@ public class FragmentEOD extends DaggerFragment {
             } catch (Exception e) {
                 stringBuilder.append(issues);
             }
-        }
+        }*/
         return stringBuilder;
     }
 

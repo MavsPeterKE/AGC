@@ -164,6 +164,10 @@ public class GameRepository {
         return gameDao.getGameTypes();
     }
 
+    public LiveData<GameView> getGamesLiveDataById(long gameId){
+        return screenDao.getGameViewById(gameId);
+    }
+
     public void updateSelectedGame(GameType gameType) {
         executorService.submit(() -> {
             gameDao.deselectAllGame();
@@ -187,7 +191,10 @@ public class GameRepository {
     }
 
     public void updateGameCountValue(long gameId,int count){
-        executorService.submit(() -> gameCountDao.updateGameCount(gameId,count));
+        executorService.submit(() -> {
+            int update = gameCountDao.updateGameCount(gameId, count);
+            Log.e("updateGameCountValue: ", update+"");
+        });
 
     }
 
@@ -205,7 +212,8 @@ public class GameRepository {
         executorService.submit(() -> {
             int x = gameCountDao.updateCompletedGames(gameModel.gameId);
             Log.e("detachGameFromScreen: ",x +"  deleted" );
-            completeGameDao.insert(completedGame);
+            long y = completeGameDao.insert(completedGame);
+            Log.e("insert__: ",x +" GCount " +completedGame.getGamesCount());
         });
 
     }
@@ -220,6 +228,20 @@ public class GameRepository {
 
     public LiveData<Double> getTotalRevenue() {
       return completeGameDao.getTotalAmountPlayed();
+    }
+
+    public GameCount getSelectedGameScreen(long gameId) {
+        Callable<GameCount> callable = () -> gameCountDao.getGameById(gameId);
+        GameCount gameCount = null;
+        Future<GameCount> future = executorService.submit(callable);
+        try {
+            gameCount = future.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return gameCount;
     }
 }
 

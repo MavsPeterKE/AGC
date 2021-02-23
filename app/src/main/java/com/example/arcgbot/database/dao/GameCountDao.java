@@ -20,8 +20,11 @@ public abstract class GameCountDao extends BaseDao<GameCount> {
     public abstract int updateCompletedGames(long gameId);
 
     @Query("UPDATE game_count_table SET games_count=:count WHERE game_id=:gameId")
-    public abstract void updateGameCount(long gameId, int count);
+    public abstract int updateGameCount(long gameId, int count);
 
     @Query("DELETE FROM game_count_table")
     public abstract void clearData();
+
+    @Query("SELECT * FROM game_count_table WHERE game_id=:id")
+    public abstract GameCount getGameById(long id);
 }
