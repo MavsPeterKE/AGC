@@ -28,10 +28,10 @@ public class GameCountViewModel extends ViewModel {
     private GameTypeAdapter gameTypeAdapter;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     private ObservableField<String> gameCountObservable = new ObservableField();
+    private ObservableField<String> gameCountBonusObservable = new ObservableField();
     private ObservableField<Boolean> isGameStarted = new ObservableField();
-    public ObservableField<Boolean> isGameSelected = new ObservableField();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
-    public ObservableField<String> obervableButtonText = new ObservableField("Start Game");
+    public ObservableField<String> observableButtonText = new ObservableField("Start Game");
     private GameModel selectedGameScreen;
     private int gameCount;
     private GameRepository gameRepository;
@@ -91,6 +91,7 @@ public class GameCountViewModel extends ViewModel {
         selectedGameScreen = gameModel;
         gameCount = Integer.parseInt(selectedGameScreen.GameCount);
         gameCountObservable.set(selectedGameScreen.GameCount);
+        gameCountBonusObservable.set(String.valueOf(getBonusGames(selectedGameScreen.GameCount)));
         clickEventsLiveData.setValue(Constants.Events.GAME_ITEM_CLICK);
         setHideGameInputs();
     }
@@ -111,25 +112,20 @@ public class GameCountViewModel extends ViewModel {
     public void addGame() {
         gameCount++;
         gameCountObservable.set(String.valueOf(gameCount));
+        gameCountBonusObservable.set(String.valueOf(getBonusGames(String.valueOf(gameCount))));
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
-        if (obervableButtonText.get().equals(Constants.Events.END_GAME)) {
-            gameRepository.updateGameCountValue(selectedGameScreen.gameId, Integer.parseInt(gameCountObservable.get()));
+        if (observableButtonText.get().equals(Constants.Events.END_GAME)) {
+            gameRepository.updateGameCountValue(selectedGameScreen.gameId,
+                    Integer.parseInt(gameCountObservable.get()),Integer.parseInt(gameCountBonusObservable.get()));
         }
     }
 
-    public void closeError() {
-        gameCount++;
-        gameCountObservable.set(String.valueOf(gameCount));
-        clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
-        if (obervableButtonText.get().equals(Constants.Events.END_GAME)) {
-            gameRepository.updateGameCountValue(selectedGameScreen.gameId, Integer.parseInt(gameCountObservable.get()));
-        }
-    }
 
     public void minusGame() {
         if (gameCount != 0) {
             gameCount--;
             gameCountObservable.set(String.valueOf(gameCount));
+            gameCountBonusObservable.set(String.valueOf(getBonusGames(String.valueOf(gameCount))));
             clickEventsLiveData.setValue(Constants.Events.MINUS_GAME_COUNT);
         }
     }
@@ -146,6 +142,10 @@ public class GameCountViewModel extends ViewModel {
         return gameCountObservable;
     }
 
+    public ObservableField<String> getBonusCountObservable() {
+        return gameCountBonusObservable;
+    }
+
     public ObservableField<Boolean> getIsGameStarted() {
         return isGameStarted;
     }
@@ -153,7 +153,7 @@ public class GameCountViewModel extends ViewModel {
     public void setHideGameInputs() {
         boolean isGameActive = selectedGameScreen != null ? selectedGameScreen.isScreenActive : false;
         isGameStarted.set(isGameActive);
-        obervableButtonText.set(isGameActive ? Constants.Events.END_GAME : Constants.Events.START_GAME);
+        observableButtonText.set(isGameActive ? Constants.Events.END_GAME : Constants.Events.START_GAME);
     }
 
     public void startDataSync() {
@@ -165,16 +165,15 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public void updateGameData(String player_phone, String players) {
-        int count = Integer.parseInt(gameCountObservable.get());
         GameCount game = new GameCount();
         game.setScreenId(selectedGameScreen.screenId);
-        game.setGamesCount(count);
+        game.setGamesCount(Integer.parseInt(gameCountObservable.get()));
         game.setPlayerPhone(player_phone);
         game.setPlayerNames(players + " Vs " + player_phone);
         game.setGameTypeId(selectedGameType.getId());
         game.setStartTime(getCurrentTime());
         game.setHashKey(selectedGameScreen.hashKey);
-        game.setGamesBonus(getBonusGames(count));
+        game.setGamesBonus(Integer.parseInt(gameCountBonusObservable.get()));
         gameRepository.updateGameCount(game);
 
     }
@@ -210,7 +209,8 @@ public class GameCountViewModel extends ViewModel {
 
     }
 
-    public int getBonusGames(int gamesPlayed) {
+    public int getBonusGames(String gameCount) {
+        int gamesPlayed = Integer.parseInt(gameCount);
         int bonus = 0;
         for (int i=1; i<=gamesPlayed;i++){
             if (i%5==0){

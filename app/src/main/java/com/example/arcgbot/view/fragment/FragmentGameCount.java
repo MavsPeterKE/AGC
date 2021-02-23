@@ -31,10 +31,10 @@ public class FragmentGameCount extends DaggerFragment {
     private GameCountViewModel mViewModel;
     private FragmentGameCountBinding fragmentGameCountBinding;
     private BottomSheetBehavior sheetBehavior;
-    String player_phone;
-    String players;
-    EditText edPlayersInput;
-    EditText edPlayerPhone;
+    private String player_phone;
+    private String players;
+    private EditText edPlayersInput;
+    private EditText edPlayerPhone;
 
     public static FragmentGameCount newInstance() {
         return new FragmentGameCount();
@@ -93,10 +93,9 @@ public class FragmentGameCount extends DaggerFragment {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             mViewModel.gameRepository().getGamesLiveDataById(mViewModel.getSelectedGameId()).observe(getViewLifecycleOwner(), gameView -> {
-                if (gameView!=null){
+                if (gameView != null) {
                     mViewModel.updateSelectedGame(gameView);
                 }
-
             });
         } else {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -148,7 +147,6 @@ public class FragmentGameCount extends DaggerFragment {
                     clickCount += 1;
                     String btnText = fragmentGameCountBinding.bottomSheet.button.getText().toString();
                     if (btnText.contains(Constants.Events.END_GAME)) {
-                        //reset data
                         mViewModel.EndGameCount();
                         showGameBottomSheetAction();
                     } else {

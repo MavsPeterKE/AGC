@@ -190,9 +190,9 @@ public class GameRepository {
 
     }
 
-    public void updateGameCountValue(long gameId,int count){
+    public void updateGameCountValue(long gameId,int count,int bonus){
         executorService.submit(() -> {
-            int update = gameCountDao.updateGameCount(gameId, count);
+            int update = gameCountDao.updateGameCount(gameId, count,bonus);
             Log.e("updateGameCountValue: ", update+"");
         });
 
