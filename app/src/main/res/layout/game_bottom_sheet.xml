@@ -124,8 +124,8 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:onClick="@{()-> model.closeSheet()}"

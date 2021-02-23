@@ -101,6 +101,14 @@ public class Utils {
         return dateFormat.format(c);
     }
 
+    public static int getSeconds(String time){
+        String[] units = time.split(":"); //will break the string up into an array
+        int minutes = Integer.parseInt(units[0]); //first element
+        int seconds = Integer.parseInt(units[1]); //second element
+        int duration = 60 * minutes + seconds;
+        return duration;
+    }
+
 
 
 }

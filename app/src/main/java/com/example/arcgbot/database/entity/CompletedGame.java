@@ -22,6 +22,9 @@ public class CompletedGame extends BaseObservable {
     @ColumnInfo(name = "games_count")
     private int gamesCount;
 
+    @ColumnInfo(name = "end_time_seconds")
+    private int endTimeSeconds;
+
     @ColumnInfo(name = "payable_amount")
     private double payableAmount;
 
@@ -63,5 +66,13 @@ public class CompletedGame extends BaseObservable {
 
     public void setPayableAmount(double payableAmount) {
         this.payableAmount = payableAmount;
+    }
+
+    public int getEndTimeSeconds() {
+        return endTimeSeconds;
+    }
+
+    public void setEndTimeSeconds(int endTimeSeconds) {
+        this.endTimeSeconds = endTimeSeconds;
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public abstract class CompleteGameDao extends BaseDao<CompletedGame> {
-    @Query("SELECT * FROM complete_games_table")
+    @Query("SELECT * FROM complete_games_table ORDER BY end_time_seconds DESC")
     public abstract LiveData<List<CompletedGame>> getAllCompletedGames();
 
     @Query("SELECT sum(games_count) FROM  complete_games_table ")

@@ -140,17 +140,18 @@ public class FragmentGameCount extends DaggerFragment {
                     break;
                 case Constants.Events.START_GAME:
                     clickCount += 1;
-                    if(isInputsValid()){
-                        String btnText = fragmentGameCountBinding.bottomSheet.button.getText().toString();
-                        if (btnText.contains(Constants.Events.END_GAME)) {
-                            //reset data
-                            mViewModel.EndGameCount();
-                            showGameBottomSheetAction();
-                        } else {
-                            mViewModel.updateGameData(player_phone,players);
+                    String btnText = fragmentGameCountBinding.bottomSheet.button.getText().toString();
+                    if (btnText.contains(Constants.Events.END_GAME)) {
+                        //reset data
+                        mViewModel.EndGameCount();
+                        showGameBottomSheetAction();
+                    } else {
+                        if (isInputsValid()) {
+                            mViewModel.updateGameData(player_phone, players);
                             showGameBottomSheetAction();
                         }
                     }
+
 
             }
         });
@@ -162,13 +163,13 @@ public class FragmentGameCount extends DaggerFragment {
         if (players.isEmpty() || players.equals("")) {
             edPlayersInput.setError("Required");
             return false;
-        }else if(player_phone.isEmpty() || player_phone.equals("")){
+        } else if (player_phone.isEmpty() || player_phone.equals("")) {
             edPlayerPhone.setError("Required");
             return false;
-        }else if (mViewModel.selectedGameType == null){
+        } else if (mViewModel.selectedGameType == null) {
             Toast.makeText(getActivity(), "Select Game Type", Toast.LENGTH_SHORT).show();
             return false;
-        }else {
+        } else {
             edPlayerPhone.setError(null);
             edPlayersInput.setError(null);
             return true;

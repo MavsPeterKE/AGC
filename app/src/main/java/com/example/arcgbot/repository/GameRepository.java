@@ -21,6 +21,7 @@ import com.example.arcgbot.retrofit.responseStructures.GameStructure;
 import com.example.arcgbot.retrofit.responseStructures.LoginStructure;
 import com.example.arcgbot.retrofit.responseStructures.ScreenStructure;
 import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -198,7 +199,8 @@ public class GameRepository {
         CompletedGame completedGame = new CompletedGame();
         completedGame.setDuration(gameModel.startTime+" - "+gameModel.endTime);
         completedGame.setGamesCount(Integer.parseInt(gameModel.GameCount));
-        completedGame.setScreenLable(gameModel.screenLable);
+        completedGame.setScreenLable(gameModel.screenLable + " - "+ gameModel.players);
+        completedGame.setEndTimeSeconds(Utils.getSeconds(gameModel.endTime));
         completedGame.setPayableAmount(Double.parseDouble(gameModel.payableAmount));
         executorService.submit(() -> {
             int x = gameCountDao.updateCompletedGames(gameModel.gameId);
