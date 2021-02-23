@@ -2,7 +2,7 @@ package com.example.arcgbot.utils;
 
 public class Constants {
 
-    public static final String BASE_URL   = "https://a093ccd36725.ngrok.io";
+    public static final String BASE_URL   = "https://7de48f8a77be.ngrok.io";
     public static final String SUCCESS = "success";
     public static final String MPESA_DEPOSIT_REGEX = "^(\\w+\\s+\\d+\\.\\d+)(\\s+\\w+\\s\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+)(\\d+\\/\\d+\\/+\\d+)\\s\\w+\\s+(\\d+\\:\\d+\\s+\\w+)\\.\\s+\\w+\\-\\w+\\s+\\w+\\s+(\\w+)";
 
@@ -22,7 +22,7 @@ public class Constants {
 
     public static final class RoomConfigs {
         public static final String DATABASE_NAME = "arcbot";
-        public static final int NEW_DB_VERSION = 4;
+        public static final int NEW_DB_VERSION = 5;
         public static final int START_DB_VERSION = 2;
     }
 
