@@ -22,7 +22,7 @@ public class Constants {
 
     public static final class RoomConfigs {
         public static final String DATABASE_NAME = "arcbot";
-        public static final int NEW_DB_VERSION = 3;
+        public static final int NEW_DB_VERSION = 4;
         public static final int START_DB_VERSION = 2;
     }
 
