@@ -55,20 +55,20 @@ public class GameCountViewModel extends ViewModel {
 
     public void setGameCountAdapter(List<GameView> screens) {
         List<GameModel> gameModels = new ArrayList<>();
-        for (GameView gameView: screens){
+        for (GameView gameView : screens) {
             GameCount gameCount = gameView.gameCount;
             GameModel gameModel = new GameModel();
-            gameModel.screenId = (gameView.screen!=null?gameView.screen.getId():0);
+            gameModel.screenId = (gameView.screen != null ? gameView.screen.getId() : 0);
             gameModel.screenLable = gameView.screen.getScreenLable();
-            gameModel.GameCount = String.valueOf(gameCount!=null?gameCount.getGamesCount():0);
+            gameModel.GameCount = String.valueOf(gameCount != null ? gameCount.getGamesCount() : 0);
             gameModel.payableAmount = String.valueOf(gameView.payableAmount);
-            gameModel.GameName = gameView.gameType!=null?gameView.gameType.getGameName():"No Active Game";
-            gameModel.players = gameCount!=null?gameCount.getPlayerNames():"Idle";
-            gameModel.startTime = gameCount!=null?gameCount.getStartTime():"";
+            gameModel.GameName = gameView.gameType != null ? gameView.gameType.getGameName() : "No Active Game";
+            gameModel.players = gameCount != null ? gameCount.getPlayerNames() : "Idle";
+            gameModel.startTime = gameCount != null ? gameCount.getStartTime() : "";
             gameModel.isScreenActive = gameView.screen.isActive();
             gameModel.currentTime = getCurrentTime();
-            gameModel.gameId = gameCount!=null?gameCount.getGameId():0;
-            gameModel.hashKey = ("#"+getCurrentTime()+"#"+gameModel.GameName+gameModel);
+            gameModel.gameId = gameCount != null ? gameCount.getGameId() : 0;
+            gameModel.hashKey = ("#" + getCurrentTime() + "#" + gameModel.GameName + gameModel);
             gameModels.add(gameModel);
 
         }
@@ -83,18 +83,20 @@ public class GameCountViewModel extends ViewModel {
         this.gameCountAdapter.notifyDataSetChanged();
     }
 
-    public GameRepository gameRepository(){return gameRepository;}
+    public GameRepository gameRepository() {
+        return gameRepository;
+    }
 
     public void onGameItemClick(GameModel gameModel) {
-        selectedGameScreen =gameModel;
+        selectedGameScreen = gameModel;
         gameCount = Integer.parseInt(selectedGameScreen.GameCount);
         gameCountObservable.set(selectedGameScreen.GameCount);
         clickEventsLiveData.setValue(Constants.Events.GAME_ITEM_CLICK);
         setHideGameInputs();
     }
 
-    public void onGameTypeClick(GameType gameType){
-       gameRepository.updateSelectedGame(gameType);
+    public void onGameTypeClick(GameType gameType) {
+        gameRepository.updateSelectedGame(gameType);
         selectedGameType = gameType;
     }
 
@@ -110,8 +112,8 @@ public class GameCountViewModel extends ViewModel {
         gameCount++;
         gameCountObservable.set(String.valueOf(gameCount));
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
-        if (obervableButtonText.get().equals(Constants.Events.END_GAME)){
-            gameRepository.updateGameCountValue(selectedGameScreen.gameId,Integer.parseInt(gameCountObservable.get()));
+        if (obervableButtonText.get().equals(Constants.Events.END_GAME)) {
+            gameRepository.updateGameCountValue(selectedGameScreen.gameId, Integer.parseInt(gameCountObservable.get()));
         }
     }
 
@@ -119,13 +121,13 @@ public class GameCountViewModel extends ViewModel {
         gameCount++;
         gameCountObservable.set(String.valueOf(gameCount));
         clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
-        if (obervableButtonText.get().equals(Constants.Events.END_GAME)){
-            gameRepository.updateGameCountValue(selectedGameScreen.gameId,Integer.parseInt(gameCountObservable.get()));
+        if (obervableButtonText.get().equals(Constants.Events.END_GAME)) {
+            gameRepository.updateGameCountValue(selectedGameScreen.gameId, Integer.parseInt(gameCountObservable.get()));
         }
     }
 
     public void minusGame() {
-        if (gameCount!=0){
+        if (gameCount != 0) {
             gameCount--;
             gameCountObservable.set(String.valueOf(gameCount));
             clickEventsLiveData.setValue(Constants.Events.MINUS_GAME_COUNT);
@@ -149,34 +151,35 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public void setHideGameInputs() {
-        boolean isGameActive = selectedGameScreen !=null? selectedGameScreen.isScreenActive : false;
+        boolean isGameActive = selectedGameScreen != null ? selectedGameScreen.isScreenActive : false;
         isGameStarted.set(isGameActive);
-        obervableButtonText.set(isGameActive?Constants.Events.END_GAME:Constants.Events.START_GAME);
+        obervableButtonText.set(isGameActive ? Constants.Events.END_GAME : Constants.Events.START_GAME);
     }
 
-    public void startDataSync(){
+    public void startDataSync() {
         clickEventsLiveData.setValue(Constants.Events.SYNC_GAME_DATA);
     }
 
-    public void syncGamesData(){
+    public void syncGamesData() {
         gameRepository.startScreensApiRequest();
     }
 
     public void updateGameData(String player_phone, String players) {
+        int count = Integer.parseInt(gameCountObservable.get());
         GameCount game = new GameCount();
         game.setScreenId(selectedGameScreen.screenId);
-        game.setGamesCount( Integer.parseInt(gameCountObservable.get()));
+        game.setGamesCount(count);
         game.setPlayerPhone(player_phone);
-        game.setPlayerNames(players+" Vs "+player_phone);
+        game.setPlayerNames(players + " Vs " + player_phone);
         game.setGameTypeId(selectedGameType.getId());
         game.setStartTime(getCurrentTime());
         game.setHashKey(selectedGameScreen.hashKey);
-        String time = getCurrentTime();
+        game.setGamesBonus(getBonusGames(count));
         gameRepository.updateGameCount(game);
 
     }
 
-    private String getCurrentTime(){
+    private String getCurrentTime() {
         return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
     }
 
@@ -187,22 +190,33 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public long getSelectedGameId() {
-        return selectedGameScreen!=null?selectedGameScreen.gameId:0;
+        return selectedGameScreen != null ? selectedGameScreen.gameId : 0;
     }
 
     public void updateSelectedGame(GameView gameView) {
         GameCount gameCount = gameView.gameCount;
-        selectedGameScreen.screenId = (gameView.screen!=null?gameView.screen.getId():0);
+        selectedGameScreen.screenId = (gameView.screen != null ? gameView.screen.getId() : 0);
         selectedGameScreen.screenLable = gameView.screen.getScreenLable();
-        selectedGameScreen.GameCount = String.valueOf(gameCount!=null?gameCount.getGamesCount():0);
+        selectedGameScreen.GameCount = String.valueOf(gameCount != null ? gameCount.getGamesCount() : 0);
         selectedGameScreen.payableAmount = String.valueOf(gameView.payableAmount);
-        selectedGameScreen.GameName = gameView.gameType!=null?gameView.gameType.getGameName():"No Active Game";
-        selectedGameScreen.players = gameCount!=null?gameCount.getPlayerNames():"Idle";
-        selectedGameScreen.startTime = gameCount!=null?gameCount.getStartTime():"";
+        selectedGameScreen.GameName = gameView.gameType != null ? gameView.gameType.getGameName() : "No Active Game";
+        selectedGameScreen.players = gameCount != null ? gameCount.getPlayerNames() : "Idle";
+        selectedGameScreen.startTime = gameCount != null ? gameCount.getStartTime() : "";
         selectedGameScreen.isScreenActive = gameView.screen.isActive();
         selectedGameScreen.currentTime = getCurrentTime();
-        selectedGameScreen.gameId = gameCount!=null?gameCount.getGameId():0;
-        selectedGameScreen.hashKey = ("#"+getCurrentTime()+"#"+selectedGameScreen.GameName+selectedGameScreen);
+        selectedGameScreen.bonusAmount = String.valueOf(gameView.bonusAmount);
+        selectedGameScreen.gameId = gameCount != null ? gameCount.getGameId() : 0;
+        selectedGameScreen.hashKey = ("#" + getCurrentTime() + "#" + selectedGameScreen.GameName + selectedGameScreen);
 
+    }
+
+    public int getBonusGames(int gamesPlayed) {
+        int bonus = 0;
+        for (int i=1; i<=gamesPlayed;i++){
+            if (i%5==0){
+                bonus+=i==gamesPlayed?0:1;
+            }
+        }
+        return bonus;
     }
 }

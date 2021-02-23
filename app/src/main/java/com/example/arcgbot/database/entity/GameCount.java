@@ -25,6 +25,9 @@ public class GameCount extends BaseObservable {
     @ColumnInfo(name = "games_count")
     private int gamesCount;
 
+    @ColumnInfo(name = "games_bonus_count")
+    private int gamesBonus;
+
     @ColumnInfo(name = "players_name")
     private String playerNames;
 
@@ -130,5 +133,13 @@ public class GameCount extends BaseObservable {
 
     public void setHashKey(String hashKey) {
         this.hashKey = hashKey;
+    }
+
+    public int getGamesBonus() {
+        return gamesBonus;
+    }
+
+    public void setGamesBonus(int gamesBonus) {
+        this.gamesBonus = gamesBonus;
     }
 }

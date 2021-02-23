@@ -209,6 +209,7 @@ public class GameRepository {
         completedGame.setScreenLable(gameModel.screenLable + " - "+ gameModel.players);
         completedGame.setEndTimeSeconds(Utils.getSeconds(gameModel.endTime));
         completedGame.setPayableAmount(Double.parseDouble(gameModel.payableAmount));
+        completedGame.setBonusAmount(Double.parseDouble(gameModel.bonusAmount));
         executorService.submit(() -> {
             int x = gameCountDao.updateCompletedGames(gameModel.gameId);
             Log.e("detachGameFromScreen: ",x +"  deleted" );

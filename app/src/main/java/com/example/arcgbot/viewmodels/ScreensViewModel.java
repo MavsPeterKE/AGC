@@ -42,7 +42,9 @@ public class ScreensViewModel extends ViewModel {
             screenItem.GameCount = String.valueOf(game.getGamesCount());
             screenItem.duration = game.getDuration();
             screenItem.payableAmount = game.getPayableAmount()+"0";
+            screenItem.bonusAmount = game.getBonusAmount()+"0";
             screenItem.screenLable = game.getScreenLable();
+            screenItem.isBonusActive = game.getBonusAmount()>0;
             screenItemList.add(screenItem);
             totalGameCount+=game.getGamesCount();
 

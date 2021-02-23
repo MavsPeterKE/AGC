@@ -9,6 +9,7 @@ public class GameModel {
     public String startTime;
     public String endTime;
     public String payableAmount;
+    public String bonusAmount;
     public String player1;
     public String players;
     public String player2;
