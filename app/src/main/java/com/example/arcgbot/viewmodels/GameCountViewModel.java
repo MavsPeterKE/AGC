@@ -32,7 +32,7 @@ public class GameCountViewModel extends ViewModel {
     private ObservableField<Boolean> isGameStarted = new ObservableField();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     public ObservableField<String> observableButtonText = new ObservableField("Start Game");
-    private GameModel selectedGameScreen;
+    private GameModel selectedGameScreen ;
     private int gameCount;
     private GameRepository gameRepository;
     List<GameType> gameTypeList = new ArrayList<>();
@@ -91,11 +91,11 @@ public class GameCountViewModel extends ViewModel {
 
     public void onGameItemClick(GameModel gameModel,int pos) {
         text.setValue(gameModel.screenLable+"");
-        selectedGameScreen = gameModel;
-        gameCount = Integer.parseInt(selectedGameScreen.GameCount);
-        gameCountObservable.set(selectedGameScreen.GameCount);
-        gameCountBonusObservable.set(String.valueOf(getBonusGames(selectedGameScreen.GameCount)));
+        gameCount = Integer.parseInt(gameModel.GameCount);
+        gameCountObservable.set(gameModel.GameCount);
+        gameCountBonusObservable.set(String.valueOf(getBonusGames(gameModel.GameCount)));
         clickEventsLiveData.setValue(Constants.Events.GAME_ITEM_CLICK);
+        selectedGameScreen = gameModel;
         setHideGameInputs();
     }
 
@@ -155,7 +155,7 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public void setHideGameInputs() {
-        boolean isGameActive = selectedGameScreen != null ? selectedGameScreen.isScreenActive : false;
+        boolean isGameActive =selectedGameScreen != null ?selectedGameScreen.isScreenActive : false;
         isGameStarted.set(isGameActive);
         observableButtonText.set(isGameActive ? Constants.Events.END_GAME : Constants.Events.START_GAME);
     }
@@ -187,29 +187,30 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public void EndGameCount() {
+        updateSelectedGame(gameRepository.getGameViewById(selectedGameScreen.gameId));
         gameRepository.resetActiveScreen(selectedGameScreen.screenId);
-        selectedGameScreen.endTime = getCurrentTime();
+       selectedGameScreen.endTime = getCurrentTime();
         gameRepository.detachGameFromScreen(selectedGameScreen);
     }
 
     public long getSelectedGameId() {
-        return selectedGameScreen != null ? selectedGameScreen.gameId : 0;
+        return selectedGameScreen != null ?selectedGameScreen.gameId : 0;
     }
 
     public void updateSelectedGame(GameView gameView) {
         GameCount gameCount = gameView.gameCount;
-        selectedGameScreen.screenId = (gameView.screen != null ? gameView.screen.getId() : 0);
-        selectedGameScreen.screenLable = gameView.screen.getScreenLable();
-        selectedGameScreen.GameCount = String.valueOf(gameCount != null ? gameCount.getGamesCount() : 0);
-        selectedGameScreen.payableAmount = String.valueOf(gameView.payableAmount);
-        selectedGameScreen.GameName = gameView.gameType != null ? gameView.gameType.getGameName() : "No Active Game";
-        selectedGameScreen.players = gameCount != null ? gameCount.getPlayerNames() : "Idle";
-        selectedGameScreen.startTime = gameCount != null ? gameCount.getStartTime() : "";
-        selectedGameScreen.isScreenActive = gameView.screen.isActive();
-        selectedGameScreen.currentTime = getCurrentTime();
-        selectedGameScreen.bonusAmount = String.valueOf(gameView.bonusAmount);
-        selectedGameScreen.gameId = gameCount != null ? gameCount.getGameId() : 0;
-        selectedGameScreen.hashKey = ("#" + getCurrentTime() + "#" + selectedGameScreen.GameName + selectedGameScreen);
+       selectedGameScreen.screenId = (gameView.screen != null ? gameView.screen.getId() : 0);
+       selectedGameScreen.screenLable = gameView.screen.getScreenLable();
+       selectedGameScreen.GameCount = String.valueOf(gameCount != null ? gameCount.getGamesCount() : 0);
+       selectedGameScreen.payableAmount = String.valueOf(gameView.payableAmount);
+       selectedGameScreen.GameName = gameView.gameType != null ? gameView.gameType.getGameName() : "No Active Game";
+       selectedGameScreen.players = gameCount != null ? gameCount.getPlayerNames() : "Idle";
+       selectedGameScreen.startTime = gameCount != null ? gameCount.getStartTime() : "";
+       selectedGameScreen.isScreenActive = gameView.screen.isActive();
+       selectedGameScreen.currentTime = getCurrentTime();
+       selectedGameScreen.bonusAmount = String.valueOf(gameView.bonusAmount);
+       selectedGameScreen.gameId = gameCount != null ? gameCount.getGameId() : 0;
+       selectedGameScreen.hashKey = ("#" + getCurrentTime() + "#" +selectedGameScreen.GameName + selectedGameScreen);
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.arcgbot.repository;
 
+import android.telecom.Call;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -164,9 +165,6 @@ public class GameRepository {
         return gameDao.getGameTypes();
     }
 
-    public LiveData<GameView> getGamesLiveDataById(long gameId){
-        return screenDao.getGameViewById(gameId);
-    }
 
     public void updateSelectedGame(GameType gameType) {
         executorService.submit(() -> {
@@ -223,7 +221,7 @@ public class GameRepository {
             int x = gameCountDao.updateCompletedGames(gameModel.gameId);
             Log.e("detachGameFromScreen: ",x +"  deleted" );
             long y = completeGameDao.insert(completedGame);
-            Log.e("insert__: ",x +" GCount " +completedGame.getGamesCount());
+            Log.e("ended_game_: ",y +" " +completedGame.getScreenLable() + "Games Count__ "+ completedGame.getGamesCount());
         });
 
     }
@@ -252,6 +250,19 @@ public class GameRepository {
             e.printStackTrace();
         }
         return gameCount;
+    }
+
+    public GameView getGameViewById(long gameId) {
+        GameView gameView = null;
+        Callable<GameView> gameViewCallable = () -> screenDao.getGameViewById(gameId);
+        Future<GameView> future = executorService.submit(gameViewCallable);
+        try {
+            gameView = future.get();
+        } catch (ExecutionException e) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return gameView;
     }
 }
 

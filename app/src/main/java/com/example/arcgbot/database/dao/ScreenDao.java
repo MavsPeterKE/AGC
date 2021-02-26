@@ -28,5 +28,5 @@ public abstract class ScreenDao extends BaseDao<Screen> {
 
     @Transaction
     @Query("SELECT * FROM gameview WHERE game_id=:gameId")
-    public abstract LiveData<GameView> getGameViewById(long gameId);
+    public abstract GameView getGameViewById(long gameId);
 }
