@@ -9,6 +9,7 @@ public class Constants {
 
     public static final class Events{
         public static final String GAME_ITEM_CLICK = "game_item";
+        public static final String SCREEN_ITEM_CLICK = "game_item";
         public static final String BOTTOM_SHEET = "close_sheet";
         public static final String MINUS_GAME_COUNT = "minus";
         public static final String ADD_GAME_COUNT = "add";
@@ -22,7 +23,7 @@ public class Constants {
 
     public static final class RoomConfigs {
         public static final String DATABASE_NAME = "arcbot";
-        public static final int NEW_DB_VERSION = 6;
+        public static final int NEW_DB_VERSION = 7;
         public static final int START_DB_VERSION = 2;
     }
 

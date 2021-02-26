@@ -28,6 +28,10 @@ public class CompletedGame extends BaseObservable {
     @ColumnInfo(name = "payable_amount")
     private double payableAmount;
 
+
+    @ColumnInfo(name = "player_phone")
+    private String playerPhone;
+
     @ColumnInfo(name = "bonus_amount")
     private double bonusAmount;
 
@@ -85,5 +89,13 @@ public class CompletedGame extends BaseObservable {
 
     public void setBonusAmount(double bonusAmount) {
         this.bonusAmount = bonusAmount;
+    }
+
+    public String getPlayerPhone() {
+        return playerPhone;
+    }
+
+    public void setPlayerPhone(String playerPhone) {
+        this.playerPhone = playerPhone;
     }
 }

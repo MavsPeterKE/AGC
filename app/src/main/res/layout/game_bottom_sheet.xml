@@ -78,7 +78,7 @@
             app:layout_goneMarginRight="28dp"
             app:srcCompat="@drawable/minus" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+       <!-- <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/editTextTextPersonName2"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -98,7 +98,68 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />-->
+
+        <LinearLayout
+            android:id="@+id/editTextTextPersonName2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/edittext_drawable"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edPlayer1"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1.4"
+                android:background="@drawable/edittext_drawable"
+                android:ems="10"
+                android:hint="Player 1"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColor="#424242"
+                android:textColorHint="#A9A9A9"
+                 />
+
+            <TextView
+                android:id="@+id/textView31"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.2"
+                android:text="VS"
+                android:textColor="@color/light_black"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edPlayer2"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1.4"
+                android:background="@drawable/edittext_drawable"
+                android:ems="10"
+                android:hint="Player 2"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColor="#424242"
+                android:textColorHint="#A9A9A9"
+                />
+
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/button"
@@ -132,8 +193,8 @@
             android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
             android:ems="10"
             android:textColor="#424242"
-            android:hint="Player 2"
-            android:inputType="textPersonName"
+            android:hint="0701234508"
+            android:inputType="phone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
 
@@ -175,6 +236,8 @@
             android:visibility="@{model.isGameStarted?View.VISIBLE:View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="@+id/imageView5"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

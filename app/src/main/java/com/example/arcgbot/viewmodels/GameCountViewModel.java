@@ -66,6 +66,7 @@ public class GameCountViewModel extends ViewModel {
             gameModel.bonusAmount = String.valueOf(gameView.bonusAmount);
             gameModel.GameName = gameView.gameType != null ? gameView.gameType.getGameName() : "No Active Game";
             gameModel.players = gameCount != null ? gameCount.getPlayerNames() : "Idle";
+            gameModel.playerPhone = gameCount != null ? gameCount.getPlayerPhone() : "";
             gameModel.startTime = gameCount != null ? gameCount.getStartTime() : "";
             gameModel.isScreenActive = gameView.screen.isActive();
             gameModel.currentTime = getCurrentTime();
@@ -173,7 +174,7 @@ public class GameCountViewModel extends ViewModel {
         game.setScreenId(selectedGameScreen.screenId);
         game.setGamesCount(Integer.parseInt(gameCountObservable.get()));
         game.setPlayerPhone(player_phone);
-        game.setPlayerNames(players + " Vs " + player_phone);
+        game.setPlayerNames(players);
         game.setGameTypeId(selectedGameType.getId());
         game.setStartTime(getCurrentTime());
         game.setHashKey(selectedGameScreen.hashKey);
@@ -205,6 +206,7 @@ public class GameCountViewModel extends ViewModel {
        selectedGameScreen.payableAmount = String.valueOf(gameView.payableAmount);
        selectedGameScreen.GameName = gameView.gameType != null ? gameView.gameType.getGameName() : "No Active Game";
        selectedGameScreen.players = gameCount != null ? gameCount.getPlayerNames() : "Idle";
+       selectedGameScreen.phoneNumber = gameCount != null ? gameCount.getPlayerPhone() : "";
        selectedGameScreen.startTime = gameCount != null ? gameCount.getStartTime() : "";
        selectedGameScreen.isScreenActive = gameView.screen.isActive();
        selectedGameScreen.currentTime = getCurrentTime();

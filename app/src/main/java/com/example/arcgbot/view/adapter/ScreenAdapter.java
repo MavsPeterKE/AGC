@@ -1,6 +1,8 @@
 package com.example.arcgbot.view.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
@@ -10,6 +12,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arcgbot.BR;
+import com.example.arcgbot.R;
 import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.viewmodels.ScreensViewModel;
 
@@ -70,6 +73,7 @@ public class ScreenAdapter extends RecyclerView.Adapter<ScreenAdapter.GenericVie
             binding.setVariable(BR.screenviewmodel, viewModel);
             binding.setVariable(BR.screen, screenItemList.get(position));
             binding.executePendingBindings();
+            binding.getRoot().findViewById(R.id.layout_main).setOnClickListener(view -> viewModel.onScreenItemClick(screenItemList.get(position)));
         }
 
     }

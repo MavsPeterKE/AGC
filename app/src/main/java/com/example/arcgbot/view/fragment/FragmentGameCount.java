@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
-import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.databinding.FragmentGameCountBinding;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
@@ -33,8 +32,10 @@ public class FragmentGameCount extends DaggerFragment {
     private FragmentGameCountBinding fragmentGameCountBinding;
     private BottomSheetBehavior sheetBehavior;
     private String player_phone;
-    private String players;
-    private EditText edPlayersInput;
+    private String player1;
+    private String player2;
+    private EditText edPlayer1;
+    private EditText edPlayer2;
     private EditText edPlayerPhone;
 
     public static FragmentGameCount newInstance() {
@@ -94,11 +95,6 @@ public class FragmentGameCount extends DaggerFragment {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             clearInputs();
-           /* mViewModel.gameRepository().getGamesLiveDataById(mViewModel.getSelectedGameId()).observe(getViewLifecycleOwner(), gameView -> {
-                if (gameView != null) {
-                    mViewModel.updateSelectedGame(gameView);
-                }
-            });*/
         } else {
             mViewModel.gameRepository().resetSelected();
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -133,7 +129,8 @@ public class FragmentGameCount extends DaggerFragment {
             }
         });
         edPlayerPhone = fragmentGameCountBinding.bottomSheet.editTextPhone;
-        edPlayersInput = fragmentGameCountBinding.bottomSheet.editTextTextPersonName2;
+        edPlayer1 = fragmentGameCountBinding.bottomSheet.edPlayer1;
+        edPlayer2 = fragmentGameCountBinding.bottomSheet.edPlayer2;
 
 
     }
@@ -154,7 +151,7 @@ public class FragmentGameCount extends DaggerFragment {
                         showGameBottomSheetAction();
                     } else {
                         if (isInputsValid()) {
-                            mViewModel.updateGameData(player_phone, players);
+                            mViewModel.updateGameData(player_phone, player1 +" Vs " +player2);
                             showGameBottomSheetAction();
                         }
                     }
@@ -166,9 +163,13 @@ public class FragmentGameCount extends DaggerFragment {
 
     private boolean isInputsValid() {
         player_phone = edPlayerPhone.getText().toString();
-        players = edPlayersInput.getText().toString();
-        if (players.isEmpty() || players.equals("")) {
-            edPlayersInput.setError("Required");
+        player1 = edPlayer1.getText().toString();
+        player2 = edPlayer2.getText().toString();
+        if (player1.isEmpty() || player1.equals("")) {
+            edPlayer1.setError("Required");
+            return false;
+        } else if (player2.isEmpty() || player2.equals("")) {
+            edPlayer1.setError("Required");
             return false;
         } else if (player_phone.isEmpty() || player_phone.equals("")) {
             edPlayerPhone.setError("Required");
@@ -178,7 +179,7 @@ public class FragmentGameCount extends DaggerFragment {
             return false;
         } else {
             edPlayerPhone.setError(null);
-            edPlayersInput.setError(null);
+            edPlayer1.setError(null);
             return true;
         }
 
@@ -186,6 +187,7 @@ public class FragmentGameCount extends DaggerFragment {
 
     private void clearInputs(){
         edPlayerPhone.setText("");
-        edPlayersInput.setText("");
+        edPlayer1.setText("");
+        edPlayer2.setText("");
     }
 }

@@ -1,15 +1,15 @@
 package com.example.arcgbot.viewmodels;
 
+import android.util.Log;
+
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.CompletedGame;
-import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.repository.GameRepository;
-import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.view.adapter.ScreenAdapter;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 public class ScreensViewModel extends ViewModel {
     private ScreenAdapter screenAdapter;
-    private MutableLiveData<String> gameItemClickLiveData = new MutableLiveData();
+    private MutableLiveData<ScreenItem> selectedScreenItem = new MutableLiveData();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     public ObservableField<String> gameCount = new ObservableField("O Games");
     public GameRepository gameRepository;
@@ -43,6 +43,7 @@ public class ScreensViewModel extends ViewModel {
             screenItem.duration = game.getDuration();
             screenItem.payableAmount = game.getPayableAmount()+"0";
             screenItem.bonusAmount = game.getBonusAmount()+"0";
+            screenItem.phoneNumber = game.getPlayerPhone();
             screenItem.screenLable = game.getScreenLable();
             screenItem.isBonusActive = game.getBonusAmount()>0;
             screenItemList.add(screenItem);
@@ -55,11 +56,12 @@ public class ScreensViewModel extends ViewModel {
         this.screenAdapter.notifyDataSetChanged();
     }
 
-    public void onGameItemClick(GameModel gameModel){
-        gameItemClickLiveData.setValue(Constants.Events.GAME_ITEM_CLICK);
+    public void onScreenItemClick(ScreenItem screenItem){
+        selectedScreenItem.setValue(screenItem);
+        Log.e("onScreenItemClick:__",screenItem.phoneNumber + "" );
     }
 
-    public MutableLiveData<String> getGameItemClickLiveData() {
-        return gameItemClickLiveData;
+    public MutableLiveData<ScreenItem> getSelectedScreenItem() {
+        return selectedScreenItem;
     }
 }

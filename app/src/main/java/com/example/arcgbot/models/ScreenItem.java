@@ -7,5 +7,6 @@ public class ScreenItem {
     public String duration;
     public String payableAmount;
     public String bonusAmount;
+    public String phoneNumber;
     public boolean isBonusActive;
 }

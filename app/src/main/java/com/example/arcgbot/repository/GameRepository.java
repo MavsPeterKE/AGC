@@ -1,6 +1,5 @@
 package com.example.arcgbot.repository;
 
-import android.telecom.Call;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -27,7 +26,6 @@ import com.example.arcgbot.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -217,6 +215,7 @@ public class GameRepository {
         completedGame.setEndTimeSeconds(Utils.getSeconds(gameModel.endTime));
         completedGame.setPayableAmount(Double.parseDouble(gameModel.payableAmount));
         completedGame.setBonusAmount(Double.parseDouble(gameModel.bonusAmount));
+        completedGame.setPlayerPhone(gameModel.phoneNumber);
         executorService.submit(() -> {
             int x = gameCountDao.updateCompletedGames(gameModel.gameId);
             Log.e("detachGameFromScreen: ",x +"  deleted" );

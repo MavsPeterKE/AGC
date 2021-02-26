@@ -10,9 +10,9 @@ public class GameModel {
     public String endTime;
     public String payableAmount;
     public String bonusAmount;
-    public String player1;
+    public String playerPhone;
     public String players;
-    public String player2;
+    public String phoneNumber;
     public String playTime;
     public String currentTime;
     public boolean isScreenActive;
