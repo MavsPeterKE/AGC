@@ -24,4 +24,7 @@ public abstract class GameDao extends BaseDao<GameType> {
 
     @Query("UPDATE game_types_table SET isSelected=0")
     public abstract void deselectGames();
+
+    @Query("UPDATE game_types_table SET isSelected=0")
+    public abstract void resetSelected();
 }

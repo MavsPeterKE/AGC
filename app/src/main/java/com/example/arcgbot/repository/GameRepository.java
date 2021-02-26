@@ -177,6 +177,15 @@ public class GameRepository {
         });
     }
 
+    public void resetSelected(){
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                gameDao.resetSelected();
+            }
+        });
+    }
+
     public void updateGameCount(GameCount gameCount) {
         if (gameCount.getGamesCount() == 0){
             gameCount.setGamesCount(1);

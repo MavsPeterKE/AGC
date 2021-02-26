@@ -4,10 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 
-@Entity(tableName = "game_count_table")
+@Entity(tableName = "game_count_table" , indices ={@Index(value = {"screen_id"}, unique = true)})
 public class GameCount extends BaseObservable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "game_id")

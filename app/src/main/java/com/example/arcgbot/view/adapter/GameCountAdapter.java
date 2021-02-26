@@ -70,6 +70,7 @@ public class GameCountAdapter extends RecyclerView.Adapter<GameCountAdapter.Gene
         void bind(GameCountViewModel viewModel, Integer position) {
             binding.setVariable(BR.model, viewModel);
             binding.setVariable(BR.gameCountModel, gameCountList.get(position));
+            binding.setVariable(BR.position, position);
             binding.executePendingBindings();
         }
 

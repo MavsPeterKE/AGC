@@ -36,6 +36,7 @@ public class GameCountViewModel extends ViewModel {
     private int gameCount;
     private GameRepository gameRepository;
     List<GameType> gameTypeList = new ArrayList<>();
+    public MutableLiveData<String> text = new MutableLiveData<>();
     public GameType selectedGameType;
 
     @Inject
@@ -62,6 +63,7 @@ public class GameCountViewModel extends ViewModel {
             gameModel.screenLable = gameView.screen.getScreenLable();
             gameModel.GameCount = String.valueOf(gameCount != null ? gameCount.getGamesCount() : 0);
             gameModel.payableAmount = String.valueOf(gameView.payableAmount);
+            gameModel.bonusAmount = String.valueOf(gameView.bonusAmount);
             gameModel.GameName = gameView.gameType != null ? gameView.gameType.getGameName() : "No Active Game";
             gameModel.players = gameCount != null ? gameCount.getPlayerNames() : "Idle";
             gameModel.startTime = gameCount != null ? gameCount.getStartTime() : "";
@@ -87,7 +89,8 @@ public class GameCountViewModel extends ViewModel {
         return gameRepository;
     }
 
-    public void onGameItemClick(GameModel gameModel) {
+    public void onGameItemClick(GameModel gameModel,int pos) {
+        text.setValue(gameModel.screenLable+"");
         selectedGameScreen = gameModel;
         gameCount = Integer.parseInt(selectedGameScreen.GameCount);
         gameCountObservable.set(selectedGameScreen.GameCount);
@@ -97,8 +100,9 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public void onGameTypeClick(GameType gameType) {
-        gameRepository.updateSelectedGame(gameType);
         selectedGameType = gameType;
+        gameRepository.updateSelectedGame(gameType);
+
     }
 
     public GameModel getSelectedScreen() {

@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.databinding.FragmentGameCountBinding;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
@@ -92,12 +93,14 @@ public class FragmentGameCount extends DaggerFragment {
     private void showGameBottomSheetAction() {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            mViewModel.gameRepository().getGamesLiveDataById(mViewModel.getSelectedGameId()).observe(getViewLifecycleOwner(), gameView -> {
+            clearInputs();
+           /* mViewModel.gameRepository().getGamesLiveDataById(mViewModel.getSelectedGameId()).observe(getViewLifecycleOwner(), gameView -> {
                 if (gameView != null) {
                     mViewModel.updateSelectedGame(gameView);
                 }
-            });
+            });*/
         } else {
+            mViewModel.gameRepository().resetSelected();
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
     }
@@ -181,8 +184,8 @@ public class FragmentGameCount extends DaggerFragment {
 
     }
 
-    private void setViews() {
-        mViewModel.setHideGameInputs();
-
+    private void clearInputs(){
+        edPlayerPhone.setText("");
+        edPlayersInput.setText("");
     }
 }
