@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
             android:text="@{screen.duration}"
+            android:textColor="@color/text_black"
             app:layout_constraintStart_toStartOf="@+id/textView25"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="11am - 12 am" />
@@ -96,6 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="29dp"
             android:layout_marginLeft="29dp"
+            android:textColor="@color/text_black"
             android:layout_marginTop="18dp"
             android:text="@{screen.screenLable}"
             app:layout_constraintStart_toStartOf="parent"
