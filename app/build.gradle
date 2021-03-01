@@ -23,18 +23,8 @@ android {
         enabled = true
     }
 
-    signingConfigs {
-        releaseSigningConfig {
-            storeFile rootProject.file("app/arcgbot.keystore")
-            storePassword System.getProperty("APPCENTER_KEYSTORE_PASSWORD")
-            keyAlias System.getProperty("APPCENTER_KEY_ALIAS")
-            keyPassword System.getProperty("APPCENTER_KEY_PASSWORD")
-        }
-    }
-
     buildTypes {
         release {
-            signingConfig signingConfigs.releaseSigningConfig
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
