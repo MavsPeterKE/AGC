@@ -89,6 +89,8 @@ public class FragmentEOD extends DaggerFragment {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*Arcade Gaming EOD*");
         stringBuilder.append("\n");
+        stringBuilder.append(Utils.getTodayDate(" "+Constants.GENERIC_DATE_TIME_FORMAT));
+        stringBuilder.append("\n");
         stringBuilder.append("*Games Played:* " + fragmentEodBinding.tvGameCount.getText().toString().trim());
         stringBuilder.append("\n");
         stringBuilder.append("*Total Revenue:* " + fragmentEodBinding.tvGameRevenue.getText().toString().trim());

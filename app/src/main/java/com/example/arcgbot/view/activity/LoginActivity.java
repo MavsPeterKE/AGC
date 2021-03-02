@@ -49,7 +49,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
 
     private void init() {
         if (Prefs.getBoolean(Constants.PrefsKeys.LOGIN_SUCCESS)){
-            if (Prefs.getString(Constants.PrefsKeys.CURRENT_DATE).equals(Utils.getTodayDate())){
+            if (Prefs.getString(Constants.PrefsKeys.CURRENT_DATE).equals(Utils.getTodayDate(Constants.DATE_FORMAT))){
                 goToGameCountHome();
             }else {
                 setUpLogin();
@@ -120,7 +120,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
                 if (loginModel.message.equals(Constants.SUCCESS)) {
                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     Prefs.putBoolean(Constants.PrefsKeys.LOGIN_SUCCESS,true);
-                    Prefs.putString(Constants.PrefsKeys.CURRENT_DATE, Utils.getTodayDate());
+                    Prefs.putString(Constants.PrefsKeys.CURRENT_DATE, Utils.getTodayDate(Constants.DATE_FORMAT));
                     goToGameCountHome();
                 } else {
                     String title = loginModel.message.contains("resolve host") ? "Connection Error" :

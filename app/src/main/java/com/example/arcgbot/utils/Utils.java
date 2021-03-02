@@ -95,9 +95,9 @@ public class Utils {
         return Pattern.compile(regexPattern).matcher(textToMatch);
     }
 
-    public static String getTodayDate() {
+    public static String getTodayDate(String format) {
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(c);
     }
 
