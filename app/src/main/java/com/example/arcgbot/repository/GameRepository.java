@@ -50,6 +50,8 @@ public class GameRepository {
     private ScreenDao screenDao;
     private GameDao gameDao;
     private GameCountDao gameCountDao;
+
+
     private CompleteGameDao completeGameDao;
 
     @Inject
