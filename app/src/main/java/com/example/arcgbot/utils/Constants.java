@@ -2,7 +2,7 @@ package com.example.arcgbot.utils;
 
 public class Constants {
 
-    public static final String BASE_URL   = "https://bd3445f3b2b0.ngrok.io";
+    public static final String BASE_URL   = "https://44bdc8ead161.ngrok.io";
     public static final String SUCCESS = "success";
     public static final String  GENERIC_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String  DATE_FORMAT = "yyyy-MM-dd";
