@@ -11,6 +11,7 @@
     <string name="title_bt_login">login</string>
     <string name="title_home">Game Count</string>
     <string name="title_screen">Screens</string>
+    <string name="title_gamers">Gamers</string>
     <string name="title_eod">End of Day</string>
     <string name="game_count">Game Count</string>
     <string name="btn_save">Start Game</string>

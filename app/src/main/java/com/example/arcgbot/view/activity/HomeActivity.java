@@ -41,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationBar.addTab(gameCountItem);
         BottomBarItem screenItem = new BottomBarItem(R.drawable.screen_icon, R.string.title_screen);
         bottomNavigationBar.addTab(screenItem);
+        BottomBarItem gamersData = new BottomBarItem(R.drawable.games, R.string.title_gamers);
+        bottomNavigationBar.addTab(gamersData);
         BottomBarItem eodItem = new BottomBarItem(R.drawable.report, R.string.title_eod);
         bottomNavigationBar.addTab(eodItem);
 
@@ -57,10 +59,16 @@ public class HomeActivity extends AppCompatActivity {
                     startScreens();
                     break;
                 case 2:
+                    startGamersScreen();
+                    break;
+                case 3:
                     startEODFragment();
                     break;
             }
         });
+    }
+
+    private void startGamersScreen() {
     }
 
     private void startEODFragment() {

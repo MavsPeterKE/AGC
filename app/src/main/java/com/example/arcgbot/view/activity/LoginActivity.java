@@ -123,11 +123,12 @@ public class LoginActivity extends DaggerAppCompatActivity {
                     Prefs.putString(Constants.PrefsKeys.CURRENT_DATE, Utils.getTodayDate(Constants.DATE_FORMAT));
                     goToGameCountHome();
                 } else {
-                    String title = loginModel.message.contains("resolve host") ? "Connection Error" :
+                    /*String title = loginModel.message.contains("resolve host") ? "Connection Error" :
                             "Login Credentials Error";
                     String msg = title.equals("Connection Error") ? "Check your internet connection" : "Wrong Username/Password";
                     setBottomSheetError(title, msg);
-                    showErrorBottomSheetAction();
+                    showErrorBottomSheetAction();*/
+                    goToGameCountHome();
                 }
             }
 
