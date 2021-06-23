@@ -48,6 +48,11 @@ public class FragmentEOD extends DaggerFragment {
         mViewModel = new ViewModelProvider(this, viewModelFactory).get(EODViewModel.class);
         fragmentEodBinding.setModel(mViewModel);
         fragmentEodBinding.executePendingBindings();
+        observeGameData();
+        return fragmentEodBinding.getRoot();
+    }
+
+    private void observeGameData() {
         mViewModel.repository.getTotalRevenue().observe(getViewLifecycleOwner(), aDouble -> {
             mViewModel.gameRevenue.set(String.valueOf(aDouble != null ? aDouble : 0.00));
         });
@@ -56,8 +61,6 @@ public class FragmentEOD extends DaggerFragment {
         fragmentEodBinding.button2.setOnClickListener(view -> {
             startEndOfDay();
         });
-
-        return fragmentEodBinding.getRoot();
     }
 
 
