@@ -1,5 +1,7 @@
 package com.example.arcgbot.viewmodels;
 
+import android.text.TextUtils;
+
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -12,8 +14,11 @@ import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.view.adapter.GameCountAdapter;
 import com.example.arcgbot.view.adapter.GameTypeAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +27,9 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
+import static com.example.arcgbot.utils.Utils.getTodayDate;
 
 public class GameCountViewModel extends ViewModel {
     private GameCountAdapter gameCountAdapter;
@@ -38,12 +46,19 @@ public class GameCountViewModel extends ViewModel {
     List<GameType> gameTypeList = new ArrayList<>();
     public MutableLiveData<String> text = new MutableLiveData<>();
     public GameType selectedGameType;
+    FirebaseLogs firebaseLogs;
+    private String todayDate;
+    String player_phone;
+    String players;
 
     @Inject
     public GameCountViewModel(GameRepository gameRepository) {
         gameCountAdapter = new GameCountAdapter(R.layout.game_item, this);
         gameTypeAdapter = new GameTypeAdapter(R.layout.game_type_item, this);
         this.gameRepository = gameRepository;
+        firebaseLogs = new FirebaseLogs();
+        todayDate = getTodayDate(DATE_FORMAT);
+
     }
 
     public GameCountAdapter getGameCountAdapter() {
@@ -78,6 +93,7 @@ public class GameCountViewModel extends ViewModel {
         isGamesAvailable.set(!screens.isEmpty());
         this.gameCountAdapter.setGameCountList(gameModels);
         this.gameCountAdapter.notifyDataSetChanged();
+        firebaseLogs.setGameLogList(todayDate+"-all-active-games",screens);
     }
 
     public void setGamesList(List<GameType> gamesList) {
@@ -170,6 +186,13 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public void updateGameData(String player_phone, String players) {
+        GameCount game = createGameCount(player_phone, players);
+        gameRepository.updateGameCount(game);
+       // firebaseLogs.setGameLog(todayDate,selectedGameScreen.screenLable,game);
+    }
+
+    @NotNull
+    private GameCount createGameCount(String player_phone, String players) {
         GameCount game = new GameCount();
         game.setScreenId(selectedGameScreen.screenId);
         game.setGamesCount(Integer.parseInt(gameCountObservable.get()));
@@ -179,8 +202,7 @@ public class GameCountViewModel extends ViewModel {
         game.setStartTime(getCurrentTime());
         game.setHashKey(selectedGameScreen.hashKey);
         game.setGamesBonus(Integer.parseInt(gameCountBonusObservable.get()));
-        gameRepository.updateGameCount(game);
-
+        return game;
     }
 
     private String getCurrentTime() {
@@ -192,6 +214,7 @@ public class GameCountViewModel extends ViewModel {
         gameRepository.resetActiveScreen(selectedGameScreen.screenId);
        selectedGameScreen.endTime = getCurrentTime();
         gameRepository.detachGameFromScreen(selectedGameScreen);
+        //firebaseLogs.setGameLog(todayDate,selectedGameScreen.screenLable,createGameCount(selectedGameScreen.playerPhone,selectedGameScreen.players));
     }
 
     public long getSelectedGameId() {

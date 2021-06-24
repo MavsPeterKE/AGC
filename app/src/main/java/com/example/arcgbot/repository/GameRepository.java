@@ -21,6 +21,7 @@ import com.example.arcgbot.retrofit.responseStructures.GameStructure;
 import com.example.arcgbot.retrofit.responseStructures.LoginStructure;
 import com.example.arcgbot.retrofit.responseStructures.ScreenStructure;
 import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,8 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
+import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
+
 @Singleton
 public class GameRepository {
     private PublishSubject<LoginModel> loginSubject;
@@ -53,6 +56,7 @@ public class GameRepository {
 
 
     private CompleteGameDao completeGameDao;
+    private FirebaseLogs firebaseLogs;
 
     @Inject
     public GameRepository(RetrofitService retrofitService, ScreenDao screenDao, GameDao gameDao,
@@ -64,6 +68,7 @@ public class GameRepository {
         this.gameDao = gameDao;
         this.gameCountDao = gameCountDao;
         this.completeGameDao = completeGameDao;
+        firebaseLogs = new FirebaseLogs();
 
     }
 
@@ -223,6 +228,7 @@ public class GameRepository {
             Log.e("detachGameFromScreen: ",x +"  deleted" );
             long y = completeGameDao.insert(completedGame);
             Log.e("ended_game_: ",y +" " +completedGame.getScreenLable() + "Games Count__ "+ completedGame.getGamesCount());
+            firebaseLogs.setAllGameList(Utils.getTodayDate(DATE_FORMAT),"all-completed-Games",completeGameDao.getAllCompletedGameList());
         });
 
     }

@@ -23,4 +23,7 @@ public abstract class CompleteGameDao extends BaseDao<CompletedGame> {
 
     @Query("DELETE FROM complete_games_table")
     public abstract void clearData();
+
+    @Query("SELECT * FROM complete_games_table ORDER BY end_time_seconds DESC")
+    public abstract List<CompletedGame> getAllCompletedGameList();
 }
