@@ -93,7 +93,12 @@ public class GameCountViewModel extends ViewModel {
         isGamesAvailable.set(!screens.isEmpty());
         this.gameCountAdapter.setGameCountList(gameModels);
         this.gameCountAdapter.notifyDataSetChanged();
-        firebaseLogs.setGameLogList("all-active-games",screens);
+        if (screens!=null){
+            if (!screens.isEmpty()){
+                firebaseLogs.setGameLogList("all-active-games",screens);
+            }
+        }
+
     }
 
     public void setGamesList(List<GameType> gamesList) {

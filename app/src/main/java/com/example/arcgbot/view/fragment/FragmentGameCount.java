@@ -64,9 +64,8 @@ public class FragmentGameCount extends DaggerFragment {
         mViewModel.gameRepository().getScreensLiveData().observe(getViewLifecycleOwner(), screen -> {
             if (!screen.isEmpty()) {
                 fragmentGameCountBinding.noGameData.progressBarSync.setVisibility(View.VISIBLE);
-            }else {
-                mViewModel.setGameCountAdapter(screen);
             }
+            mViewModel.setGameCountAdapter(screen);
 
         });
 
