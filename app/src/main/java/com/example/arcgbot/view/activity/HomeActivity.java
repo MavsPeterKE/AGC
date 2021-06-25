@@ -43,8 +43,8 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationBar.addTab(screenItem);
         BottomBarItem gamersData = new BottomBarItem(R.drawable.games, R.string.title_gamers);
         bottomNavigationBar.addTab(gamersData);
-        BottomBarItem eodItem = new BottomBarItem(R.drawable.report, R.string.title_eod);
-        bottomNavigationBar.addTab(eodItem);
+       /* BottomBarItem eodItem = new BottomBarItem(R.drawable.report, R.string.title_eod);
+        bottomNavigationBar.addTab(eodItem);*/
 
         //Create Default Home View
        startGameCountView();
