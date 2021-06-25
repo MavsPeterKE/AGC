@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -107,6 +108,21 @@ public class Utils {
         int seconds = Integer.parseInt(units[1]); //second element
         int duration = 60 * minutes + seconds;
         return duration;
+    }
+
+    public static Date convertToDate(String dateString,String format) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+            return simpleDateFormat.parse(dateString);
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
     }
 
 

@@ -1,5 +1,7 @@
 package com.example.arcgbot.utils;
 
+import android.text.format.DateFormat;
+
 import com.example.arcgbot.database.entity.CompletedGame;
 import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.views.GameView;
@@ -8,6 +10,7 @@ import com.example.arcgbot.models.GameModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,29 +25,47 @@ public class FirebaseLogs {
     }
 
     public void setGameLog(String date, String screenId, GameCount gameCount) {
-        firebaseDatabaseReference.child("gamelogs")
+        firebaseDatabaseReference
+                .child(Constants.DEFAULT_USER)
+                .child("gamelogs")
                 .child(date)
                 .child(screenId+""+gameCount.getGameId())
                     .setValue(gameCount);
     }
 
-    public void setGameLogList(String date, List<GameView> gameList) {
-        firebaseDatabaseReference.child("gamelogs")
-                .child(date)
+    public void setGameLogList(String tablename, List<GameView> gameList) {
+        firebaseDatabaseReference
+                .child(Constants.DEFAULT_USER)
+                .child("gamelogs")
+                .child(tablename)
                 .setValue(gameList);
     }
 
     public void setAllGameList(String date, String tableName,List<CompletedGame> gameList) {
-        firebaseDatabaseReference.child("gamelogs")
+        Date dataTest = Utils.convertToDate(date,Constants.DATE_FORMAT);
+        String monthString  = (String) DateFormat.format("MMM",  dataTest); // Jun
+        String year         = (String) DateFormat.format("yyyy", dataTest); // 2013
+        String monthNumber  = (String) DateFormat.format("MM",   dataTest); // 06
+        String dayOfTheWeek = (String) DateFormat.format("EEEE", dataTest); // Thursday
+        String day          = (String) DateFormat.format("dd",   dataTest); // 20
+        firebaseDatabaseReference
+                .child(Constants.DEFAULT_USER)
+                .child("gamelogs")
                 .child(tableName)
+                .child(monthString+"_"+year)
                 .child(date)
-                //.child(screenId+""+gameCount.getGameId())
                 .setValue(gameList);
     }
 
     public void setEndDayLog(String date, String tableName, EndDayModel endDayModel) {
-        firebaseDatabaseReference.child("gamelogs")
+        Date dataTest = Utils.convertToDate(date,Constants.DATE_FORMAT);
+        String monthString  = (String) DateFormat.format("MMM",  dataTest); // Jun
+        String year         = (String) DateFormat.format("yyyy", dataTest); // 2013
+        firebaseDatabaseReference
+                .child(Constants.DEFAULT_USER)
+                .child("gamelogs")
                 .child(tableName)
+                .child(monthString+"_"+year)
                 .child(date)
                 .setValue(endDayModel);
     }
