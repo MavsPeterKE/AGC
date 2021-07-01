@@ -7,7 +7,7 @@ public class EndDayModel {
     public String totalSales;
     public String endOfDayTime;
     public String issues;
-    public Date date;
+    public long date;
     public double happyHourAmount;
     public double moviesAmount;
     public double printingSales;

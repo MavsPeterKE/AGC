@@ -107,6 +107,7 @@ public class FragmentEOD extends DaggerFragment {
         stringBuilder.append("\n");
         stringBuilder.append(issues);
 
+
         //Added
         String happyHour = fragmentEodBinding.edHappyHour.getText().toString().trim();
         String moviesAmount = fragmentEodBinding.edMovies.getText().toString().trim();
@@ -134,6 +135,7 @@ public class FragmentEOD extends DaggerFragment {
         issuesString.append("\n");
         issuesString.append("\n");
         issuesString.append("Business Issue");
+        issuesString.append("\n");
         issuesString.append(issues);
 
         EndDayModel endDayModel = new EndDayModel();
@@ -144,7 +146,7 @@ public class FragmentEOD extends DaggerFragment {
         endDayModel.printingSales = normalGamingSalesAmount;
         endDayModel.normalGamingRateSales = printingSaleAmount;
         endDayModel.issues = issuesString.toString();
-        endDayModel.date = new Date();
+        endDayModel.date = new Date().getTime();
         endDayModel.totalGamesPlayed = fragmentEodBinding.tvGameCount.getText().toString().trim();
         endDayModel.totalSales = totals +"";
 
