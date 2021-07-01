@@ -25,6 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 
 import javax.inject.Inject;
@@ -105,11 +106,47 @@ public class FragmentEOD extends DaggerFragment {
         stringBuilder.append("*Business Issue:* ");
         stringBuilder.append("\n");
         stringBuilder.append(issues);
+
+        //Added
+        String happyHour = fragmentEodBinding.edHappyHour.getText().toString().trim();
+        String moviesAmount = fragmentEodBinding.edMovies.getText().toString().trim();
+        String printingAmount = fragmentEodBinding.edPrintingAmount.getText().toString().trim();
+        String otherAmount = fragmentEodBinding.edOtherAmount.getText().toString().trim();
+        String normalGamingSalesRate = fragmentEodBinding.tvGameRevenue.getText().toString().trim().substring(5);
+        double happyHourSale = !happyHour.isEmpty()?Double.parseDouble(happyHour):0.00;
+        double moviesSaleAmount = !moviesAmount.isEmpty()?Double.parseDouble(moviesAmount):0.00;
+        double printingSaleAmount = !printingAmount.isEmpty()?Double.parseDouble(printingAmount):0.00;
+        double otherSaleAmount =  !otherAmount.isEmpty()?Double.parseDouble(otherAmount):0.00;
+        double normalGamingSalesAmount = !normalGamingSalesRate.isEmpty()?Double.parseDouble(normalGamingSalesRate):0.00;
+        double totals = happyHourSale+moviesSaleAmount+printingSaleAmount+otherSaleAmount+normalGamingSalesAmount;
+
+        //Format Issues;
+        StringBuilder issuesString = new StringBuilder();
+        issuesString.append("Happy Hour Gaming Sales: "+happyHour);
+        issuesString.append("\n");
+        issuesString.append("Normal Rate Gaming Sales: "+normalGamingSalesAmount);
+        issuesString.append("\n");
+        issuesString.append("Movies  Sales: "+moviesAmount);
+        issuesString.append("\n");
+        issuesString.append("Printing  Sales: "+printingAmount);
+        issuesString.append("\n");
+        issuesString.append("Others  Sales: "+otherAmount);
+        issuesString.append("\n");
+        issuesString.append("\n");
+        issuesString.append("Business Issue");
+        issuesString.append(issues);
+
         EndDayModel endDayModel = new EndDayModel();
         endDayModel.endOfDayTime = time;
-        endDayModel.issues = issues;
+        endDayModel.happyHourAmount = happyHourSale;
+        endDayModel.moviesAmount = moviesSaleAmount;
+        endDayModel.otherSales = otherSaleAmount;
+        endDayModel.printingSales = normalGamingSalesAmount;
+        endDayModel.normalGamingRateSales = printingSaleAmount;
+        endDayModel.issues = issuesString.toString();
+        endDayModel.date = new Date();
         endDayModel.totalGamesPlayed = fragmentEodBinding.tvGameCount.getText().toString().trim();
-        endDayModel.totalSales = fragmentEodBinding.tvGameRevenue.getText().toString().trim();
+        endDayModel.totalSales = totals +"";
 
         firebaseLogs.setEndDayLog(Utils.getTodayDate(Constants.DATE_FORMAT),"-all-end-days",endDayModel);
         return stringBuilder;
