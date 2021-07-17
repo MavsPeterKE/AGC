@@ -127,7 +127,7 @@
                 android:inputType="textPersonName"
                 android:padding="10dp"
                 android:textColor="@color/text_black"
-                android:textColorHint="#A9A9A9"
+                android:textColorHint="@color/hint_grey"
                  />
 
             <TextView
@@ -154,8 +154,8 @@
                 android:hint="Player 2"
                 android:inputType="textPersonName"
                 android:padding="10dp"
-                android:textColor="#424242"
-                android:textColorHint="#A9A9A9"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/hint_grey"
                 />
 
 
@@ -189,7 +189,7 @@
             android:background="@drawable/edittext_drawable"
             android:padding="10dp"
             android:layout_marginRight="16dp"
-            android:textColorHint="#A9A9A9"
+            android:textColorHint="@color/hint_grey"
             android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
             android:ems="10"
             android:textColor="@color/text_black"

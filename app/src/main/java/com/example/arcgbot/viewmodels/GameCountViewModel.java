@@ -53,12 +53,16 @@ public class GameCountViewModel extends ViewModel {
 
     @Inject
     public GameCountViewModel(GameRepository gameRepository) {
-        gameCountAdapter = new GameCountAdapter(R.layout.game_item, this);
+        gameCountAdapter = new GameCountAdapter(R.layout.game_item_revamp, this);
         gameTypeAdapter = new GameTypeAdapter(R.layout.game_type_item, this);
         this.gameRepository = gameRepository;
         firebaseLogs = new FirebaseLogs();
         todayDate = getTodayDate(DATE_FORMAT);
 
+    }
+
+    public void onSearchClicked(){
+        clickEventsLiveData.setValue(Constants.Events.SEARCH_GAME);
     }
 
     public GameCountAdapter getGameCountAdapter() {
@@ -177,9 +181,14 @@ public class GameCountViewModel extends ViewModel {
     }
 
     public void setHideGameInputs() {
-        boolean isGameActive =selectedGameScreen != null ?selectedGameScreen.isScreenActive : false;
-        isGameStarted.set(isGameActive);
-        observableButtonText.set(isGameActive ? Constants.Events.END_GAME : Constants.Events.START_GAME);
+       /* if (selectedGameScreen!=null){
+            if (!selectedGameScreen.GameName.contains("No Active")){*/
+                boolean isGameActive =selectedGameScreen != null ?selectedGameScreen.isScreenActive : false;
+                isGameStarted.set(isGameActive);
+                observableButtonText.set(isGameActive ? Constants.Events.END_GAME : Constants.Events.START_GAME);
+      /*      }
+        }*/
+
     }
 
     public void startDataSync() {

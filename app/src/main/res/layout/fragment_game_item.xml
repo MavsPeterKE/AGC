@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="model"
+            type="com.example.arcgbot.viewmodels.GameItemViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/editTextTextPersonName2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edittext_drawable"
+            android:orientation="horizontal"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            android:weightSum="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView11">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edPlayer1Name"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_drawable"
+                android:ems="10"
+                android:hint="Player 1 Name"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/hint_grey" />
+
+            <View
+                android:id="@+id/textView31"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.1"
+                android:background="@color/light_grey" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edPlayer1Phone"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1.4"
+                android:background="@drawable/edittext_drawable"
+                android:ems="10"
+                android:hint="0711223344"
+                android:inputType="number"
+                android:padding="10dp"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/hint_grey" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/player2layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/edittext_drawable"
+            android:orientation="horizontal"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            android:weightSum="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edPlayer2Name"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_drawable"
+                android:ems="10"
+                android:hint="Player 2 Name"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/hint_grey" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.1"
+                android:background="@color/light_grey" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edPlayer2Phone"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_drawable"
+                android:ems="10"
+                android:hint="0711223344"
+                android:inputType="number"
+                android:padding="10dp"
+                android:textColor="@color/text_black"
+                android:textColorHint="@color/hint_grey" />
+
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@+id/player2layout"
+            app:layout_constraintStart_toStartOf="@+id/player2layout"
+            android:background="@drawable/rectangular_border_grey"
+            app:layout_constraintTop_toBottomOf="@+id/player2layout"
+            app:setAdapter="@{model.gameTypeAdapter}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@+id/btStartGame"
+            app:layout_constraintEnd_toEndOf="@+id/spinner"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/spinner"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+        <Button
+            android:id="@+id/btStartGame"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/green"
+            android:onClick="@{() -> model.startGame()}"
+            android:text="Start Game"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="@+id/recyclerView4"
+            tools:text="Start Game" />
+
+        <Button
+            android:id="@+id/btStopGame"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/holo_red_dark"
+            android:onClick="@{() -> model.stopGame()}"
+            android:text="End Game"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/recyclerView4"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/btStartGame"
+            tools:text="Start Game" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_begin="195dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back_black" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

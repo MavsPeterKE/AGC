@@ -17,8 +17,11 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.databinding.FragmentGameCountBinding;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
+import com.example.arcgbot.view.activity.HomeActivity;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -80,7 +83,8 @@ public class FragmentGameCount extends DaggerFragment {
             public void onChanged(String action) {
                 switch (action) {
                     case Constants.Events.GAME_ITEM_CLICK:
-                        showGameBottomSheetAction();
+                        startGameItemFragment();
+                        //showGameBottomSheetAction();
                         break;
                     case Constants.Events.SYNC_GAME_DATA:
                         fragmentGameCountBinding.noGameData.progressBarSync.setVisibility(View.VISIBLE);
@@ -90,6 +94,11 @@ public class FragmentGameCount extends DaggerFragment {
                 }
             }
         });
+    }
+
+    private void startGameItemFragment() {
+        ((HomeActivity) Objects.requireNonNull(getActivity()))
+                .changeFragment(new FragmentGameItem(),FragmentGameItem.class.getSimpleName());
     }
 
     private void showGameBottomSheetAction() {
@@ -156,10 +165,18 @@ public class FragmentGameCount extends DaggerFragment {
                             showGameBottomSheetAction();
                         }
                     }
+                case Constants.Events.SEARCH_GAME:
+                   startSearchFragment();
+                    break;
 
 
             }
         });
+    }
+
+    private void startSearchFragment() {
+        ((HomeActivity) Objects.requireNonNull(getActivity()))
+                .changeFragment(new FragmentSearch(),FragmentSearch.class.getSimpleName());
     }
 
     private boolean isInputsValid() {
