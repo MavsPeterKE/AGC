@@ -32,6 +32,12 @@ public class GameCount extends BaseObservable {
     @ColumnInfo(name = "players_name")
     private String playerNames;
 
+    @ColumnInfo(name = "player_one_id")
+    private String player1Id;
+
+    @ColumnInfo(name = "player_two_id")
+    private String player2Id;
+
     @ColumnInfo(name = "player_phone")
     private String playerPhone;
 
@@ -142,5 +148,21 @@ public class GameCount extends BaseObservable {
 
     public void setGamesBonus(int gamesBonus) {
         this.gamesBonus = gamesBonus;
+    }
+
+    public String getPlayer1Id() {
+        return player1Id;
+    }
+
+    public void setPlayer1Id(String player1Id) {
+        this.player1Id = player1Id;
+    }
+
+    public String getPlayer2Id() {
+        return player2Id;
+    }
+
+    public void setPlayer2Id(String player2Id) {
+        this.player2Id = player2Id;
     }
 }

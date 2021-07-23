@@ -7,10 +7,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.View;
 
 import com.eightbitlab.bottomnavigationbar.BottomBarItem;
 import com.eightbitlab.bottomnavigationbar.BottomNavigationBar;
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.views.GameView;
+import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.models.User;
 import com.example.arcgbot.view.fragment.FragmentEOD;
 import com.example.arcgbot.view.fragment.FragmentGameCount;
@@ -34,6 +37,10 @@ import static com.example.arcgbot.utils.Constants.DEFAULT_USER;
 public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.bottom_bar)
     BottomNavigationBar bottomNavigationBar;
+    public GameView selectedGamingScreen;
+
+    Fragment fragment;
+    FragmentTransaction transaction;
 
 
     @Override
@@ -73,6 +80,14 @@ public class HomeActivity extends AppCompatActivity {
                 // Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+    }
+
+    public void hideBottomNavigation(){
+        bottomNavigationBar.setVisibility(View.GONE);
+    }
+
+    public void showBottomNavigation(){
+        bottomNavigationBar.setVisibility(View.GONE);
     }
 
     private void setBottomNavigation() {
@@ -141,6 +156,20 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.setPrimaryNavigationFragment(fragmentTemp);
         fragmentTransaction.setReorderingAllowed(true);
         fragmentTransaction.commitNowAllowingStateLoss();
+    }
+
+    @Override
+    public void onBackPressed() {
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 0) {
+            finish();
+        } else {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 
 

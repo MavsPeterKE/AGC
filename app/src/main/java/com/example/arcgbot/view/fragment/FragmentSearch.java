@@ -1,9 +1,11 @@
 package com.example.arcgbot.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +38,9 @@ public class FragmentSearch extends DaggerFragment {
         //mViewModel = new ViewModelProvider(this, viewModelFactory).get(GameCountViewModel.class);
         //fragmentGameCountBinding.setModel(mViewModel);
         fragmentGameCountBinding.executePendingBindings();
+        fragmentGameCountBinding.edSearchText.requestFocus();
+       /* imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);*/
         return fragmentGameCountBinding.getRoot();
     }
 }

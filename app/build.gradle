@@ -104,7 +104,7 @@ dependencies {
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
     androidTestImplementation('com.microsoft.appcenter:espresso-test-extension:1.4')
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
-
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.ctrlplusz.anytextview:library:1.2'
 
 }

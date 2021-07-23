@@ -18,6 +18,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:id="@+id/view7"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/rectangular_border_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tvDetailsTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvDetailsTitle" />
+
+        <TextView
+            android:id="@+id/textView38"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:text="Game Count"
+            android:textSize="16sp"
+            android:textColor="@color/holo_red_dark"
+            app:layout_constraintBottom_toBottomOf="@+id/view7"
+            app:layout_constraintStart_toStartOf="@+id/view7"
+            app:layout_constraintTop_toTopOf="@+id/view7"
+            app:layout_constraintVertical_bias="0.585" />
+
+        <ImageView
+            android:id="@+id/imgPlus"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="24dp"
+            android:onClick="@{()->model.addGame()}"
+            app:layout_constraintBottom_toBottomOf="@+id/view7"
+            app:layout_constraintEnd_toEndOf="@+id/view7"
+            app:layout_constraintTop_toTopOf="@+id/view7"
+            app:layout_constraintVertical_bias="0.514"
+            app:srcCompat="@drawable/plus_black" />
+
+        <ImageView
+            android:id="@+id/imgMinus"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="16dp"
+            android:onClick="@{()->model.minusGame()}"
+            app:layout_constraintBottom_toBottomOf="@+id/view7"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/view7"
+            app:srcCompat="@drawable/minus_black" />
+
         <LinearLayout
             android:id="@+id/editTextTextPersonName2"
             android:layout_width="match_parent"
@@ -27,12 +75,12 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/edittext_drawable"
             android:orientation="horizontal"
-            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            android:visibility="@{model.selectedGamingScreen.screen.active?View.INVISIBLE:View.VISIBLE}"
             android:weightSum="3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView11">
+            app:layout_constraintTop_toBottomOf="@+id/view7" >
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edPlayer1Name"
@@ -62,6 +110,7 @@
                 android:background="@drawable/edittext_drawable"
                 android:ems="10"
                 android:hint="0711223344"
+                android:maxLength="10"
                 android:inputType="number"
                 android:padding="10dp"
                 android:textColor="@color/text_black"
@@ -75,8 +124,6 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -88,7 +135,7 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/edittext_drawable"
             android:orientation="horizontal"
-            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            android:visibility="@{model.selectedGamingScreen.screen.active?View.INVISIBLE:View.VISIBLE}"
             android:weightSum="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -123,65 +170,24 @@
                 android:background="@drawable/edittext_drawable"
                 android:ems="10"
                 android:hint="0711223344"
+                android:maxLength="10"
                 android:inputType="number"
                 android:padding="10dp"
                 android:textColor="@color/text_black"
                 android:textColorHint="@color/hint_grey" />
-
-
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rectangular_border_grey"
             app:layout_constraintEnd_toEndOf="@+id/player2layout"
             app:layout_constraintStart_toStartOf="@+id/player2layout"
-            android:background="@drawable/rectangular_border_grey"
             app:layout_constraintTop_toBottomOf="@+id/player2layout"
+            android:visibility="@{model.selectedGamingScreen.screen.active?View.INVISIBLE:View.VISIBLE}"
             app:setAdapter="@{model.gameTypeAdapter}" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView4"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="@{model.isGameStarted?View.INVISIBLE:View.VISIBLE}"
-            app:layout_constraintBottom_toTopOf="@+id/btStartGame"
-            app:layout_constraintEnd_toEndOf="@+id/spinner"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/spinner"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
-
-        <Button
-            android:id="@+id/btStartGame"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/green"
-            android:onClick="@{() -> model.startGame()}"
-            android:text="Start Game"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintStart_toStartOf="@+id/recyclerView4"
-            tools:text="Start Game" />
-
-        <Button
-            android:id="@+id/btStopGame"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/holo_red_dark"
-            android:onClick="@{() -> model.stopGame()}"
-            android:text="End Game"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/recyclerView4"
-            app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toTopOf="@+id/btStartGame"
-            tools:text="Start Game" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
@@ -197,11 +203,229 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{() -> model.onBack()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_back_black" />
+
+        <TextView
+            android:id="@+id/tvDetailsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@{model.gameTitleObservable}"
+            android:fontFamily="@font/press_start_2p"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textFontWeight="300"
+            app:layout_constraintStart_toStartOf="@+id/imageView11"
+            app:layout_constraintTop_toBottomOf="@+id/imageView11" />
+
+
+        <View
+            android:id="@+id/view8"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_corner_game_boarder"
+            app:layout_constraintBottom_toBottomOf="@+id/view7"
+            app:layout_constraintEnd_toStartOf="@+id/imgPlus"
+            app:layout_constraintStart_toEndOf="@+id/imgMinus"
+            app:layout_constraintTop_toTopOf="@+id/view7" />
+
+        <TextView
+            android:id="@+id/tvGameCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@={``+model.gameCountObservable}"
+            android:textSize="18sp"
+            android:textColor="@color/holo_red_dark"
+            app:layout_constraintBottom_toBottomOf="@+id/view8"
+            app:layout_constraintEnd_toEndOf="@+id/view8"
+            app:layout_constraintStart_toStartOf="@+id/view8"
+            app:layout_constraintTop_toTopOf="@+id/view8" />
+
+        <Button
+            android:id="@+id/btStartGame"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="20dp"
+            android:onClick="@{() -> model.stopGame()}"
+            android:clickable="@{model.selectedGamingScreen.screen.active?true:false}"
+            android:focusable="@{model.selectedGamingScreen.screen.active?true:false}"
+            android:backgroundTint="@{model.selectedGamingScreen.screen.active?@color/holo_red_dark:@color/grey}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="End Game"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="@+id/spinner"
+            tools:text="Start Game" />
+
+        <Button
+            android:id="@+id/btStopGame"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@{model.selectedGamingScreen.screen.active?@color/grey:@color/green}"
+            android:onClick="@{() -> model.startGame()}"
+            android:text="Start Game"
+            android:focusable="@{model.selectedGamingScreen.screen.active?false:true}"
+            android:clickable="@{model.selectedGamingScreen.screen.active?false:true}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/spinner"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/btStartGame"
+            tools:text="Start Game" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.selectedGamingScreen.screen.active?View.VISIBLE:View.GONE}"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/view8">
+
+            <View
+                android:id="@+id/view10"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_margin="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/rectangular_border_circular"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_user_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/white"
+                android:text=" Summary  "
+                android:textColor="@color/text_black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView41"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Players : "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/view10"
+                app:layout_constraintTop_toTopOf="@+id/view10" />
+
+            <TextView
+                android:id="@+id/textView42"
+                android:layout_width="220dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:text="@{model.selectedGamingScreen.gameCount.playerNames+` - Started at: `+ model.selectedGamingScreen.gameCount.startTime}"
+                android:textColor="@color/text_black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView41"
+                app:layout_constraintStart_toEndOf="@+id/textView41"
+                app:layout_constraintTop_toTopOf="@+id/textView41"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/textView44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Duration : "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/textView41"
+                app:layout_constraintTop_toBottomOf="@+id/textView41" />
+
+            <TextView
+                android:id="@+id/textView45"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30 mins Playtime"
+                android:textColor="@color/text_black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView44"
+                app:layout_constraintStart_toStartOf="@+id/textView42"
+                app:layout_constraintTop_toTopOf="@+id/textView44"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/textView46"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Bonus Games : "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/textView44"
+                app:layout_constraintTop_toBottomOf="@+id/textView44" />
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_black"
+                android:textSize="14sp"
+                android:text="@{``+model.gameBonusCountObservable}"
+                app:layout_constraintBottom_toBottomOf="@+id/textView46"
+                app:layout_constraintStart_toStartOf="@+id/textView45"
+                app:layout_constraintTop_toTopOf="@+id/textView46" />
+
+            <TextView
+                android:id="@+id/textView48"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Amount : "
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/textView46"
+                app:layout_constraintTop_toBottomOf="@+id/textView46" />
+
+            <TextView
+                android:id="@+id/textView49"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{`kes. `+model.selectedGamingScreen.payableAmount+`0`}"
+                android:textColor="@color/green"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/textView48"
+                app:layout_constraintStart_toStartOf="@+id/textView47"
+                app:layout_constraintTop_toTopOf="@+id/textView48" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

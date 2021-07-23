@@ -5,16 +5,25 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
+import com.example.arcgbot.database.views.GameView;
+import com.example.arcgbot.models.GamerModel;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
-import com.example.arcgbot.view.adapter.GameTypeAdapter;
+import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.view.adapter.GameTypeAdapterNew;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static com.example.arcgbot.utils.Constants.Events.BACK_TO_GAME_COUNT;
+import static com.example.arcgbot.utils.Constants.Events.GAME_STARTED;
+import static com.example.arcgbot.utils.Utils.getCurrentTime;
 
 public class GameItemViewModel extends ViewModel {
     private ObservableField<Boolean> isGameStarted = new ObservableField();
@@ -23,14 +32,59 @@ public class GameItemViewModel extends ViewModel {
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     private GameRepository gameRepository;
     List<GameType> gameTypeList = new ArrayList<>();
+    private ObservableField<Integer> gameCountObservable = new ObservableField(1);
+    private ObservableField<Integer> gameBonusCountObservable = new ObservableField(0);
+    private ObservableField<String> gameTitleObservable = new ObservableField("Game Details");
+    private int gameCount = 0 ;
+    public GameType selectedGameType;
+    private ObservableField<GameView> selectedGamingScreen = new ObservableField();
+    FirebaseLogs firebaseLogs;
 
 
 
     @Inject
     public GameItemViewModel(GameRepository gameRepository) {
+        firebaseLogs = new FirebaseLogs();
         this.gameRepository = gameRepository;
         gameTypeAdapter = new GameTypeAdapterNew(R.layout.game_type_item, this);
 
+    }
+
+    public int getBonusGames(int gameCount) {
+        int bonus = 0;
+        for (int i=1; i<=gameCount;i++){
+            if (i%5==0){
+                bonus+=i==gameCount?0:1;
+            }
+        }
+        return bonus;
+    }
+
+    public ObservableField<GameView> getSelectedGamingScreen() {
+        return selectedGamingScreen;
+    }
+
+    public ObservableField<Integer> getGameCountObservable() {
+        return gameCountObservable;
+    }
+
+    public ObservableField<Integer> getGameBonusCountObservable() {
+        return gameBonusCountObservable;
+    }
+
+    public ObservableField<String> getGameTitleObservable() {
+        return gameTitleObservable;
+    }
+
+    public void setGameTitleObservable(GameView gameView) {
+        selectedGamingScreen.set(gameView);
+        gameTitleObservable.set(gameView.screen.getScreenLable());
+        GameCount gameCount = gameView.gameCount;
+        setGameCount(gameCount!=null?gameCount.getGamesCount():1);
+    }
+
+    public MutableLiveData<String> getClickEventsLiveData() {
+        return clickEventsLiveData;
     }
 
     public GameRepository getGameRepository() {
@@ -53,10 +107,91 @@ public class GameItemViewModel extends ViewModel {
         clickEventsLiveData.setValue(Constants.Events.END_GAME);
     }
 
+    public void onBack() {
+        clickEventsLiveData.setValue(BACK_TO_GAME_COUNT);
+    }
+
     public void setGamesList(List<GameType> gamesList) {
         gameTypeList = gamesList;
         this.gameTypeAdapter.setGameTypeList(gamesList);
         this.gameTypeAdapter.notifyDataSetChanged();
+    }
+
+    public void updateGameData(GamerModel gamerModel) {
+        GameCount game = createGameCount(gamerModel);
+        gameRepository.updateGameCount(game);
+        clickEventsLiveData.setValue(GAME_STARTED);
+
+    }
+
+    public void addGame() {
+        gameCount = gameCountObservable.get();
+        gameCount+=1;
+        setGameCount(gameCount);
+        if (selectedGamingScreen.get().screen.isActive()){
+            updateActiveGameCount();
+        }
+        clickEventsLiveData.setValue(Constants.Events.ADD_GAME_COUNT);
+
+    }
+
+    public void minusGame() {
+        gameCount = gameCountObservable.get();
+        if (gameCount != 1) {
+            if (!selectedGamingScreen.get().screen.isActive()){
+                gameCount-=1;
+                setGameCount(gameCount);
+                clickEventsLiveData.setValue(Constants.Events.MINUS_GAME_COUNT);
+            }else {
+                clickEventsLiveData.setValue(Constants.Events.MINUS_GAME_EVENT_ERROR);
+            }
+
+        }
+    }
+
+    private void setGameCount(int gameCount) {
+        this.gameCountObservable.set(gameCount);
+        this.gameBonusCountObservable.set(getBonusGames(gameCountObservable.get()));
+    }
+
+    public void onGameTypeClick(GameType gameType) {
+        selectedGameType = gameType;
+        gameRepository.updateSelectedGame(gameType);
+
+    }
+
+    public void updateActiveGameCount(){
+        gameRepository.updateGameCountValue(selectedGamingScreen.get().gameCount.getGameId(),
+                gameCountObservable.get(),gameBonusCountObservable.get());
+    }
+
+    public void endGameSession() {
+        gameRepository.resetActiveScreen(selectedGamingScreen.get().screen.getId());
+        selectedGamingScreen.get().gameCount.setStopTime(getCurrentTime());
+        gameRepository.detachGameFromScreen(selectedGamingScreen.get());
+    }
+
+    public GameType getSelectedGameType() {
+        return selectedGameType;
+    }
+
+    @NotNull
+    private GameCount createGameCount(GamerModel gamerModel) {
+        GameView selectedScreen = (selectedGamingScreen.get());
+        GameCount game = new GameCount();
+        game.setPlayer1Id(gamerModel.player1Phone);
+        game.setPlayer2Id(gamerModel.player1Phone);
+        game.setPlayerNames(gamerModel.player1Name+" Vs "+gamerModel.player2Name);
+        game.setScreenId(selectedScreen.screen.getId());
+        game.setGamesCount(gameCountObservable.get());
+        game.setPlayerNames(gamerModel.player1Name+" vs "+gamerModel.player2Name);
+        game.setGameTypeId(selectedGameType.getId());
+        game.setStartTime(getCurrentTime());
+        game.setGamesBonus(gameBonusCountObservable.get());
+        /*game.setStartTime(getCurrentTime());
+        game.setHashKey(selectedGameScreen.hashKey);*/
+       /* game.setGamesBonus(0);*/
+        return game;
     }
 
 }

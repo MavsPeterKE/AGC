@@ -13,7 +13,7 @@ public class Customer extends BaseObservable {
     @NonNull
     @PrimaryKey()
     @ColumnInfo(name = "id")
-    private long id;
+    private String id;
 
     @ColumnInfo(name = "customer_name")
     private String customerName;
@@ -24,11 +24,11 @@ public class Customer extends BaseObservable {
     @ColumnInfo(name = "gender")
     private String gender;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

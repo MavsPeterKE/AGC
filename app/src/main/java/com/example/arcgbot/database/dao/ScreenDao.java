@@ -19,6 +19,10 @@ public abstract class ScreenDao extends BaseDao<Screen> {
     public abstract LiveData<List<GameView>> getAllScreens();
 
     @Transaction
+    @Query("SELECT * FROM gameview WHERE id=:screenId")
+    public abstract LiveData<GameView> getScreenById(long screenId);
+
+    @Transaction
     @Query("UPDATE screen_table SET active=1 WHERE id=:screenId")
     public abstract void updateActiveScreen(long screenId);
 

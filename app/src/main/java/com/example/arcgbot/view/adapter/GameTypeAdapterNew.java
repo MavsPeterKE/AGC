@@ -76,7 +76,7 @@ public class GameTypeAdapterNew extends RecyclerView.Adapter<GameTypeAdapterNew.
             binding.getRoot().findViewById(R.id.main).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //viewModel.onGameTypeClick(gameTypeList.get(position));
+                    viewModel.onGameTypeClick(gameTypeList.get(position));
                 }
             });
         }

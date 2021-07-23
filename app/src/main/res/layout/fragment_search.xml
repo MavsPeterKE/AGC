@@ -50,7 +50,7 @@
             app:layout_constraintEnd_toEndOf="@+id/edSearchText"
             app:layout_constraintStart_toStartOf="@+id/edSearchText"
             app:layout_constraintTop_toBottomOf="@+id/edSearchText"
-            tools:listitem="@layout/game_item" />
+            tools:listitem="@layout/game_item_revamp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

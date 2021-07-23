@@ -205,6 +205,7 @@ public class GameRepository {
     public void updateGameCountValue(long gameId,int count,int bonus){
         executorService.submit(() -> {
             int update = gameCountDao.updateGameCount(gameId, count,bonus);
+            int x = 1;
             Log.e("updateGameCountValue: ", update+"");
         });
 
@@ -214,17 +215,16 @@ public class GameRepository {
         executorService.submit(() -> screenDao.resetActiveScreen(id));
     }
 
-    public void detachGameFromScreen(GameModel gameModel) {
+    public void detachGameFromScreen(GameView gameView) {
         CompletedGame completedGame = new CompletedGame();
-        completedGame.setDuration(gameModel.startTime+" - "+gameModel.endTime);
-        completedGame.setGamesCount(Integer.parseInt(gameModel.GameCount));
-        completedGame.setScreenLable(gameModel.screenLable + " - "+ gameModel.players);
-        completedGame.setEndTimeSeconds(Utils.getSeconds(gameModel.endTime));
-        completedGame.setPayableAmount(Double.parseDouble(gameModel.payableAmount));
-        completedGame.setBonusAmount(Double.parseDouble(gameModel.bonusAmount));
-        completedGame.setPlayerPhone(gameModel.phoneNumber);
+        completedGame.setDuration(gameView.gameCount.getStartTime()+" - "+gameView.gameCount.getStopTime());
+        completedGame.setGamesCount(gameView.gameCount.getGamesCount());
+        completedGame.setScreenLable(gameView.screen.getScreenLable() + " - "+ gameView.gameCount.getPlayerNames());
+        completedGame.setEndTimeSeconds(Utils.getSeconds(gameView.gameCount.getStopTime()));
+        completedGame.setPayableAmount(gameView.payableAmount);
+        completedGame.setBonusAmount(gameView.bonusAmount);
         executorService.submit(() -> {
-            int x = gameCountDao.updateCompletedGames(gameModel.gameId);
+            int x = gameCountDao.updateCompletedGames(gameView.gameCount.getGameId());
             Log.e("detachGameFromScreen: ",x +"  deleted" );
             long y = completeGameDao.insert(completedGame);
             Log.e("ended_game_: ",y +" " +completedGame.getScreenLable() + "Games Count__ "+ completedGame.getGamesCount());
@@ -235,6 +235,10 @@ public class GameRepository {
 
     public LiveData<List<CompletedGame>> getCompletedGames(){
         return completeGameDao.getAllCompletedGames();
+    }
+
+    public LiveData<GameView> getScreenById(long screenId){
+        return screenDao.getScreenById(screenId);
     }
 
     public LiveData<Integer> getGameTotal() {

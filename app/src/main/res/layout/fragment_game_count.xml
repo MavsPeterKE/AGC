@@ -71,11 +71,6 @@
                 app:srcCompat="@drawable/search" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-          <include
-               android:id="@+id/bottom_sheet"
-               layout="@layout/game_bottom_sheet"
-                app:model="@{model}"
-               />
 
         <include
             android:id="@+id/no_game_data"

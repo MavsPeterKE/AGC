@@ -1,7 +1,7 @@
 package com.example.arcgbot.utils;
 
 public class Constants {
-    public static final String BASE_URL   = "https://db08f911f60b.ngrok.io/";
+    public static final String BASE_URL   = "https://aa1cb40a8b4c.ngrok.io/";
     public static final String SUCCESS = "success";
     public static final String  GENERIC_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String  DATE_FORMAT = "yyyy-MM-dd";
@@ -23,6 +23,9 @@ public class Constants {
         public static final String LOGIN = "login";
         public static final String CLOSE_ERROR_SHEET = "close_error_sheet" ;
         public static final String SEARCH_GAME = "search game";
+        public static final String BACK_TO_GAME_COUNT = "back_to_game_count";
+        public static final String GAME_STARTED = "game_started";
+        public static final String MINUS_GAME_EVENT_ERROR = "minus game error";
     }
 
     public static final class RoomConfigs {
@@ -42,5 +45,10 @@ public class Constants {
         public static final String PASSWORD_ERROR = "Password Required ";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String CURRENT_DATE = "date" ;
+    }
+
+    public class IntentKeys {
+        public static final String GAME_COUNT_FRAGMENT = "fragment_game_count";
+        public static final String SCREEN_ID = "screen_id";
     }
 }
