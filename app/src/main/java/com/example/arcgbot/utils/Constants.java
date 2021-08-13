@@ -1,7 +1,7 @@
 package com.example.arcgbot.utils;
 
 public class Constants {
-    public static final String BASE_URL   = "https://aa1cb40a8b4c.ngrok.io/";
+    public static final String BASE_URL   = "https://20d00e8788d2.ngrok.io/";
     public static final String SUCCESS = "success";
     public static final String  GENERIC_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String  DATE_FORMAT = "yyyy-MM-dd";
@@ -26,6 +26,8 @@ public class Constants {
         public static final String BACK_TO_GAME_COUNT = "back_to_game_count";
         public static final String GAME_STARTED = "game_started";
         public static final String MINUS_GAME_EVENT_ERROR = "minus game error";
+        public static final String CALL_GAMER = "call_gamer";
+        public static final String SEND_MESSAGE = "send_message";
     }
 
     public static final class RoomConfigs {

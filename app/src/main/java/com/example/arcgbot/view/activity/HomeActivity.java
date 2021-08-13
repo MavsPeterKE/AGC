@@ -15,6 +15,7 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.models.User;
+import com.example.arcgbot.view.fragment.FragmentCustomers;
 import com.example.arcgbot.view.fragment.FragmentEOD;
 import com.example.arcgbot.view.fragment.FragmentGameCount;
 import com.example.arcgbot.view.fragment.FragmentScreens;
@@ -113,7 +114,8 @@ public class HomeActivity extends AppCompatActivity {
                     startScreens();
                     break;
                 case 2:
-                    startScreens();
+                    changeFragment(new FragmentCustomers(),FragmentCustomers.class.getSimpleName());
+
                     break;
                 case 3:
                     startEODFragment();

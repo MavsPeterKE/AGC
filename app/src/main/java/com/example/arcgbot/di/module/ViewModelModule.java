@@ -3,6 +3,7 @@ package com.example.arcgbot.di.module;
 import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.di.util.ViewModelKey;
+import com.example.arcgbot.viewmodels.CustomerViewModel;
 import com.example.arcgbot.viewmodels.EODViewModel;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
 import com.example.arcgbot.viewmodels.GameItemViewModel;
@@ -46,4 +47,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(GameItemViewModel.class)
     abstract ViewModel bindGameItemViewModel(GameItemViewModel gameItemViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CustomerViewModel.class)
+    abstract ViewModel bindCustomerViewModel(CustomerViewModel customerViewModel);
 }

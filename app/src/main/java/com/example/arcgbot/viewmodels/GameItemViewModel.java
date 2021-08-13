@@ -1,10 +1,12 @@
 package com.example.arcgbot.viewmodels;
 
+import androidx.annotation.RequiresApi;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.database.views.GameView;
@@ -13,11 +15,14 @@ import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.view.adapter.GameTypeAdapterNew;
+import com.example.arcgbot.view.adapter.GamerSuggestAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -25,20 +30,30 @@ import static com.example.arcgbot.utils.Constants.Events.BACK_TO_GAME_COUNT;
 import static com.example.arcgbot.utils.Constants.Events.GAME_STARTED;
 import static com.example.arcgbot.utils.Utils.getCurrentTime;
 
+import android.os.Build;
+
 public class GameItemViewModel extends ViewModel {
     private ObservableField<Boolean> isGameStarted = new ObservableField();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     private GameTypeAdapterNew gameTypeAdapter;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
+    private MutableLiveData<Customer> selectedGamerLiveData = new MutableLiveData();
     private GameRepository gameRepository;
     List<GameType> gameTypeList = new ArrayList<>();
     private ObservableField<Integer> gameCountObservable = new ObservableField(1);
     private ObservableField<Integer> gameBonusCountObservable = new ObservableField(0);
     private ObservableField<String> gameTitleObservable = new ObservableField("Game Details");
+    private ObservableField<Boolean> isCustomerListEmpty = new ObservableField(false);
+    private ObservableField<Boolean> isPlayerOneEnabled = new ObservableField(false);
+    private ObservableField<Boolean> isPlayerTwoEnabled = new ObservableField(false);
+    private ObservableField<Boolean> isSearchListEmpty = new ObservableField(false);
+    public ObservableField<Boolean> isViewHideSet = new ObservableField(false);
     private int gameCount = 0 ;
     public GameType selectedGameType;
     private ObservableField<GameView> selectedGamingScreen = new ObservableField();
     FirebaseLogs firebaseLogs;
+    private GamerSuggestAdapter gamerSuggestAdapter;
+    private List<Customer> customerList;
 
 
 
@@ -47,7 +62,12 @@ public class GameItemViewModel extends ViewModel {
         firebaseLogs = new FirebaseLogs();
         this.gameRepository = gameRepository;
         gameTypeAdapter = new GameTypeAdapterNew(R.layout.game_type_item, this);
+        gamerSuggestAdapter = new GamerSuggestAdapter(R.layout.gamer_suggest_item, this);
 
+    }
+
+    public GamerSuggestAdapter getGamerSuggestAdapter() {
+        return gamerSuggestAdapter;
     }
 
     public int getBonusGames(int gameCount) {
@@ -74,6 +94,14 @@ public class GameItemViewModel extends ViewModel {
 
     public ObservableField<String> getGameTitleObservable() {
         return gameTitleObservable;
+    }
+
+    public ObservableField<Boolean> getIsPlayerOneEnabled() {
+        return isPlayerOneEnabled;
+    }
+
+    public ObservableField<Boolean> getIsPlayerTwoEnabled() {
+        return isPlayerTwoEnabled;
     }
 
     public void setGameTitleObservable(GameView gameView) {
@@ -119,7 +147,7 @@ public class GameItemViewModel extends ViewModel {
 
     public void updateGameData(GamerModel gamerModel) {
         GameCount game = createGameCount(gamerModel);
-        gameRepository.updateGameCount(game);
+        gameRepository.updateGameCount(game, gamerModel);
         clickEventsLiveData.setValue(GAME_STARTED);
 
     }
@@ -171,6 +199,16 @@ public class GameItemViewModel extends ViewModel {
         gameRepository.detachGameFromScreen(selectedGamingScreen.get());
     }
 
+    public void setCustomerList(List<Customer> customerList) {
+        if (customerList != null) {
+            isCustomerListEmpty.set(!customerList.isEmpty());
+        }
+        this.customerList = customerList;
+        gamerSuggestAdapter.setCustomerList(customerList);
+        gamerSuggestAdapter.notifyDataSetChanged();
+
+    }
+
     public GameType getSelectedGameType() {
         return selectedGameType;
     }
@@ -180,7 +218,7 @@ public class GameItemViewModel extends ViewModel {
         GameView selectedScreen = (selectedGamingScreen.get());
         GameCount game = new GameCount();
         game.setPlayer1Id(gamerModel.player1Phone);
-        game.setPlayer2Id(gamerModel.player1Phone);
+        game.setPlayer2Id(gamerModel.player2Phone);
         game.setPlayerNames(gamerModel.player1Name+" Vs "+gamerModel.player2Name);
         game.setScreenId(selectedScreen.screen.getId());
         game.setGamesCount(gameCountObservable.get());
@@ -188,10 +226,29 @@ public class GameItemViewModel extends ViewModel {
         game.setGameTypeId(selectedGameType.getId());
         game.setStartTime(getCurrentTime());
         game.setGamesBonus(gameBonusCountObservable.get());
-        /*game.setStartTime(getCurrentTime());
-        game.setHashKey(selectedGameScreen.hashKey);*/
-       /* game.setGamesBonus(0);*/
         return game;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void updatePlayerSearchList(String searchText) {
+        List<Customer>newList = customerList.stream().filter(customer -> customer.getCustomerName()
+                .toLowerCase().contains(searchText)||customer.getCustomerPhone().toLowerCase()
+                .contains(searchText))
+                .collect(Collectors.toList());
+        isSearchListEmpty.set(newList.isEmpty());
+        gamerSuggestAdapter.setCustomerList(newList);
+        gamerSuggestAdapter.notifyDataSetChanged();
+    }
+
+    public ObservableField<Boolean> getIsSearchListEmpty() {
+        return isSearchListEmpty;
+    }
+
+    public void onGamerItemClick(Customer customer) {
+        selectedGamerLiveData.setValue(customer);
+    }
+
+    public MutableLiveData<Customer> getSelectedGamerLiveData() {
+        return selectedGamerLiveData;
+    }
 }

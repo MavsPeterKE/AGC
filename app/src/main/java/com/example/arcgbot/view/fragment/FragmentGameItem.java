@@ -1,6 +1,12 @@
 package com.example.arcgbot.view.fragment;
 
+import static com.example.arcgbot.utils.Constants.Events.GAME_STARTED;
+import static com.example.arcgbot.utils.Constants.Events.MINUS_GAME_EVENT_ERROR;
+
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +14,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.databinding.FragmentGameItemBinding;
 import com.example.arcgbot.models.GamerModel;
 import com.example.arcgbot.utils.Constants;
@@ -25,9 +34,6 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-
-import static com.example.arcgbot.utils.Constants.Events.GAME_STARTED;
-import static com.example.arcgbot.utils.Constants.Events.MINUS_GAME_EVENT_ERROR;
 
 
 public class FragmentGameItem extends DaggerFragment {
@@ -51,11 +57,149 @@ public class FragmentGameItem extends DaggerFragment {
         gameItemViewModel = new ViewModelProvider(this, viewModelFactory).get(GameItemViewModel.class);
         fragmentGameItemBinding.setModel(gameItemViewModel);
         fragmentGameItemBinding.executePendingBindings();
+        init();
+        return fragmentGameItemBinding.getRoot();
+    }
+
+    private void observePlayerSuggestListPick() {
+        gameItemViewModel.getSelectedGamerLiveData().observe(getViewLifecycleOwner(), customer -> {
+            if (customer!=null){
+                if (gameItemViewModel.getIsPlayerOneEnabled().get()){
+                    fragmentGameItemBinding.edPlayer1Name.setText(customer.getCustomerName());
+                    fragmentGameItemBinding.edPlayer1Phone.setText(customer.getCustomerPhone());
+                    gameItemViewModel.getIsPlayerOneEnabled().set(false);
+                    fragmentGameItemBinding.player2layout.setVisibility(View.VISIBLE);
+                    fragmentGameItemBinding.spinner.setVisibility(View.VISIBLE);
+                }
+
+                if (gameItemViewModel.getIsPlayerTwoEnabled().get()){
+                    fragmentGameItemBinding.edPlayer2Name.setText(customer.getCustomerName());
+                    fragmentGameItemBinding.edPlayer2Phone.setText(customer.getCustomerPhone());
+                    gameItemViewModel.getIsPlayerTwoEnabled().set(false);
+                    fragmentGameItemBinding.spinner.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private void setPlayTwoTextChangeListener() {
+        fragmentGameItemBinding.edPlayer2Name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                onPlayerTwoInputAction(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        fragmentGameItemBinding.edPlayer2Phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                onPlayerTwoInputAction(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
+    private void setPlayerOneTextChangeListener() {
+        fragmentGameItemBinding.edPlayer1Name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                onPlayerInputAction(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        fragmentGameItemBinding.edPlayer1Phone.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                onPlayerInputAction(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void onPlayerInputAction(CharSequence charSequence) {
+        gameItemViewModel.updatePlayerSearchList(charSequence.toString().toLowerCase());
+        if (charSequence.length()>0){
+            boolean isListEmpty = gameItemViewModel.getIsSearchListEmpty().get();
+            gameItemViewModel.getIsPlayerOneEnabled().set(!isListEmpty);
+            fragmentGameItemBinding.player2layout.setVisibility(isListEmpty?View.VISIBLE:View.INVISIBLE);
+            fragmentGameItemBinding.spinner.setVisibility(isListEmpty?View.VISIBLE:View.INVISIBLE);
+        }else {
+            gameItemViewModel.getIsPlayerOneEnabled().set(false);
+            fragmentGameItemBinding.player2layout.setVisibility(View.VISIBLE);
+            fragmentGameItemBinding.spinner.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void onPlayerTwoInputAction(CharSequence charSequence) {
+        gameItemViewModel.updatePlayerSearchList(charSequence.toString().toLowerCase());
+        if (charSequence.length()>0){
+            boolean isListEmpty = gameItemViewModel.getIsSearchListEmpty().get();
+            gameItemViewModel.getIsPlayerTwoEnabled().set(!isListEmpty);
+            fragmentGameItemBinding.spinner.setVisibility(isListEmpty?View.VISIBLE:View.INVISIBLE);
+        }else {
+            gameItemViewModel.getIsPlayerTwoEnabled().set(false);
+            fragmentGameItemBinding.spinner.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void init() {
         setGameTypeList();
         observeScreenData();
-
         observeButtonActionClicks();
-        return fragmentGameItemBinding.getRoot();
+        observeCustomerList();
+        setPlayerOneTextChangeListener();
+        setPlayTwoTextChangeListener();
+        observePlayerSuggestListPick();
+    }
+
+    private void observeCustomerList() {
+        gameItemViewModel.getGameRepository().getCustomerList().observe(getViewLifecycleOwner(), customers ->
+                gameItemViewModel.setCustomerList(customers));
     }
 
     private void observeScreenData() {

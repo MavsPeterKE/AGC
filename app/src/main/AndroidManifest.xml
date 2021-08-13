@@ -3,6 +3,7 @@
     package="com.example.arcgbot">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".utils.BaseApplication"
@@ -12,11 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ArcGBot">
-        <activity android:name=".view.activity.LoginActivity"
+        <activity android:name=".view.activity.HomeActivity"
             android:windowSoftInputMode="adjustPan"> </activity>
         <activity android:name=".view.activity.GameActivity"
             android:windowSoftInputMode="adjustPan"> </activity>
-        <activity android:name=".view.activity.HomeActivity">
+        <activity android:name=".view.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,6 +1,7 @@
 package com.example.arcgbot.di.module;
 
 
+import com.example.arcgbot.view.fragment.FragmentCustomers;
 import com.example.arcgbot.view.fragment.FragmentEOD;
 import com.example.arcgbot.view.fragment.FragmentGameCount;
 import com.example.arcgbot.view.fragment.FragmentGameItem;
@@ -27,5 +28,8 @@ public abstract class FragmentBindingModule {
 
     @ContributesAndroidInjector
     abstract FragmentGameItem bindFragmentGameItem();
+
+    @ContributesAndroidInjector
+    abstract FragmentCustomers bindFragmentCustomers();
 
 }

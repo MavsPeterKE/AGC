@@ -5,15 +5,18 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.example.arcgbot.database.dao.CompleteGameDao;
+import com.example.arcgbot.database.dao.CustomerDao;
 import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
 import com.example.arcgbot.database.dao.ScreenDao;
 import com.example.arcgbot.database.entity.CompletedGame;
+import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.database.entity.Screen;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.GameModel;
+import com.example.arcgbot.models.GamerModel;
 import com.example.arcgbot.models.LoginModel;
 import com.example.arcgbot.retrofit.RetrofitService;
 import com.example.arcgbot.retrofit.responseStructures.APIListResponse;
@@ -53,6 +56,7 @@ public class GameRepository {
     private ScreenDao screenDao;
     private GameDao gameDao;
     private GameCountDao gameCountDao;
+    private CustomerDao customerDao;
 
 
     private CompleteGameDao completeGameDao;
@@ -60,7 +64,7 @@ public class GameRepository {
 
     @Inject
     public GameRepository(RetrofitService retrofitService, ScreenDao screenDao, GameDao gameDao,
-                          GameCountDao gameCountDao, CompleteGameDao completeGameDao,ExecutorService executorService) {
+                          GameCountDao gameCountDao, CompleteGameDao completeGameDao,CustomerDao customerDao,ExecutorService executorService) {
         this.retrofitService = retrofitService;
         disposable = new CompositeDisposable();
         this.executorService = executorService;
@@ -68,8 +72,13 @@ public class GameRepository {
         this.gameDao = gameDao;
         this.gameCountDao = gameCountDao;
         this.completeGameDao = completeGameDao;
+        this.customerDao = customerDao;
         firebaseLogs = new FirebaseLogs();
 
+    }
+
+    public LiveData<List<Customer>> getCustomerList(){
+        return customerDao.getAllCustomer();
     }
 
     public void clearGameData(){
@@ -189,11 +198,22 @@ public class GameRepository {
         });
     }
 
-    public void updateGameCount(GameCount gameCount) {
+    public void updateGameCount(GameCount gameCount, GamerModel gamerModel) {
         if (gameCount.getGamesCount() == 0){
             gameCount.setGamesCount(1);
         }
         executorService.submit(() -> {
+           Customer gamer1 = new Customer();
+           gamer1.setCustomerPhone(gamerModel.player1Phone);
+           gamer1.setCustomerName(gamerModel.player1Name);
+
+            Customer gamer2 = new Customer();
+            gamer2.setCustomerPhone(gamerModel.player2Phone);
+            gamer2.setCustomerName(gamerModel.player2Name);
+
+            long insertGamer1 = customerDao.insert(gamer1);
+            long insertGamer2 = customerDao.insert(gamer2);
+
             long insert = gameCountDao.insert(gameCount);
             screenDao.updateActiveScreen(gameCount.getScreenId());
             gameDao.deselectGames();

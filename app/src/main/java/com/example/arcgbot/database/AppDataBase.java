@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import com.example.arcgbot.database.converters.DateConverter;
 import com.example.arcgbot.database.dao.CompleteGameDao;
+import com.example.arcgbot.database.dao.CustomerDao;
 import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
 import com.example.arcgbot.database.dao.ScreenDao;
@@ -23,6 +24,8 @@ import static com.example.arcgbot.utils.Constants.RoomConfigs.NEW_DB_VERSION;
 public abstract class AppDataBase extends RoomDatabase {
 
     public abstract ScreenDao screenDao();
+
+    public abstract CustomerDao customerDao();
 
     public abstract GameDao gameTypeDao();
 
