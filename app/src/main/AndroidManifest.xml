@@ -17,6 +17,8 @@
             android:windowSoftInputMode="adjustPan"> </activity>
         <activity android:name=".view.activity.GameActivity"
             android:windowSoftInputMode="adjustPan"> </activity>
+        <activity android:name=".view.activity.SearchActivity"
+            android:windowSoftInputMode="adjustPan"> </activity>
         <activity android:name=".view.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

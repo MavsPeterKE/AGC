@@ -6,6 +6,9 @@
     <data>
 
         <import type="android.view.View" />
+        <variable
+            name="model"
+            type="com.example.arcgbot.viewmodels.SearchItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{()-> model.onBackClick()}"
             app:srcCompat="@drawable/ic_back_black" />
 
         <EditText
@@ -50,6 +54,7 @@
             app:layout_constraintEnd_toEndOf="@+id/edSearchText"
             app:layout_constraintStart_toStartOf="@+id/edSearchText"
             app:layout_constraintTop_toBottomOf="@+id/edSearchText"
+            app:setAdapter="@{model.screenSearchAdapter}"
             tools:listitem="@layout/game_item_revamp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

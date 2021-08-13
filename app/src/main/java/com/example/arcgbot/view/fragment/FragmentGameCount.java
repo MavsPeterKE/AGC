@@ -17,10 +17,8 @@ import com.example.arcgbot.databinding.FragmentGameCountBinding;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.view.activity.GameActivity;
-import com.example.arcgbot.view.activity.HomeActivity;
+import com.example.arcgbot.view.activity.SearchActivity;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -53,11 +51,11 @@ public class FragmentGameCount extends DaggerFragment {
     private void init() {
         observeClickEvents();
         observeScreenData();
-        observeGamingScreens();
+        observeClickedGamingScreen();
         observeButtonClicks();
     }
 
-    private void observeGamingScreens() {
+    private void observeClickedGamingScreen() {
         mViewModel.getSelectedGamingScreen().observe(getViewLifecycleOwner(), gameModel -> {
             selectedGamingScreen = gameModel;
         });
@@ -105,7 +103,7 @@ public class FragmentGameCount extends DaggerFragment {
         mViewModel.getClickEventsLiveData().observe(getViewLifecycleOwner(), value -> {
             switch (value) {
                 case Constants.Events.SEARCH_GAME:
-                    startSearchFragment();
+                    startSearchActivity();
                     break;
 
 
@@ -113,8 +111,7 @@ public class FragmentGameCount extends DaggerFragment {
         });
     }
 
-    private void startSearchFragment() {
-        ((HomeActivity) Objects.requireNonNull(getActivity()))
-                .changeFragment(new FragmentSearch(), FragmentSearch.class.getSimpleName());
+    private void startSearchActivity() {
+        startActivity(new Intent(getActivity(), SearchActivity.class));
     }
 }

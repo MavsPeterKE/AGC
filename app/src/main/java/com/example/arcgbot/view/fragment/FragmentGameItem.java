@@ -16,11 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
-import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.databinding.FragmentGameItemBinding;
 import com.example.arcgbot.models.GamerModel;
 import com.example.arcgbot.utils.Constants;
@@ -130,7 +128,7 @@ public class FragmentGameItem extends DaggerFragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                onPlayerInputAction(charSequence);
+                onPlayerOneInputAction(charSequence);
             }
 
             @Override
@@ -149,7 +147,7 @@ public class FragmentGameItem extends DaggerFragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                onPlayerInputAction(charSequence);
+                onPlayerOneInputAction(charSequence);
             }
 
             @Override
@@ -160,7 +158,7 @@ public class FragmentGameItem extends DaggerFragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void onPlayerInputAction(CharSequence charSequence) {
+    private void onPlayerOneInputAction(CharSequence charSequence) {
         gameItemViewModel.updatePlayerSearchList(charSequence.toString().toLowerCase());
         if (charSequence.length()>0){
             boolean isListEmpty = gameItemViewModel.getIsSearchListEmpty().get();
@@ -228,7 +226,6 @@ public class FragmentGameItem extends DaggerFragment {
                     break;
                 case Constants.Events.BACK_TO_GAME_COUNT:
                 case GAME_STARTED:
-                    //Toast.makeText(getActivity(), "Game Started Successfully", Toast.LENGTH_SHORT).show();
                     goBack();
                     break;
                 case MINUS_GAME_EVENT_ERROR:

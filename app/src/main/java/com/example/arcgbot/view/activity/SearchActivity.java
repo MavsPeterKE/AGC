@@ -10,19 +10,19 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.arcgbot.R;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.view.fragment.FragmentGameItem;
+import com.example.arcgbot.view.fragment.FragmentSearch;
 
 import butterknife.ButterKnife;
 
-public class GameActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
     public long screenId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_main);
+        setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
-        screenId = getIntent().getLongExtra(Constants.IntentKeys.SCREEN_ID,0);
-        createFragments(new FragmentGameItem());
+        createFragments(new FragmentSearch());
     }
 
     public void createFragments(Fragment fragment) {
