@@ -3,18 +3,25 @@ package com.example.arcgbot.view.fragment;
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
 import com.example.arcgbot.databinding.FragmentCustomersBinding;
+import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.CustomerViewModel;
 import com.karumi.dexter.Dexter;
@@ -30,6 +37,9 @@ import dagger.android.support.DaggerFragment;
 
 import static com.example.arcgbot.utils.Constants.Events.CALL_GAMER;
 import static com.example.arcgbot.utils.Constants.Events.SEND_MESSAGE;
+
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class FragmentCustomers extends DaggerFragment {
@@ -55,8 +65,23 @@ public class FragmentCustomers extends DaggerFragment {
         fragmentCustomersBinding.executePendingBindings();
         observeCustomerList();
         observeClickEvents();
+        fragmentCustomersBinding.edSearchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+             mViewModel.searchGamer(charSequence.toString().toLowerCase());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         return fragmentCustomersBinding.getRoot();
     }
 
@@ -68,10 +93,8 @@ public class FragmentCustomers extends DaggerFragment {
                     break;
                 case SEND_MESSAGE:
                     customerPhone = mViewModel.getPhoneNo();
-                    Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-                    smsIntent.setType("vnd.android-dir/mms-sms");
-                    smsIntent.putExtra("address", customerPhone);
-                    smsIntent.putExtra("sms_body", "");
+                    Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                    smsIntent.setData(Uri.parse("smsto:"+customerPhone));
                     startActivity(smsIntent);
                     break;
             }

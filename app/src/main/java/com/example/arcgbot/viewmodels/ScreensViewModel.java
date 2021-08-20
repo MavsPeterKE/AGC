@@ -25,6 +25,7 @@ import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
 public class ScreensViewModel extends ViewModel {
     private ScreenAdapter screenAdapter;
     private MutableLiveData<ScreenItem> selectedScreenItem = new MutableLiveData();
+    private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     public ObservableField<String> gameCount = new ObservableField("O Games");
     public GameRepository gameRepository;
@@ -35,6 +36,14 @@ public class ScreensViewModel extends ViewModel {
         screenAdapter = new ScreenAdapter(R.layout.screen_item, this);
         this.gameRepository = gameRepository;
         firebaseLogs = new FirebaseLogs();
+    }
+
+    public void onSearchClicked() {
+        clickEventsLiveData.setValue(Constants.Events.SEARCH_GAME);
+    }
+
+    public MutableLiveData<String> getClickEventsLiveData() {
+        return clickEventsLiveData;
     }
 
     public ScreenAdapter getScreenAdapterAdapter() {

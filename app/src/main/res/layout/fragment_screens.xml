@@ -38,6 +38,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="28dp"
+                android:onClick="@{()-> screenviewmodel.onSearchClicked()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView28"
+                app:srcCompat="@drawable/search" />
+
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"

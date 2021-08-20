@@ -33,7 +33,7 @@
             android:id="@+id/tvSyncTitleHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_screens_data"
+            android:text="@string/no_customer_data"
             android:textColor="@color/black"
             android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,5 +1,10 @@
 package com.example.arcgbot.viewmodels;
 
+import static com.example.arcgbot.utils.Constants.Events.SEND_MESSAGE;
+
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,10 +17,9 @@ import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.view.adapter.CustomerAdapter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-
-import static com.example.arcgbot.utils.Constants.Events.SEND_MESSAGE;
 
 public class CustomerViewModel extends ViewModel {
     private CustomerAdapter customerAdapter;
@@ -25,6 +29,7 @@ public class CustomerViewModel extends ViewModel {
     FirebaseLogs firebaseLogs;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     private String phoneNo;
+    private List<Customer> customerList;
 
     @Inject
     public CustomerViewModel(GameRepository gameRepository) {
@@ -45,6 +50,7 @@ public class CustomerViewModel extends ViewModel {
         if (customerList != null) {
             isCustomerListSet.set(!customerList.isEmpty());
         }
+        this.customerList = customerList;
         customerAdapter.setCustomerList(customerList);
         customerAdapter.notifyDataSetChanged();
 
@@ -66,5 +72,14 @@ public class CustomerViewModel extends ViewModel {
 
     public MutableLiveData<String> getClickEventsLiveData() {
         return clickEventsLiveData;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void searchGamer(String searchText) {
+        List<Customer> searchList = customerList.stream().filter(customer ->
+                customer.getCustomerName().toLowerCase().contains(searchText) ||
+                customer.getCustomerPhone().toLowerCase().contains(searchText)).collect(Collectors.toList());
+        customerAdapter.setCustomerList(searchList);
+        customerAdapter.notifyDataSetChanged();
     }
 }

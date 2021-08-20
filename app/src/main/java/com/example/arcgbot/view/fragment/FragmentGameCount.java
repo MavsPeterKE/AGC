@@ -112,6 +112,8 @@ public class FragmentGameCount extends DaggerFragment {
     }
 
     private void startSearchActivity() {
-        startActivity(new Intent(getActivity(), SearchActivity.class));
+        Intent searchIntent = new Intent(getActivity(), SearchActivity.class);
+        searchIntent.putExtra(Constants.IntentKeys.ORIGIN_FRAGMENT,FragmentGameCount.class.getSimpleName());
+        startActivity(searchIntent);
     }
 }

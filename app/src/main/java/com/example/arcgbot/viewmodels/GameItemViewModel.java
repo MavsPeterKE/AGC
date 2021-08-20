@@ -147,7 +147,7 @@ public class GameItemViewModel extends ViewModel {
 
     public void updateGameData(GamerModel gamerModel) {
         GameCount game = createGameCount(gamerModel);
-        gameRepository.updateGameCount(game, gamerModel);
+        gameRepository.saveGameSession(game, gamerModel);
         clickEventsLiveData.setValue(GAME_STARTED);
 
     }

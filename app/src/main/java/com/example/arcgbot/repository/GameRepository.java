@@ -1,16 +1,19 @@
 package com.example.arcgbot.repository;
 
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.arcgbot.database.dao.CompleteGameDao;
 import com.example.arcgbot.database.dao.CustomerDao;
+import com.example.arcgbot.database.dao.CustomerVisitDao;
 import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
 import com.example.arcgbot.database.dao.ScreenDao;
 import com.example.arcgbot.database.entity.CompletedGame;
 import com.example.arcgbot.database.entity.Customer;
+import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.database.entity.Screen;
@@ -30,6 +33,8 @@ import com.example.arcgbot.utils.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -57,6 +62,7 @@ public class GameRepository {
     private GameDao gameDao;
     private GameCountDao gameCountDao;
     private CustomerDao customerDao;
+    private CustomerVisitDao customerVisitDao;
 
 
     private CompleteGameDao completeGameDao;
@@ -64,7 +70,8 @@ public class GameRepository {
 
     @Inject
     public GameRepository(RetrofitService retrofitService, ScreenDao screenDao, GameDao gameDao,
-                          GameCountDao gameCountDao, CompleteGameDao completeGameDao,CustomerDao customerDao,ExecutorService executorService) {
+                          GameCountDao gameCountDao, CompleteGameDao completeGameDao,
+                          CustomerDao customerDao,CustomerVisitDao customerVisitDao,ExecutorService executorService) {
         this.retrofitService = retrofitService;
         disposable = new CompositeDisposable();
         this.executorService = executorService;
@@ -73,6 +80,7 @@ public class GameRepository {
         this.gameCountDao = gameCountDao;
         this.completeGameDao = completeGameDao;
         this.customerDao = customerDao;
+        this.customerVisitDao = customerVisitDao;
         firebaseLogs = new FirebaseLogs();
 
     }
@@ -198,7 +206,7 @@ public class GameRepository {
         });
     }
 
-    public void updateGameCount(GameCount gameCount, GamerModel gamerModel) {
+    public void saveGameSession(GameCount gameCount, GamerModel gamerModel) {
         if (gameCount.getGamesCount() == 0){
             gameCount.setGamesCount(1);
         }
@@ -211,14 +219,37 @@ public class GameRepository {
             gamer2.setCustomerPhone(gamerModel.player2Phone);
             gamer2.setCustomerName(gamerModel.player2Name);
 
-            long insertGamer1 = customerDao.insert(gamer1);
-            long insertGamer2 = customerDao.insert(gamer2);
+            long insertGamer1 = customerDao.insertCustomer(gamer1);
+            long insertGamer2 = customerDao.insertCustomer(gamer2);
+            updateGamersVisit(gamer1,gamer2);
 
             long insert = gameCountDao.insert(gameCount);
             screenDao.updateActiveScreen(gameCount.getScreenId());
             gameDao.deselectGames();
             Log.e("updateGameCount:_ ",insert +" inserted" );
         });
+
+    }
+
+    private void updateGamersVisit(Customer gamer1, Customer gamer2) {
+        Date todayDate = Utils.convertToDate(Utils.getTodayDate(DATE_FORMAT),Constants.DATE_FORMAT);
+        String monthString  = (String) DateFormat.format("MMM",  todayDate); // Jun
+        String year         = (String) DateFormat.format("yyyy", todayDate); // 2013
+        List<CustomerVisit> customerVisits =new ArrayList<>();
+        CustomerVisit customerVisit = new CustomerVisit();
+        customerVisit.setCustomer_phone(gamer1.getCustomerPhone());
+        customerVisit.setDate(todayDate);
+        customerVisit.setMonth(monthString+"_"+year);
+        customerVisit.setWeek(Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT)));
+        customerVisits.add(customerVisit);
+
+        CustomerVisit customerVisit2 = new CustomerVisit();
+        customerVisit2.setCustomer_phone(gamer2.getCustomerPhone());
+        customerVisit2.setDate(todayDate);
+        customerVisit2.setMonth(monthString+"_"+year);
+        customerVisit2.setWeek(Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT)));
+        customerVisits.add(customerVisit2);
+        customerVisitDao.insertGamerVisit(customerVisits);
 
     }
 
@@ -244,6 +275,8 @@ public class GameRepository {
         completedGame.setPayableAmount(gameView.payableAmount);
         completedGame.setBonusAmount(gameView.bonusAmount);
         executorService.submit(() -> {
+           customerVisitDao.updateCustomerVisit(gameView.gameCount.getPlayer1Id(),
+                    gameView.gameCount.getPlayer2Id(),completedGame.getGamesCount(),completedGame.getPayableAmount());
             int x = gameCountDao.updateCompletedGames(gameView.gameCount.getGameId());
             Log.e("detachGameFromScreen: ",x +"  deleted" );
             long y = completeGameDao.insert(completedGame);

@@ -103,6 +103,12 @@ public class Utils {
         return dateFormat.format(c);
     }
 
+    public static int getCurrentWeekCount(String dateString) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(Utils.convertToDate(dateString, Constants.DATE_FORMAT));
+        return cal.get(Calendar.WEEK_OF_MONTH);
+    }
+
     public static int getSeconds(String time){
         String[] units = time.split(":"); //will break the string up into an array
         int minutes = Integer.parseInt(units[0]); //first element
