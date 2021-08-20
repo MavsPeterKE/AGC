@@ -9,6 +9,7 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
+import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.GamerModel;
 import com.example.arcgbot.repository.GameRepository;
@@ -37,7 +38,7 @@ public class GameItemViewModel extends ViewModel {
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     private GameTypeAdapterNew gameTypeAdapter;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
-    private MutableLiveData<Customer> selectedGamerLiveData = new MutableLiveData();
+    private MutableLiveData<CustomerView> selectedGamerLiveData = new MutableLiveData();
     private GameRepository gameRepository;
     List<GameType> gameTypeList = new ArrayList<>();
     private ObservableField<Integer> gameCountObservable = new ObservableField(1);
@@ -53,7 +54,7 @@ public class GameItemViewModel extends ViewModel {
     private ObservableField<GameView> selectedGamingScreen = new ObservableField();
     FirebaseLogs firebaseLogs;
     private GamerSuggestAdapter gamerSuggestAdapter;
-    private List<Customer> customerList;
+    private List<CustomerView> customerList;
 
 
 
@@ -199,7 +200,7 @@ public class GameItemViewModel extends ViewModel {
         gameRepository.detachGameFromScreen(selectedGamingScreen.get());
     }
 
-    public void setCustomerList(List<Customer> customerList) {
+    public void setCustomerList(List<CustomerView> customerList) {
         if (customerList != null) {
             isCustomerListEmpty.set(!customerList.isEmpty());
         }
@@ -231,8 +232,8 @@ public class GameItemViewModel extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void updatePlayerSearchList(String searchText) {
-        List<Customer>newList = customerList.stream().filter(customer -> customer.getCustomerName()
-                .toLowerCase().contains(searchText)||customer.getCustomerPhone().toLowerCase()
+        List<CustomerView>newList = customerList.stream().filter(customer -> customer.screen.getCustomerName()
+                .toLowerCase().contains(searchText)||customer.screen.getCustomerPhone().toLowerCase()
                 .contains(searchText))
                 .collect(Collectors.toList());
         isSearchListEmpty.set(newList.isEmpty());
@@ -244,11 +245,11 @@ public class GameItemViewModel extends ViewModel {
         return isSearchListEmpty;
     }
 
-    public void onGamerItemClick(Customer customer) {
+    public void onGamerItemClick(CustomerView customer) {
         selectedGamerLiveData.setValue(customer);
     }
 
-    public MutableLiveData<Customer> getSelectedGamerLiveData() {
+    public MutableLiveData<CustomerView> getSelectedGamerLiveData() {
         return selectedGamerLiveData;
     }
 }

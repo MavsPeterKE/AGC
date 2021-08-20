@@ -12,7 +12,7 @@
 
         <variable
             name="customer"
-            type="com.example.arcgbot.database.entity.Customer" />
+            type="com.example.arcgbot.database.views.CustomerView" />
 
     </data>
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:text="@{customer.customerName}"
+            android:text="@{customer.screen.customerName}"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Mavs"
             app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="88dp"
-            android:text="@{customer.customerPhone}"
+            android:text="@{customer.screen.customerPhone}"
             app:layout_constraintBottom_toBottomOf="@+id/textView35"
             app:layout_constraintStart_toEndOf="@+id/textView35"
             app:layout_constraintTop_toTopOf="@+id/textView35"

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.arcgbot.BR;
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.Customer;
+import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.viewmodels.CustomerViewModel;
 import com.example.arcgbot.viewmodels.GameItemViewModel;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class GamerSuggestAdapter extends RecyclerView.Adapter<GamerSuggestAdapter.GenericViewHolder> {
 
     private int layoutId;
-    private List<Customer> customerList;
+    private List<CustomerView> customerList;
     private GameItemViewModel viewModel;
 
     public GamerSuggestAdapter(@LayoutRes int layoutId, GameItemViewModel viewModel) {
@@ -55,7 +56,7 @@ public class GamerSuggestAdapter extends RecyclerView.Adapter<GamerSuggestAdapte
         return getLayoutIdForPosition(position);
     }
 
-    public void setCustomerList(List<Customer> customerList) {
+    public void setCustomerList(List<CustomerView> customerList) {
         this.customerList = customerList;
         notifyDataSetChanged();
     }

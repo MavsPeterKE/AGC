@@ -1,5 +1,11 @@
 package com.example.arcgbot.view.activity;
 
+import static com.example.arcgbot.utils.Constants.Events.CLOSE_ERROR_SHEET;
+import static com.example.arcgbot.utils.Constants.Events.LOGIN;
+import static com.example.arcgbot.utils.Constants.InputError.PASSWORD_ERROR;
+import static com.example.arcgbot.utils.Constants.InputError.USERNAME_ERROR;
+import static com.example.arcgbot.utils.Constants.InputError.VALID_LOGIN;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,12 +33,6 @@ import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 
-import static com.example.arcgbot.utils.Constants.Events.CLOSE_ERROR_SHEET;
-import static com.example.arcgbot.utils.Constants.Events.LOGIN;
-import static com.example.arcgbot.utils.Constants.InputError.PASSWORD_ERROR;
-import static com.example.arcgbot.utils.Constants.InputError.USERNAME_ERROR;
-import static com.example.arcgbot.utils.Constants.InputError.VALID_LOGIN;
-
 public class LoginActivity extends DaggerAppCompatActivity {
     @Inject
     ViewModelFactory viewModelFactory;
@@ -48,15 +48,15 @@ public class LoginActivity extends DaggerAppCompatActivity {
     }
 
     private void init() {
-        if (Prefs.getBoolean(Constants.PrefsKeys.LOGIN_SUCCESS)){
-            if (Prefs.getString(Constants.PrefsKeys.CURRENT_DATE).equals(Utils.getTodayDate(Constants.DATE_FORMAT))){
+        if (Prefs.getBoolean(Constants.PrefsKeys.LOGIN_SUCCESS)) {
+            if (Prefs.getString(Constants.PrefsKeys.CURRENT_DATE).equals(Utils.getTodayDate(Constants.DATE_FORMAT))) {
                 goToGameCountHome();
-            }else {
+            } else {
                 setUpLogin();
                 viewModel.gameRepository.clearGameData();
             }
 
-        }else {
+        } else {
             setUpLogin();
         }
 
@@ -70,7 +70,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
         viewModel.clickEventsLiveData.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String action) {
-                switch (action){
+                switch (action) {
                     case LOGIN:
                         viewModel.validateLoginInputs();
                         break;
@@ -119,16 +119,15 @@ public class LoginActivity extends DaggerAppCompatActivity {
                 activityLoginBinding.progressBar.setVisibility(View.GONE);
                 if (loginModel.message.equals(Constants.SUCCESS)) {
                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Prefs.putBoolean(Constants.PrefsKeys.LOGIN_SUCCESS,true);
+                    Prefs.putBoolean(Constants.PrefsKeys.LOGIN_SUCCESS, true);
                     Prefs.putString(Constants.PrefsKeys.CURRENT_DATE, Utils.getTodayDate(Constants.DATE_FORMAT));
                     goToGameCountHome();
                 } else {
-                    /*String title = loginModel.message.contains("resolve host") ? "Connection Error" :
-                            "Login Credentials Error";
-                    String msg = title.equals("Connection Error") ? "Check your internet connection" : "Wrong Username/Password";
+                    String title = getTitle(loginModel.message);
+                    String msg = getMessage(title);
                     setBottomSheetError(title, msg);
-                    showErrorBottomSheetAction();*/
-                    goToGameCountHome();
+                    showErrorBottomSheetAction();
+                    //goToGameCountHome();
                 }
             }
 
@@ -144,6 +143,30 @@ public class LoginActivity extends DaggerAppCompatActivity {
 
             }
         };
+    }
+
+    private String getTitle(String title) {
+        String message  = "";
+        if (title.contains("404")) {
+            message = "Server Error";
+        } else if (title.contains("resolve host")) {
+            message = "Connection Error";
+        }else {
+            message = "Login Credentials Error";
+        }
+        return message;
+    }
+
+    private String getMessage(String title) {
+        String message = "";
+        if (title.contains("Server Error")) {
+            message = "Kindly raise issue with Support Team";
+        } else if (title.contains("Connection Error")) {
+            message = "Check your internet connection";
+        }else if (title.contains("Login Credentials Error")){
+            message = "Wrong Username/Password";
+        }
+        return message;
     }
 
     private void goToGameCountHome() {

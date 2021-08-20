@@ -10,18 +10,15 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arcgbot.BR;
-import com.example.arcgbot.R;
-import com.example.arcgbot.database.entity.Customer;
-import com.example.arcgbot.models.ScreenItem;
+import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.viewmodels.CustomerViewModel;
-import com.example.arcgbot.viewmodels.ScreensViewModel;
 
 import java.util.List;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.GenericViewHolder> {
 
     private int layoutId;
-    private List<Customer> customerList;
+    private List<CustomerView> customerList;
     private CustomerViewModel viewModel;
 
     public CustomerAdapter(@LayoutRes int layoutId, CustomerViewModel viewModel) {
@@ -56,7 +53,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Generi
         return getLayoutIdForPosition(position);
     }
 
-    public void setCustomerList(List<Customer> customerList) {
+    public void setCustomerList(List<CustomerView> customerList) {
         this.customerList = customerList;
         notifyDataSetChanged();
     }
@@ -70,8 +67,8 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Generi
         }
 
         void bind(CustomerViewModel viewModel, Integer position) {
-           binding.setVariable(BR.model, viewModel);
-           binding.setVariable(BR.customer, customerList.get(position));
+            binding.setVariable(BR.model, viewModel);
+            binding.setVariable(BR.customer, customerList.get(position));
             binding.executePendingBindings();
             //binding.getRoot().findViewById(R.id.layout_main).setOnClickListener(view -> viewModel.onScreenItemClick(screenItemList.get(position)));
         }

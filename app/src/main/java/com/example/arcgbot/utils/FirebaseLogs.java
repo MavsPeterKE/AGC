@@ -3,7 +3,9 @@ package com.example.arcgbot.utils;
 import android.text.format.DateFormat;
 
 import com.example.arcgbot.database.entity.CompletedGame;
+import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.entity.GameCount;
+import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.EndDayModel;
 import com.example.arcgbot.models.GameModel;
@@ -22,15 +24,6 @@ public class FirebaseLogs {
     public FirebaseLogs() {
         firebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
-    }
-
-    public void setGameLog(String date, String screenId, GameCount gameCount) {
-        firebaseDatabaseReference
-                .child(Constants.DEFAULT_USER)
-                .child("gamelogs")
-                .child(date)
-                .child(screenId+""+gameCount.getGameId())
-                    .setValue(gameCount);
     }
 
     public void setGameLogList(String tablename, List<GameView> gameList) {
@@ -68,6 +61,14 @@ public class FirebaseLogs {
                 .child(monthString+"_"+year)
                 .child(date)
                 .setValue(endDayModel);
+    }
+
+    public void setCustomerList(List<CustomerView> customerVisits){
+        firebaseDatabaseReference
+                .child(Constants.DEFAULT_USER)
+                .child("gamelogs")
+                .child("all-game-customers")
+                .setValue(customerVisits);
     }
 
 }

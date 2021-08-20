@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.Customer;
+import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
@@ -29,7 +30,7 @@ public class CustomerViewModel extends ViewModel {
     FirebaseLogs firebaseLogs;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     private String phoneNo;
-    private List<Customer> customerList;
+    private List<CustomerView> customerList;
 
     @Inject
     public CustomerViewModel(GameRepository gameRepository) {
@@ -46,7 +47,7 @@ public class CustomerViewModel extends ViewModel {
         return customerAdapter;
     }
 
-    public void setCustomerList(List<Customer> customerList) {
+    public void setCustomerList(List<CustomerView> customerList) {
         if (customerList != null) {
             isCustomerListSet.set(!customerList.isEmpty());
         }
@@ -76,9 +77,9 @@ public class CustomerViewModel extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void searchGamer(String searchText) {
-        List<Customer> searchList = customerList.stream().filter(customer ->
-                customer.getCustomerName().toLowerCase().contains(searchText) ||
-                customer.getCustomerPhone().toLowerCase().contains(searchText)).collect(Collectors.toList());
+        List<CustomerView> searchList = customerList.stream().filter(customer ->
+                customer.screen.getCustomerName().toLowerCase().contains(searchText) ||
+                customer.screen.getCustomerPhone().toLowerCase().contains(searchText)).collect(Collectors.toList());
         customerAdapter.setCustomerList(searchList);
         customerAdapter.notifyDataSetChanged();
     }

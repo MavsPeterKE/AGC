@@ -81,7 +81,8 @@ public class CompletedGameSearchViewModel extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void searchScreen(String searchText) {
-        List<ScreenItem> gameViewList = screenList.stream().filter(screenItem -> screenItem.screenLable.contains(searchText)).collect(Collectors.toList());
+        List<ScreenItem> gameViewList = screenList.stream().filter(screenItem ->
+                screenItem.screenLable.toLowerCase().contains(searchText)).collect(Collectors.toList());
         completedGameSearchAdapter.setScreenList(gameViewList);
         completedGameSearchAdapter.notifyDataSetChanged();
     }

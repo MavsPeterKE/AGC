@@ -33,4 +33,7 @@ public abstract class ScreenDao extends BaseDao<Screen> {
     @Transaction
     @Query("SELECT * FROM gameview WHERE game_id=:gameId")
     public abstract GameView getGameViewById(long gameId);
+
+    @Query("UPDATE screen_table SET active=0")
+    public abstract void resetAllScreens();
 }
