@@ -49,7 +49,9 @@ public abstract class CustomerVisitDao extends BaseDao<CustomerVisit> {
            update(customerVisit);
        }
     }
-
     @Query("SELECT * FROM customer_visit_table WHERE customer_id IN(:customers)")
     abstract List<CustomerVisit> getCustomersByPhone(List<String> customers);
+
+    @Query("SELECT * FROM customer_visit_table WHERE customer_id IN(:customers) AND week_number=:week AND month=:month")
+    public abstract List<CustomerVisit> getWeeklyCustomerVisit(List<String> customers,int week,String month);
 }

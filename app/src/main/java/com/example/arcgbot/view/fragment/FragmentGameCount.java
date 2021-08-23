@@ -65,6 +65,9 @@ public class FragmentGameCount extends DaggerFragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Configs configs = dataSnapshot.getValue(Configs.class);
                 Prefs.putLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX,configs.happy_hour_max_seconds);
+                Prefs.putInt(Constants.PrefsKeys.LOYALTY_VISIT_COUNT,configs.loyalty_visit_count);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_SPEND_AMOUNT_BONUS_ENABLED,configs.spent_amount_bonus_enabled);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_LOYALTY_BONUS_ENABLED,configs.loyalty_discount_enabled);
             }
 
             @Override

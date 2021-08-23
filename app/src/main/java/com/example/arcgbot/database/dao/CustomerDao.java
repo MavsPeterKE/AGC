@@ -7,6 +7,7 @@ import androidx.room.Dao;
 import androidx.room.Query;
 
 import com.example.arcgbot.database.entity.Customer;
+import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.entity.GameType;
 import com.example.arcgbot.database.views.CustomerView;
 
@@ -37,4 +38,10 @@ public abstract class CustomerDao extends BaseDao<Customer> {
 
     @Query("SELECT * FROM customerview")
     public abstract List<CustomerView> getSavedCustomers();
+
+    @Query("UPDATE customer_table SET loyalty_bonus=1 WHERE id IN (:customerPhoneList)")
+    public abstract void updateLoyaltyBonusAwarded(List<String> customerPhoneList);
+
+    @Query("SELECT count(*) FROM customer_table WHERE id IN (:customerVisitList) AND loyalty_bonus=1 AND loyalty_bonus_week=:loyaltyBonusWeek")
+    public abstract int getLoyaltyBonusCount(List<String> customerVisitList,int loyaltyBonusWeek);
 }

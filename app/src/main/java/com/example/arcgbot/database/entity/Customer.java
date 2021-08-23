@@ -20,7 +20,11 @@ public class Customer extends BaseObservable {
     private String isGamingBeast;
 
     @ColumnInfo(name = "loyalty_bonus")
-    private double loyaltyBonus;
+    private boolean isLoyaltyBonusAwarded;
+
+    @ColumnInfo(name = "loyalty_bonus_week")
+    private int loyaltyBonusWeek;
+
 
     @ColumnInfo(name = "review_comment")
     private double reviewComment;
@@ -53,12 +57,12 @@ public class Customer extends BaseObservable {
         this.isGamingBeast = isGamingBeast;
     }
 
-    public double getLoyaltyBonus() {
-        return loyaltyBonus;
+    public boolean getLoyaltyBonus() {
+        return isLoyaltyBonusAwarded;
     }
 
-    public void setLoyaltyBonus(double loyaltyBonus) {
-        this.loyaltyBonus = loyaltyBonus;
+    public void setLoyaltyBonus(boolean loyaltyBonus) {
+        this.isLoyaltyBonusAwarded = loyaltyBonus;
     }
 
     public double getReviewComment() {
@@ -75,5 +79,21 @@ public class Customer extends BaseObservable {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public boolean isLoyaltyBonusAwarded() {
+        return isLoyaltyBonusAwarded;
+    }
+
+    public void setLoyaltyBonusAwarded(boolean loyaltyBonusAwarded) {
+        isLoyaltyBonusAwarded = loyaltyBonusAwarded;
+    }
+
+    public int getLoyaltyBonusWeek() {
+        return loyaltyBonusWeek;
+    }
+
+    public void setLoyaltyBonusWeek(int loyaltyBonusWeek) {
+        this.loyaltyBonusWeek = loyaltyBonusWeek;
     }
 }

@@ -35,6 +35,13 @@ public class CompletedGame extends BaseObservable {
     @ColumnInfo(name = "bonus_amount")
     private double bonusAmount;
 
+    @ColumnInfo(name = "happy_hour_bonus_amount")
+    private double happyHourBonusAmount;
+
+
+    @ColumnInfo(name = "loyalty_bonus_amount")
+    private double loyaltyBonusAmount;
+
     public long getId() {
         return id;
     }
@@ -97,5 +104,21 @@ public class CompletedGame extends BaseObservable {
 
     public void setPlayerPhone(String playerPhone) {
         this.playerPhone = playerPhone;
+    }
+
+    public double getLoyaltyBonusAmount() {
+        return loyaltyBonusAmount;
+    }
+
+    public void setLoyaltyBonusAmount(double loyaltyBonusAmount) {
+        this.loyaltyBonusAmount = loyaltyBonusAmount;
+    }
+
+    public double getHappyHourBonusAmount() {
+        return happyHourBonusAmount;
+    }
+
+    public void setHappyHourBonusAmount(double happyHourBonusAmount) {
+        this.happyHourBonusAmount = happyHourBonusAmount;
     }
 }

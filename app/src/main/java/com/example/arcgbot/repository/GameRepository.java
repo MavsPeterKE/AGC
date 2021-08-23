@@ -1,10 +1,14 @@
 package com.example.arcgbot.repository;
 
 import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
+import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_LOYALTY_BONUS_ENABLED;
+import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_SPEND_AMOUNT_BONUS_ENABLED;
+import static com.example.arcgbot.utils.Constants.PrefsKeys.LOYALTY_VISIT_COUNT;
 
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.example.arcgbot.database.dao.CompleteGameDao;
@@ -28,7 +32,6 @@ import com.example.arcgbot.models.LoginModel;
 import com.example.arcgbot.retrofit.RetrofitService;
 import com.example.arcgbot.retrofit.responseStructures.APIListResponse;
 import com.example.arcgbot.retrofit.responseStructures.GameStructure;
-import com.example.arcgbot.retrofit.responseStructures.LoginStructure;
 import com.example.arcgbot.retrofit.responseStructures.ScreenStructure;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
@@ -39,8 +42,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -337,17 +338,17 @@ public class GameRepository {
     public void updateGameCountValue(GameView gameView, int count, int bonus) {
         executorService.submit(() -> {
             GameCount gameCount = gameCountDao.getGameCountById(gameView.gameCount.getGameId());
-            if (Utils.getCurrentSeconds()>Prefs.getLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX)){
+            if (Utils.getCurrentSeconds() > Prefs.getLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX)) {
                 double normalCharges = gameView.gameType.getCharges();
-                gameCount.setGamesCount(gameCount.getGamesCount()+(count-gameView.totalGameCount));
-                gameCount.setGamesBonus(bonus-gameCount.getHappyHourBonusCount());
-                gameCount.setNormalGamingRateBonusAmount(gameCount.getGamesBonus()*normalCharges);
-                gameCount.setNormalGamingRateAmount(normalCharges*gameCount.getGamesCount()-gameCount.getNormalGamingRateBonusAmount());
+                gameCount.setGamesCount(gameCount.getGamesCount() + (count - gameView.totalGameCount));
+                gameCount.setGamesBonus(bonus - gameCount.getHappyHourBonusCount());
+                gameCount.setNormalGamingRateBonusAmount(gameCount.getGamesBonus() * normalCharges);
+                gameCount.setNormalGamingRateAmount(normalCharges * gameCount.getGamesCount() - gameCount.getNormalGamingRateBonusAmount());
 
             } else {
                 double happyHourCharges = gameView.gameType.getCharges() - gameView.promotion.getHappyHourDiscount();
-                gameCount.setHappyHourGameCount(gameCount.getHappyHourGameCount()+(count-gameView.totalGameCount));
-                gameCount.setHappyHourBonusCount(bonus-gameCount.getGamesBonus());
+                gameCount.setHappyHourGameCount(gameCount.getHappyHourGameCount() + (count - gameView.totalGameCount));
+                gameCount.setHappyHourBonusCount(bonus - gameCount.getGamesBonus());
                 gameCount.setHappyHourBonusAmount(gameCount.getHappyHourBonusCount() * happyHourCharges);
                 gameCount.setHappyHourAmount(gameCount.getHappyHourGameCount() * happyHourCharges - gameCount.getHappyHourBonusAmount());
             }
@@ -364,23 +365,76 @@ public class GameRepository {
     }
 
     public void detachGameFromScreen(GameView gameView) {
-        CompletedGame completedGame = new CompletedGame();
-        completedGame.setDuration(gameView.gameCount.getStartTime() + " - " + gameView.gameCount.getStopTime());
-        completedGame.setGamesCount(gameView.gameCount.getGamesCount());
-        completedGame.setScreenLable(gameView.screen.getScreenLable() + " - " + gameView.gameCount.getPlayerNames());
-        completedGame.setEndTimeSeconds(Utils.getSeconds(gameView.gameCount.getStopTime()));
-        completedGame.setPayableAmount(gameView.payableAmount);
-        completedGame.setBonusAmount(gameView.bonusAmount);
+        Date todayDate = Utils.convertToDate(Utils.getTodayDate(DATE_FORMAT), Constants.DATE_FORMAT);
+        String monthString = (String) DateFormat.format("MMM", todayDate); // Jun
+        String year = (String) DateFormat.format("yyyy", todayDate); // 2013
+        int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
+        CompletedGame completedGame = createCompletedGame(gameView);
         executorService.submit(() -> {
-            customerVisitDao.updateCustomerVisit(gameView.gameCount.getPlayer1Id(),
-                    gameView.gameCount.getPlayer2Id(), completedGame.getGamesCount(), completedGame.getPayableAmount());
-            int x = gameCountDao.updateCompletedGames(gameView.gameCount.getGameId());
+            updatedCustomerVisit(gameView, completedGame);
+            List<String> customerPhoneList = getCustomerPhoneList(gameView);
+
+            List<CustomerVisit> weekCustomerVisit = customerVisitDao.getWeeklyCustomerVisit(customerPhoneList,
+                    currentWeek,monthString + "_" + year);
+
+            if (Prefs.getBoolean(IS_LOYALTY_BONUS_ENABLED)){
+                if (weekCustomerVisit.size()>Prefs.getInt(LOYALTY_VISIT_COUNT)){
+                    if (customerDao.getLoyaltyBonusCount(customerPhoneList,currentWeek)==0){
+                        completedGame.setPayableAmount(completedGame.getPayableAmount()-gameView.promotion.getLoyaltyDiscount());
+                        completedGame.setBonusAmount(completedGame.getBonusAmount()+gameView.promotion.getLoyaltyDiscount());
+                        customerDao.updateLoyaltyBonusAwarded(customerPhoneList);
+                    }
+                }
+            }
+
+            if (Prefs.getBoolean(IS_SPEND_AMOUNT_BONUS_ENABLED)){
+                double totalAmount = getCustomerWeekSpendAmount(weekCustomerVisit);
+                if (totalAmount>=gameView.promotion.getSpendingDiscount()){
+                    completedGame.setPayableAmount(completedGame.getPayableAmount()-gameView.promotion.getSpendingDiscount());
+                    completedGame.setBonusAmount(completedGame.getBonusAmount()+gameView.promotion.getSpendingDiscount());
+                }
+            }
+
+            int x = gameCountDao.deleteCompletedGameById(gameView.gameCount.getGameId());
             Log.e("detachGameFromScreen: ", x + "  deleted");
             long y = completeGameDao.insert(completedGame);
             Log.e("ended_game_: ", y + " " + completedGame.getScreenLable() + "Games Count__ " + completedGame.getGamesCount());
             firebaseLogs.setAllGameList(Utils.getTodayDate(DATE_FORMAT), "all-completed-Games", completeGameDao.getAllCompletedGameList());
         });
 
+    }
+
+    private void updatedCustomerVisit(GameView gameView, CompletedGame completedGame) {
+        customerVisitDao.updateCustomerVisit(gameView.gameCount.getPlayer1Id(),
+                gameView.gameCount.getPlayer2Id(), completedGame.getGamesCount(), completedGame.getPayableAmount());
+    }
+
+    @NonNull
+    private List<String> getCustomerPhoneList(GameView gameView) {
+        List<String> customerPhoneList = new ArrayList<>();
+        customerPhoneList.add(gameView.gameCount.getPlayer1Id());
+        customerPhoneList.add(gameView.gameCount.getPlayer2Id());
+        return customerPhoneList;
+    }
+
+    @NonNull
+    private CompletedGame createCompletedGame(GameView gameView) {
+        CompletedGame completedGame = new CompletedGame();
+        completedGame.setDuration(gameView.gameCount.getStartTime() + " - " + gameView.gameCount.getStopTime());
+        completedGame.setGamesCount(gameView.totalGameCount);
+        completedGame.setScreenLable(gameView.screen.getScreenLable() + " - " + gameView.gameCount.getPlayerNames());
+        completedGame.setEndTimeSeconds(Utils.getSeconds(gameView.gameCount.getStopTime()));
+        completedGame.setPayableAmount(gameView.payableAmount);
+        completedGame.setBonusAmount(gameView.bonusAmount);
+        return completedGame;
+    }
+
+    private double getCustomerWeekSpendAmount(List<CustomerVisit> weekCustomerVisit) {
+        double totalAmount=0;
+        for (CustomerVisit customerVisit : weekCustomerVisit){
+            totalAmount+=customerVisit.getAmountPaidToShop();
+        }
+        return totalAmount;
     }
 
     public LiveData<List<CompletedGame>> getCompletedGames() {

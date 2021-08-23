@@ -57,6 +57,9 @@ public class Constants {
         public static final String ACTIVE_USER = "active_user";
         public static final String HAPPY_HOUR_TIME_MAX = "happy_hour_max";
         public static final String DISABLED_FEATURES = "disabled_";
+        public static final String LOYALTY_VISIT_COUNT = "loyalty_visit_count";
+        public static final String IS_LOYALTY_BONUS_ENABLED = "loyalty_discount_enabled:";
+        public static final String IS_SPEND_AMOUNT_BONUS_ENABLED = "spent_amount_bonus_enabled";
     }
 
     public class IntentKeys {
