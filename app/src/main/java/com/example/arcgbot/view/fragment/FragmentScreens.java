@@ -18,6 +18,7 @@ import com.example.arcgbot.databinding.FragmentScreensBinding;
 import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
+import com.example.arcgbot.view.activity.SearchActivity;
 import com.example.arcgbot.viewmodels.ScreensViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +52,7 @@ public class FragmentScreens extends DaggerFragment {
 
         mViewModel.gameRepository.getCompletedGames().observe(getViewLifecycleOwner(), completedGames -> mViewModel.setGameCountdapter(completedGames));
 
-        mViewModel.getSelectedScreenItem().observe(getViewLifecycleOwner(), new Observer<ScreenItem>() {
+       /* mViewModel.getSelectedScreenItem().observe(getViewLifecycleOwner(), new Observer<ScreenItem>() {
             @Override
             public void onChanged(ScreenItem screenItem) {
                 if (screenItem!=null){
@@ -76,9 +77,28 @@ public class FragmentScreens extends DaggerFragment {
 
                 }
             }
-        });
-
+        });*/
+        observeClickEvents();
         return fragmentScreensBinding.getRoot();
+    }
+
+
+    public void observeClickEvents() {
+        mViewModel.getClickEventsLiveData().observe(getViewLifecycleOwner(), value -> {
+            switch (value) {
+                case Constants.Events.SEARCH_GAME:
+                    startSearchActivity();
+                    break;
+
+
+            }
+        });
+    }
+
+    private void startSearchActivity() {
+        Intent searchIntent = new Intent(getActivity(), SearchActivity.class);
+        searchIntent.putExtra(Constants.IntentKeys.ORIGIN_FRAGMENT,FragmentScreens.class.getSimpleName());
+        startActivity(searchIntent);
     }
 
     @NotNull

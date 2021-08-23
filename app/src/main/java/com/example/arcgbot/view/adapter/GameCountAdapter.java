@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arcgbot.BR;
 import com.example.arcgbot.database.entity.GameCount;
+import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class GameCountAdapter extends RecyclerView.Adapter<GameCountAdapter.GenericViewHolder> {
 
     private int layoutId;
-    private List<GameModel> gameCountList;
+    private List<GameView> gameCountList;
     private GameCountViewModel viewModel;
 
     public GameCountAdapter(@LayoutRes int layoutId, GameCountViewModel viewModel) {
@@ -54,7 +55,7 @@ public class GameCountAdapter extends RecyclerView.Adapter<GameCountAdapter.Gene
         return getLayoutIdForPosition(position);
     }
 
-    public void setGameCountList(List<GameModel> gameCountList) {
+    public void setGameCountList(List<GameView> gameCountList) {
         this.gameCountList = gameCountList;
         notifyDataSetChanged();
     }

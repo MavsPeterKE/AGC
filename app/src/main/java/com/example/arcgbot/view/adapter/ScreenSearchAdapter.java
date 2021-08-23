@@ -1,7 +1,6 @@
 package com.example.arcgbot.view.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
@@ -11,20 +10,19 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arcgbot.BR;
-import com.example.arcgbot.R;
-import com.example.arcgbot.database.entity.GameType;
-import com.example.arcgbot.models.GameModel;
+import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
+import com.example.arcgbot.viewmodels.SearchItemViewModel;
 
 import java.util.List;
 
-public class GameTypeAdapter extends RecyclerView.Adapter<GameTypeAdapter.GenericViewHolder> {
+public class ScreenSearchAdapter extends RecyclerView.Adapter<ScreenSearchAdapter.GenericViewHolder> {
 
     private int layoutId;
-    private List<GameType> gameTypeList;
-    private GameCountViewModel viewModel;
+    private List<GameView> gameCountList;
+    private SearchItemViewModel viewModel;
 
-    public GameTypeAdapter(@LayoutRes int layoutId, GameCountViewModel viewModel) {
+    public ScreenSearchAdapter(@LayoutRes int layoutId, SearchItemViewModel viewModel) {
         this.layoutId = layoutId;
         this.viewModel = viewModel;
     }
@@ -35,7 +33,7 @@ public class GameTypeAdapter extends RecyclerView.Adapter<GameTypeAdapter.Generi
 
     @Override
     public int getItemCount() {
-        return gameTypeList == null ? 0 : gameTypeList.size();
+        return gameCountList == null ? 0 : gameCountList.size();
     }
 
     @NonNull
@@ -56,8 +54,8 @@ public class GameTypeAdapter extends RecyclerView.Adapter<GameTypeAdapter.Generi
         return getLayoutIdForPosition(position);
     }
 
-    public void setGameTypeList(List<GameType> gameTypeList) {
-        this.gameTypeList = gameTypeList;
+    public void setGameCountList(List<GameView> gameCountList) {
+        this.gameCountList = gameCountList;
         notifyDataSetChanged();
     }
 
@@ -69,16 +67,11 @@ public class GameTypeAdapter extends RecyclerView.Adapter<GameTypeAdapter.Generi
             this.binding = binding;
         }
 
-        void bind(GameCountViewModel viewModel, Integer position) {
+        void bind(SearchItemViewModel viewModel, Integer position) {
             binding.setVariable(BR.model, viewModel);
-            binding.setVariable(BR.gameType, gameTypeList.get(position));
+            binding.setVariable(BR.gameCountModel, gameCountList.get(position));
+            binding.setVariable(BR.position, position);
             binding.executePendingBindings();
-            binding.getRoot().findViewById(R.id.main).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    viewModel.onGameTypeClick(gameTypeList.get(position));
-                }
-            });
         }
 
     }

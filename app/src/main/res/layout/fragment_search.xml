@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="com.example.arcgbot.viewmodels.SearchItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.activity.LoginActivity">
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{()-> model.onBackClick()}"
+            app:srcCompat="@drawable/ic_back_black" />
+
+        <EditText
+            android:id="@+id/edSearchText"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:ems="12"
+            android:inputType="textPersonName"
+            android:hint="Search..."
+            android:textSize="24dp"
+            android:textColorHint="@color/hint_grey"
+            android:textColor="@color/text_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/edSearchText"
+            app:layout_constraintStart_toStartOf="@+id/edSearchText"
+            app:layout_constraintTop_toBottomOf="@+id/edSearchText"
+            app:setAdapter="@{model.screenSearchAdapter}"
+            tools:listitem="@layout/game_item_revamp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

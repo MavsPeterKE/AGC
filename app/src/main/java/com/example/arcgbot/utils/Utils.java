@@ -7,9 +7,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,12 +103,44 @@ public class Utils {
         return dateFormat.format(c);
     }
 
+    public static int getCurrentWeekCount(String dateString) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(Utils.convertToDate(dateString, Constants.DATE_FORMAT));
+        return cal.get(Calendar.WEEK_OF_MONTH);
+    }
+
     public static int getSeconds(String time){
         String[] units = time.split(":"); //will break the string up into an array
         int minutes = Integer.parseInt(units[0]); //first element
         int seconds = Integer.parseInt(units[1]); //second element
         int duration = 60 * minutes + seconds;
         return duration;
+    }
+
+    public static Date convertToDate(String dateString,String format) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+            return simpleDateFormat.parse(dateString);
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    public static String getCurrentTime() {
+        return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+    }
+
+    public static long getCurrentSeconds() {
+        String currentTime = getCurrentTime();
+        String[] timeArray = currentTime.split(":");
+        long seconds = Integer.parseInt(timeArray[0]) * 60 * 60 + Integer.parseInt(timeArray[1]) * 60;
+        return seconds;
     }
 
 

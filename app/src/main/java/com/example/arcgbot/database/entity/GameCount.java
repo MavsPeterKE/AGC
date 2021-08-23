@@ -29,8 +29,20 @@ public class GameCount extends BaseObservable {
     @ColumnInfo(name = "games_bonus_count")
     private int gamesBonus;
 
+    @ColumnInfo(name = "happy_hour_bonus_count")
+    private int happyHourBonusCount;
+
+    @ColumnInfo(name = "happy_hour_game_count")
+    private int happyHourGameCount;
+
     @ColumnInfo(name = "players_name")
     private String playerNames;
+
+    @ColumnInfo(name = "player_one_id")
+    private String player1Id;
+
+    @ColumnInfo(name = "player_two_id")
+    private String player2Id;
 
     @ColumnInfo(name = "player_phone")
     private String playerPhone;
@@ -43,6 +55,18 @@ public class GameCount extends BaseObservable {
 
     @ColumnInfo(name = "payable_amount")
     private double payableAmount;
+
+    @ColumnInfo(name = "happy_hour_amount")
+    private double happyHourAmount;
+
+    @ColumnInfo(name = "normal_game_rate_amount")
+    private double normalGamingRateAmount;
+
+    @ColumnInfo(name = "happy_hour_bonus_amount")
+    private double happyHourBonusAmount;
+
+    @ColumnInfo(name = "normal_game_rate_bonus_amount")
+    private double normalGamingRateBonusAmount;
 
     @ColumnInfo(name = "hash_key")
     private String hashKey;
@@ -142,5 +166,69 @@ public class GameCount extends BaseObservable {
 
     public void setGamesBonus(int gamesBonus) {
         this.gamesBonus = gamesBonus;
+    }
+
+    public String getPlayer1Id() {
+        return player1Id;
+    }
+
+    public void setPlayer1Id(String player1Id) {
+        this.player1Id = player1Id;
+    }
+
+    public String getPlayer2Id() {
+        return player2Id;
+    }
+
+    public void setPlayer2Id(String player2Id) {
+        this.player2Id = player2Id;
+    }
+
+    public double getHappyHourAmount() {
+        return happyHourAmount;
+    }
+
+    public void setHappyHourAmount(double happyHourAmount) {
+        this.happyHourAmount = happyHourAmount;
+    }
+
+    public double getNormalGamingRateAmount() {
+        return normalGamingRateAmount;
+    }
+
+    public void setNormalGamingRateAmount(double normalGamingRateAmount) {
+        this.normalGamingRateAmount = normalGamingRateAmount;
+    }
+
+    public double getHappyHourBonusAmount() {
+        return happyHourBonusAmount;
+    }
+
+    public void setHappyHourBonusAmount(double happyHourBonusAmount) {
+        this.happyHourBonusAmount = happyHourBonusAmount;
+    }
+
+    public double getNormalGamingRateBonusAmount() {
+        return normalGamingRateBonusAmount;
+    }
+
+    public void setNormalGamingRateBonusAmount(double normalGamingRateBonusAmount) {
+        this.normalGamingRateBonusAmount = normalGamingRateBonusAmount;
+    }
+
+    public int getHappyHourBonusCount() {
+        return happyHourBonusCount;
+    }
+
+    public void setHappyHourBonusCount(int happyHourBonusCount) {
+        this.happyHourBonusCount = happyHourBonusCount;
+    }
+
+    public int getHappyHourGameCount() {
+        return happyHourGameCount;
+    }
+
+    public void setHappyHourGameCount(int happyHourGameCount) {
+        this.happyHourGameCount = happyHourGameCount;
     }
 }

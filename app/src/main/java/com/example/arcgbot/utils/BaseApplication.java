@@ -4,6 +4,12 @@ import android.content.ContextWrapper;
 
 import com.example.arcgbot.di.component.ApplicationComponent;
 import com.example.arcgbot.di.component.DaggerApplicationComponent;
+import com.example.arcgbot.models.Configs;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;
@@ -15,7 +21,6 @@ public class BaseApplication extends DaggerApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-
         // Initialize the Prefs class
         new Prefs.Builder()
                 .setContext(this)

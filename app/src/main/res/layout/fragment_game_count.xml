@@ -45,7 +45,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle"
                 app:setAdapter="@{model.getGameCountAdapter()}"
                 tools:layout_editor_absoluteX="16dp"
-                tools:listitem="@layout/game_item" />
+                tools:listitem="@layout/game_item_revamp" />
 
             <TextView
                 android:id="@+id/textView28"
@@ -60,12 +60,17 @@
                 app:layout_constraintStart_toStartOf="@+id/tvTitle"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="28dp"
+                android:onClick="@{()-> model.onSearchClicked()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView28"
+                app:srcCompat="@drawable/search" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-          <include
-               android:id="@+id/bottom_sheet"
-               layout="@layout/game_bottom_sheet"
-                app:model="@{model}"
-               />
 
         <include
             android:id="@+id/no_game_data"

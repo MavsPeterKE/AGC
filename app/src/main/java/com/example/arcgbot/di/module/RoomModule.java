@@ -6,8 +6,11 @@ import androidx.room.Room;
 
 import com.example.arcgbot.database.AppDataBase;
 import com.example.arcgbot.database.dao.CompleteGameDao;
+import com.example.arcgbot.database.dao.CustomerDao;
+import com.example.arcgbot.database.dao.CustomerVisitDao;
 import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
+import com.example.arcgbot.database.dao.PromotionDao;
 import com.example.arcgbot.database.dao.ScreenDao;
 
 import javax.inject.Singleton;
@@ -52,6 +55,24 @@ public class RoomModule {
     @Provides
     CompleteGameDao provideCompleteGameDao(AppDataBase appDataBase) {
         return appDataBase.completeGameDao();
+    }
+
+    @Singleton
+    @Provides
+    CustomerDao provideCustomerDao(AppDataBase appDataBase) {
+        return appDataBase.customerDao();
+    }
+
+    @Singleton
+    @Provides
+    CustomerVisitDao provideCustomerVisitDao(AppDataBase appDataBase) {
+        return appDataBase.customerVisitDao();
+    }
+
+    @Singleton
+    @Provides
+    PromotionDao providePromotionDao(AppDataBase appDataBase) {
+        return appDataBase.promotionDao();
     }
 
 
