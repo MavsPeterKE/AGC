@@ -27,6 +27,12 @@ public class CustomerVisit extends BaseObservable {
     @ColumnInfo(name = "spent_amount")
     private double amountPaidToShop;
 
+    @ColumnInfo(name = "happy_hour_amount")
+    private double happyHourAmount;
+
+    @ColumnInfo(name = "normal_gaming_rate_Amount")
+    private double normalGamingRateAmount;
+
     @ColumnInfo(name = "month")
     private String month;
 
@@ -87,5 +93,21 @@ public class CustomerVisit extends BaseObservable {
 
     public void setAmountPaidToShop(double amountPaidToShop) {
         this.amountPaidToShop = amountPaidToShop;
+    }
+
+    public double getHappyHourAmount() {
+        return happyHourAmount;
+    }
+
+    public void setHappyHourAmount(double happyHourAmount) {
+        this.happyHourAmount = happyHourAmount;
+    }
+
+    public double getNormalGamingRateAmount() {
+        return normalGamingRateAmount;
+    }
+
+    public void setNormalGamingRateAmount(double normalGamingRateAmount) {
+        this.normalGamingRateAmount = normalGamingRateAmount;
     }
 }

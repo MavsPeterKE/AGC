@@ -12,10 +12,21 @@ import com.example.arcgbot.database.entity.Screen;
 
 import java.util.List;
 
-@DatabaseView("SELECT ct.*,cvt.* FROM customer_table ct LEFT JOIN customer_visit_table cvt ON cvt.customer_id=ct.id")
+@DatabaseView("" +
+        "SELECT " +
+        "ct.*," +
+        "cvt.*," +
+        "SUM(cvt.spent_amount) AS totalSpentAmount, " +
+        "SUM(cvt.games_played) AS totalGamesPlayed " +
+        "FROM customer_table ct " +
+        "LEFT JOIN customer_visit_table cvt ON cvt.customer_id=ct.id " +
+        "GROUP BY ct.id")
 public class CustomerView {
     @Embedded
     public Customer screen;
+
+    public double totalSpentAmount;
+    public int totalGamesPlayed;
 
     @Relation(parentColumn = "id", entityColumn = "customer_id", entity = CustomerVisit.class)
     public List<CustomerVisit> customerVisitList;

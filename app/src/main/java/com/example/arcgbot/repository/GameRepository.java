@@ -12,12 +12,14 @@ import com.example.arcgbot.database.dao.CustomerDao;
 import com.example.arcgbot.database.dao.CustomerVisitDao;
 import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
+import com.example.arcgbot.database.dao.PromotionDao;
 import com.example.arcgbot.database.dao.ScreenDao;
 import com.example.arcgbot.database.entity.CompletedGame;
 import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.entity.GameCount;
 import com.example.arcgbot.database.entity.GameType;
+import com.example.arcgbot.database.entity.Promotion;
 import com.example.arcgbot.database.entity.Screen;
 import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.database.views.GameView;
@@ -30,6 +32,7 @@ import com.example.arcgbot.retrofit.responseStructures.LoginStructure;
 import com.example.arcgbot.retrofit.responseStructures.ScreenStructure;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
+import com.example.arcgbot.utils.Prefs;
 import com.example.arcgbot.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -70,12 +73,13 @@ public class GameRepository {
 
 
     private CompleteGameDao completeGameDao;
+    private PromotionDao promotionDao;
     private FirebaseLogs firebaseLogs;
 
     @Inject
     public GameRepository(RetrofitService retrofitService, ScreenDao screenDao, GameDao gameDao,
                           GameCountDao gameCountDao, CompleteGameDao completeGameDao,
-                          CustomerDao customerDao, CustomerVisitDao customerVisitDao, ExecutorService executorService) {
+                          CustomerDao customerDao, CustomerVisitDao customerVisitDao, PromotionDao promotionDao, ExecutorService executorService) {
         this.retrofitService = retrofitService;
         disposable = new CompositeDisposable();
         this.executorService = executorService;
@@ -85,6 +89,7 @@ public class GameRepository {
         this.completeGameDao = completeGameDao;
         this.customerDao = customerDao;
         this.customerVisitDao = customerVisitDao;
+        this.promotionDao = promotionDao;
         firebaseLogs = new FirebaseLogs();
 
     }
@@ -112,7 +117,6 @@ public class GameRepository {
                 .subscribeWith(new DisposableSingleObserver<APIListResponse<ScreenStructure>>() {
                     @Override
                     public void onSuccess(APIListResponse<ScreenStructure> screenStructures) {
-                        int count = screenStructures.data.size();
                         List<Screen> screenList = new ArrayList<>();
                         for (ScreenStructure structure : screenStructures.data) {
                             Screen screen = new Screen();
@@ -138,6 +142,7 @@ public class GameRepository {
                 .subscribeWith(new DisposableSingleObserver<APIListResponse<GameStructure>>() {
                     @Override
                     public void onSuccess(APIListResponse<GameStructure> gameStructureAPIListResponse) {
+                        List<Promotion> promotionList = new ArrayList<>();
                         List<GameType> gameTypeList = new ArrayList<>();
                         for (GameStructure structure : gameStructureAPIListResponse.data) {
                             GameType gameType = new GameType();
@@ -145,6 +150,13 @@ public class GameRepository {
                             gameType.setCharges(structure.unitPrice);
                             gameType.setGameName(structure.name);
                             gameTypeList.add(gameType);
+
+                            Promotion promotion = new Promotion();
+                            promotion.setId(gameType.getId());
+                            promotion.setHappyHourDiscount(0);
+                            promotion.setSpendingDiscount(0);
+                            promotion.setLoyaltyDiscount(00);
+                            promotionList.add(promotion);
                         }
                         setGameToDB(gameTypeList);
                     }
@@ -156,10 +168,56 @@ public class GameRepository {
                 }));
     }
 
+    public void observePromotionsData() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(Constants.DEFAULT_USER).child("gamelogs").child("configs").child("promotions");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Promotion> firebasePromotionList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    firebasePromotionList.add(snapshot.getValue(Promotion.class));
+                }
+
+                List<GameType> gameTypeList = gameDao.getAllGames();
+                if (firebasePromotionList.size() > 0) {
+                    insertPromotions(firebasePromotionList);
+                } else {
+                    List<Promotion> promotionList = new ArrayList<>();
+                    for (GameType gameType : gameTypeList) {
+                        Promotion promotion = new Promotion();
+                        promotion.setId(gameType.getId());
+                        promotion.setHappyHourDiscount(0);
+                        promotion.setSpendingDiscount(0);
+                        promotion.setLoyaltyDiscount(00);
+                        promotionList.add(promotion);
+                    }
+
+                    new FirebaseLogs().createFirebasePromotion(promotionList);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                // Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+
     private void setGameToDB(List<GameType> gameTypeList) {
         executorService.submit(() -> {
             long[] x = gameDao.insert(gameTypeList);
             int j = 12;
+        });
+    }
+
+    private void insertPromotions(List<Promotion> promotionList) {
+        executorService.submit(() -> {
+            long[] x = promotionDao.insert(promotionList);
         });
     }
 
@@ -169,19 +227,6 @@ public class GameRepository {
         });
 
         startGamesSync();
-    }
-
-    @NotNull
-    private LoginModel getLoginResponseModel(LoginStructure userStructureAPIResponse) {
-        String errorMsg = userStructureAPIResponse.error != null ? userStructureAPIResponse.error : Constants.SUCCESS;
-        LoginModel loginResponseModel = new LoginModel();
-        loginResponseModel.message = errorMsg;
-        loginResponseModel.loginStructure = userStructureAPIResponse;
-        return loginResponseModel;
-    }
-
-    public PublishSubject<LoginModel> getLoginSubject() {
-        return loginSubject;
     }
 
     public LiveData<List<GameView>> getScreensLiveData() {
@@ -202,39 +247,30 @@ public class GameRepository {
         });
     }
 
-    public void resetSelected() {
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                gameDao.resetSelected();
-            }
-        });
-    }
-
     public void saveGameSession(GameCount gameCount, GamerModel gamerModel) {
-        if (gameCount.getGamesCount() == 0) {
-            gameCount.setGamesCount(1);
-        }
         executorService.submit(() -> {
-            Customer gamer1 = new Customer();
-            gamer1.setCustomerPhone(gamerModel.player1Phone);
-            gamer1.setCustomerName(gamerModel.player1Name);
-
-            Customer gamer2 = new Customer();
-            gamer2.setCustomerPhone(gamerModel.player2Phone);
-            gamer2.setCustomerName(gamerModel.player2Name);
-
-            long insertGamer1 = customerDao.insertCustomer(gamer1);
-            long insertGamer2 = customerDao.insertCustomer(gamer2);
-            updateGamersVisit(gamer1, gamer2);
-
+            saveGamersDetails(gamerModel);
             long insert = gameCountDao.insert(gameCount);
             screenDao.updateActiveScreen(gameCount.getScreenId());
             gameDao.deselectGames();
             Log.e("updateGameCount:_ ", insert + " inserted");
         });
         setCustomersData();
+    }
 
+    private void saveGamersDetails(GamerModel gamerModel) {
+        Customer gamer1 = new Customer();
+        gamer1.setCustomerPhone(gamerModel.player1Phone);
+        gamer1.setCustomerName(gamerModel.player1Name);
+
+        Customer gamer2 = new Customer();
+        gamer2.setCustomerPhone(gamerModel.player2Phone);
+        gamer2.setCustomerName(gamerModel.player2Name);
+
+        //Save Gamers
+        long insertGamer1 = customerDao.insertCustomer(gamer1);
+        long insertGamer2 = customerDao.insertCustomer(gamer2);
+        updateGamersVisit(gamer1, gamer2);
     }
 
     public void setCustomersData() {
@@ -298,9 +334,25 @@ public class GameRepository {
 
     }
 
-    public void updateGameCountValue(long gameId, int count, int bonus) {
+    public void updateGameCountValue(GameView gameView, int count, int bonus) {
         executorService.submit(() -> {
-            int update = gameCountDao.updateGameCount(gameId, count, bonus);
+            GameCount gameCount = gameCountDao.getGameCountById(gameView.gameCount.getGameId());
+            if (Utils.getCurrentSeconds()>Prefs.getLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX)){
+                double normalCharges = gameView.gameType.getCharges();
+                gameCount.setGamesCount(gameCount.getGamesCount()+(count-gameView.totalGameCount));
+                gameCount.setGamesBonus(bonus-gameCount.getHappyHourBonusCount());
+                gameCount.setNormalGamingRateBonusAmount(gameCount.getGamesBonus()*normalCharges);
+                gameCount.setNormalGamingRateAmount(normalCharges*gameCount.getGamesCount()-gameCount.getNormalGamingRateBonusAmount());
+
+            } else {
+                double happyHourCharges = gameView.gameType.getCharges() - gameView.promotion.getHappyHourDiscount();
+                gameCount.setHappyHourGameCount(gameCount.getHappyHourGameCount()+(count-gameView.totalGameCount));
+                gameCount.setHappyHourBonusCount(bonus-gameCount.getGamesBonus());
+                gameCount.setHappyHourBonusAmount(gameCount.getHappyHourBonusCount() * happyHourCharges);
+                gameCount.setHappyHourAmount(gameCount.getHappyHourGameCount() * happyHourCharges - gameCount.getHappyHourBonusAmount());
+            }
+
+            int update = gameCountDao.update(gameCount);
             int x = 1;
             Log.e("updateGameCountValue: ", update + "");
         });
@@ -372,6 +424,20 @@ public class GameRepository {
             e.printStackTrace();
         }
         return gameView;
+    }
+
+    public double getHappyHourPromotion(long id) {
+        double amount = 0;
+        Callable<Double> callable = () -> promotionDao.getHappyHourAmount(id);
+        Future<Double> future = executorService.submit(callable);
+        try {
+            amount = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return amount;
     }
 }
 

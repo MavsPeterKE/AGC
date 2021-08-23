@@ -136,6 +136,13 @@ public class Utils {
         return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
     }
 
+    public static long getCurrentSeconds() {
+        String currentTime = getCurrentTime();
+        String[] timeArray = currentTime.split(":");
+        long seconds = Integer.parseInt(timeArray[0]) * 60 * 60 + Integer.parseInt(timeArray[1]) * 60;
+        return seconds;
+    }
+
 
 
 }

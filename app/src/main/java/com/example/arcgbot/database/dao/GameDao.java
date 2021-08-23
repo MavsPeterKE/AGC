@@ -15,6 +15,9 @@ public abstract class GameDao extends BaseDao<GameType> {
     @Query("SELECT * FROM game_types_table")
     public abstract LiveData<List<GameType>> getGameTypes();
 
+    @Query("SELECT * FROM game_types_table")
+    public abstract List<GameType> getAllGames();
+
     @Query("UPDATE game_types_table SET isSelected=0")
     public abstract void deselectAllGame();
 

@@ -1,13 +1,18 @@
 package com.example.arcgbot.utils;
 
 public class Constants {
-    public static final String BASE_URL   = "https://699549c40f5d.ngrok.io/";
+    public static final String BASE_URL   = "https://d22e-105-163-18-171.ngrok.io/";
     public static final String SUCCESS = "success";
     public static final String  GENERIC_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String  DATE_FORMAT = "yyyy-MM-dd";
 
     public static final String MPESA_DEPOSIT_REGEX = "^(\\w+\\s+\\d+\\.\\d+)(\\s+\\w+\\s\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+)(\\d+\\/\\d+\\/+\\d+)\\s\\w+\\s+(\\d+\\:\\d+\\s+\\w+)\\.\\s+\\w+\\-\\w+\\s+\\w+\\s+(\\w+)";
     public static final String DEFAULT_USER = "juja_cross_roads_test";
+
+    public static String getBaseUrl() {
+        String url = Prefs.getString(PrefsKeys.BASE_URL);
+        return url.equals("")?BASE_URL:url;
+    }
 
 
     public static final class Events{
@@ -48,6 +53,10 @@ public class Constants {
         public static final String PASSWORD_ERROR = "Password Required ";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String CURRENT_DATE = "date" ;
+        public static final String BASE_URL = "base_url";
+        public static final String ACTIVE_USER = "active_user";
+        public static final String HAPPY_HOUR_TIME_MAX = "happy_hour_max";
+        public static final String DISABLED_FEATURES = "disabled_";
     }
 
     public class IntentKeys {

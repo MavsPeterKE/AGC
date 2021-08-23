@@ -5,6 +5,7 @@ import android.text.format.DateFormat;
 import com.example.arcgbot.database.entity.CompletedGame;
 import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.entity.GameCount;
+import com.example.arcgbot.database.entity.Promotion;
 import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.EndDayModel;
@@ -71,4 +72,12 @@ public class FirebaseLogs {
                 .setValue(customerVisits);
     }
 
+    public void createFirebasePromotion(List<Promotion> promotionList) {
+        firebaseDatabaseReference
+                .child(Constants.DEFAULT_USER)
+                .child("gamelogs")
+                .child("configs")
+                .child("promotions")
+                .setValue(promotionList);
+    }
 }

@@ -5,6 +5,7 @@ import com.example.arcgbot.database.dao.CustomerDao;
 import com.example.arcgbot.database.dao.CustomerVisitDao;
 import com.example.arcgbot.database.dao.GameCountDao;
 import com.example.arcgbot.database.dao.GameDao;
+import com.example.arcgbot.database.dao.PromotionDao;
 import com.example.arcgbot.database.dao.ScreenDao;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.repository.UserRepository;
@@ -37,9 +38,9 @@ public class RepositoryModule {
     GameRepository provideGameRepository(RetrofitService retrofitService, ScreenDao screenDao,
                                          GameDao gameDao, GameCountDao gameCountDao,
                                          CompleteGameDao completeGameDao, CustomerDao customerDao,
-                                         CustomerVisitDao customerVisitDao, ExecutorService executorService) {
+                                         CustomerVisitDao customerVisitDao, PromotionDao promotionDao, ExecutorService executorService) {
         return new GameRepository(retrofitService,screenDao,gameDao,gameCountDao,completeGameDao,
-                customerDao,customerVisitDao,executorService);
+                customerDao,customerVisitDao,promotionDao,executorService);
     }
 
 

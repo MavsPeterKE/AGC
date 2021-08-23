@@ -14,11 +14,19 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.databinding.FragmentGameCountBinding;
+import com.example.arcgbot.models.Configs;
 import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.Prefs;
+import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.view.activity.GameActivity;
 import com.example.arcgbot.view.activity.SearchActivity;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
@@ -48,12 +56,34 @@ public class FragmentGameCount extends DaggerFragment {
         return fragmentGameCountBinding.getRoot();
     }
 
+    private void observeAppConfigs(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(Constants.DEFAULT_USER).child("gamelogs").child("configs");
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Configs configs = dataSnapshot.getValue(Configs.class);
+                Prefs.putLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX,configs.happy_hour_max_seconds);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                // Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+
     private void init() {
         mViewModel.gameRepository().setCustomersData();
+        mViewModel.gameRepository().observePromotionsData();
         observeClickEvents();
         observeScreenData();
         observeClickedGamingScreen();
         observeButtonClicks();
+        observeAppConfigs();
     }
 
     private void observeClickedGamingScreen() {

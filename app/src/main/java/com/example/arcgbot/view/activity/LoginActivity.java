@@ -16,16 +16,27 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.databinding.ActivityLoginBinding;
+import com.example.arcgbot.models.Configs;
 import com.example.arcgbot.models.LoginModel;
 import com.example.arcgbot.utils.Constants;
+import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.utils.Prefs;
 import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.LoginViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,7 +55,6 @@ public class LoginActivity extends DaggerAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
-
     }
 
     private void init() {
@@ -60,6 +70,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
             setUpLogin();
         }
 
+        observeAppConfigs();
     }
 
     private void setUpLogin() {
@@ -127,7 +138,6 @@ public class LoginActivity extends DaggerAppCompatActivity {
                     String msg = getMessage(title);
                     setBottomSheetError(title, msg);
                     showErrorBottomSheetAction();
-                    //goToGameCountHome();
                 }
             }
 
@@ -146,12 +156,12 @@ public class LoginActivity extends DaggerAppCompatActivity {
     }
 
     private String getTitle(String title) {
-        String message  = "";
+        String message = "";
         if (title.contains("404")) {
             message = "Server Error";
         } else if (title.contains("resolve host")) {
             message = "Connection Error";
-        }else {
+        } else {
             message = "Login Credentials Error";
         }
         return message;
@@ -163,7 +173,7 @@ public class LoginActivity extends DaggerAppCompatActivity {
             message = "Kindly raise issue with Support Team";
         } else if (title.contains("Connection Error")) {
             message = "Check your internet connection";
-        }else if (title.contains("Login Credentials Error")){
+        } else if (title.contains("Login Credentials Error")) {
             message = "Wrong Username/Password";
         }
         return message;
@@ -199,6 +209,26 @@ public class LoginActivity extends DaggerAppCompatActivity {
                     viewModel.getLoginObervable().subscribeWith(getLoginObserver());
 
                 }
+            }
+        });
+    }
+
+    private void observeAppConfigs(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(Constants.DEFAULT_USER).child("gamelogs").child("configs");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Configs configs = dataSnapshot.getValue(Configs.class);
+                Prefs.putString(Constants.PrefsKeys.BASE_URL,configs.base_url);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                // Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
     }
