@@ -26,4 +26,7 @@ public abstract class CompleteGameDao extends BaseDao<CompletedGame> {
 
     @Query("SELECT * FROM complete_games_table ORDER BY end_time_seconds DESC")
     public abstract List<CompletedGame> getAllCompletedGameList();
+
+    @Query("SELECT * FROM complete_games_table WHERE id=:gameId")
+    public abstract LiveData<CompletedGame> getCompletedGameById(long gameId);
 }

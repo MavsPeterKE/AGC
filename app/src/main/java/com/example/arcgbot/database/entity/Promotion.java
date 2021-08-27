@@ -23,6 +23,13 @@ public class Promotion extends BaseObservable {
     @ColumnInfo(name = "spending_discount")
     private double spendingDiscount;
 
+    @ColumnInfo(name = "loyal_customer_fulltime_discount")
+    private double loyalFullTimeDiscount;
+
+    @ColumnInfo(name = "new_customer_discount")
+    private double newCustomerDiscount;
+
+
     public long getId() {
         return id;
     }
@@ -53,5 +60,21 @@ public class Promotion extends BaseObservable {
 
     public void setSpendingDiscount(double spendingDiscount) {
         this.spendingDiscount = spendingDiscount;
+    }
+
+    public double getLoyalFullTimeDiscount() {
+        return loyalFullTimeDiscount;
+    }
+
+    public void setLoyalFullTimeDiscount(double loyalFullTimeDiscount) {
+        this.loyalFullTimeDiscount = loyalFullTimeDiscount;
+    }
+
+    public double getNewCustomerDiscount() {
+        return newCustomerDiscount;
+    }
+
+    public void setNewCustomerDiscount(double newCustomerDiscount) {
+        this.newCustomerDiscount = newCustomerDiscount;
     }
 }

@@ -72,9 +72,9 @@ public class GameItemViewModel extends ViewModel {
 
     public int getBonusGames(int gameCount) {
         int bonus = 0;
-        for (int i = 1; i <= gameCount; i++) {
-            if (i % 5 == 0) {
-                bonus += i == gameCount ? 0 : 1;
+        for (int count = 1; count <= gameCount; count++) {
+            if (count % 5 == 0) {
+                bonus += count == gameCount ? 0 : 1;
             }
         }
         return bonus;
@@ -107,16 +107,16 @@ public class GameItemViewModel extends ViewModel {
     public void setGameTitleObservable(GameView gameView) {
         selectedGamingScreen.set(gameView);
         gameTitleObservable.set(gameView.screen.getScreenLable());
-        setGameCount(gameView.totalGameCount==0?1:gameView.totalGameCount);
+        setGameCount(gameView.totalGameCount == 0 ? 1 : gameView.totalGameCount);
 
     }
 
     private int getCurrentGameCount(GameCount gameCount) {
         int count = 1;
         if (Utils.getCurrentSeconds() > Prefs.getLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX)) {
-            count = gameCount!=null? gameCount.getGamesCount():1;
+            count = gameCount != null ? gameCount.getGamesCount() : 1;
         } else {
-                count = gameCount!=null? gameCount.getHappyHourGameCount():1;
+            count = gameCount != null ? gameCount.getHappyHourGameCount() : 1;
         }
         return count;
     }
@@ -254,8 +254,8 @@ public class GameItemViewModel extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void updatePlayerSearchList(String searchText) {
-        List<CustomerView> newList = customerList.stream().filter(customer -> customer.screen.getCustomerName()
-                .toLowerCase().contains(searchText) || customer.screen.getCustomerPhone().toLowerCase()
+        List<CustomerView> newList = customerList.stream().filter(customer -> customer.gamer.getCustomerName()
+                .toLowerCase().contains(searchText) || customer.gamer.getCustomerPhone().toLowerCase()
                 .contains(searchText))
                 .collect(Collectors.toList());
         isSearchListEmpty.set(newList.isEmpty());

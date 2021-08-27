@@ -8,23 +8,18 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.CompletedGame;
-import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
-import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.view.adapter.ScreenAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
-
 public class ScreensViewModel extends ViewModel {
     private ScreenAdapter screenAdapter;
-    private MutableLiveData<ScreenItem> selectedScreenItem = new MutableLiveData();
+    private MutableLiveData<CompletedGame> selectedScreenItem = new MutableLiveData();
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     public ObservableField<Boolean> isGamesAvailable = new ObservableField(false);
     public ObservableField<String> gameCount = new ObservableField("O Games");
@@ -50,34 +45,24 @@ public class ScreensViewModel extends ViewModel {
         return screenAdapter;
     }
 
-    public void setGameCountdapter(List<CompletedGame> completedGameList) {
-        List<ScreenItem> screenItemList = new ArrayList<>();
+    public void setGameCountAdapter(List<CompletedGame> completedGameList) {
         int totalGameCount = 0;
-        for (CompletedGame game : completedGameList){
-            ScreenItem screenItem = new ScreenItem();
-            screenItem.GameCount = String.valueOf(game.getGamesCount());
-            screenItem.duration = game.getDuration();
-            screenItem.payableAmount = game.getPayableAmount()+"0";
-            screenItem.bonusAmount = game.getBonusAmount()+"0";
-            screenItem.phoneNumber = game.getPlayerPhone();
-            screenItem.screenLable = game.getScreenLable();
-            screenItem.isBonusActive = game.getBonusAmount()>0;
-            screenItemList.add(screenItem);
-            totalGameCount+=game.getGamesCount();
+        for (CompletedGame game : completedGameList) {
+            totalGameCount += game.getGamesCount();
 
         }
-        gameCount.set(totalGameCount+ " Games");
-        isGamesAvailable.set(screenItemList!=null?screenItemList.size()>0:false);
-        this.screenAdapter.setGameCountList(screenItemList);
+        gameCount.set(totalGameCount + " Games");
+        isGamesAvailable.set(completedGameList != null ? completedGameList.size() > 0 : false);
+        this.screenAdapter.setGameCountList(completedGameList);
         this.screenAdapter.notifyDataSetChanged();
     }
 
-    public void onScreenItemClick(ScreenItem screenItem){
+    public void onScreenItemClick(CompletedGame screenItem) {
         selectedScreenItem.setValue(screenItem);
-        Log.e("onScreenItemClick:__",screenItem.phoneNumber + "" );
+        clickEventsLiveData.setValue(Constants.Events.COMPLETED_GAME_CLICK);
     }
 
-    public MutableLiveData<ScreenItem> getSelectedScreenItem() {
+    public MutableLiveData<CompletedGame> getSelectedScreenItem() {
         return selectedScreenItem;
     }
 }

@@ -10,5 +10,7 @@ public class Configs {
     public boolean loyalty_discount_enabled;
     public long happy_hour_max_seconds;
     public boolean spent_amount_bonus_enabled;
+    public boolean is_new_customer_discount_enabled;
+    public boolean is_fulltime_loyal_discount_enabled;
     public List<String> enabled_modules;
 }

@@ -39,8 +39,8 @@ public abstract class CustomerDao extends BaseDao<Customer> {
     @Query("SELECT * FROM customerview")
     public abstract List<CustomerView> getSavedCustomers();
 
-    @Query("UPDATE customer_table SET loyalty_bonus=1 WHERE id IN (:customerPhoneList)")
-    public abstract void updateLoyaltyBonusAwarded(List<String> customerPhoneList);
+    @Query("UPDATE customer_table SET loyalty_bonus=1,customer_type=:customerType,loyalty_bonus_week=:currentWeek WHERE id IN (:customerPhoneList)")
+    public abstract void updateLoyaltyBonusAwarded(List<String> customerPhoneList,String customerType,int currentWeek);
 
     @Query("SELECT count(*) FROM customer_table WHERE id IN (:customerVisitList) AND loyalty_bonus=1 AND loyalty_bonus_week=:loyaltyBonusWeek")
     public abstract int getLoyaltyBonusCount(List<String> customerVisitList,int loyaltyBonusWeek);

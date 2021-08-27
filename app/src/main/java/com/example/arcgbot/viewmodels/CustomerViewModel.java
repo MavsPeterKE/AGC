@@ -1,22 +1,28 @@
 package com.example.arcgbot.viewmodels;
 
+import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
 import static com.example.arcgbot.utils.Constants.Events.SEND_MESSAGE;
 
 import android.os.Build;
+import android.text.format.DateFormat;
 
 import androidx.annotation.RequiresApi;
 import androidx.databinding.ObservableField;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.Customer;
+import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
+import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.view.adapter.CustomerAdapter;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,13 +64,20 @@ public class CustomerViewModel extends ViewModel {
     }
 
     public void onCallClick(String phoneNo) {
-        clickEventsLiveData.setValue(Constants.Events.CALL_GAMER);
         this.phoneNo = phoneNo;
+        clickEventsLiveData.setValue(Constants.Events.CALL_GAMER);
+
+    }
+
+    public void onCustomerClick(String phoneNo) {
+        this.phoneNo = phoneNo;
+        clickEventsLiveData.setValue(Constants.Events.CUSTOMER_CLICK);
     }
 
     public void onSendMessage(String phoneNo) {
-        clickEventsLiveData.setValue(SEND_MESSAGE);
         this.phoneNo = phoneNo;
+        clickEventsLiveData.setValue(SEND_MESSAGE);
+
     }
 
     public String getPhoneNo() {
@@ -78,9 +91,17 @@ public class CustomerViewModel extends ViewModel {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void searchGamer(String searchText) {
         List<CustomerView> searchList = customerList.stream().filter(customer ->
-                customer.screen.getCustomerName().toLowerCase().contains(searchText) ||
-                customer.screen.getCustomerPhone().toLowerCase().contains(searchText)).collect(Collectors.toList());
+                customer.gamer.getCustomerName().toLowerCase().contains(searchText) ||
+                        customer.gamer.getCustomerPhone().toLowerCase().contains(searchText)).collect(Collectors.toList());
         customerAdapter.setCustomerList(searchList);
         customerAdapter.notifyDataSetChanged();
+    }
+
+    public LiveData<List<CustomerVisit>> getThisWeekCustomerVisitsByPhone(String customerPhone) {
+        Date todayDate = Utils.convertToDate(Utils.getTodayDate(DATE_FORMAT), Constants.DATE_FORMAT);
+        String monthString = (String) DateFormat.format("MMM", todayDate); // Jun
+        String year = (String) DateFormat.format("yyyy", todayDate); // 2013
+        int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
+        return gameRepository.getCustomerVisitThisWeek(customerPhone,currentWeek,monthString+"_"+year);
     }
 }
