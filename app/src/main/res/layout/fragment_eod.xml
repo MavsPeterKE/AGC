@@ -16,254 +16,272 @@
 
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-
+        android:background="@color/white"
+        android:layout_height="match_parent">
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textView28"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/press_start_2p"
-                android:text="@string/app_name"
-                android:textColor="@color/black"
-                android:textFontWeight="400"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="29dp"
-                android:layout_marginStart="29dp"
-                android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
 
-            <Button
-                android:id="@+id/button2"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="@color/green"
-                android:text="End Day"
-                android:layout_marginLeft="29dp"
-                android:layout_marginStart="29dp"
-                android:layout_marginRight="28dp"
-                android:layout_marginEnd="28dp"
-                app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
-                app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+                android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/editTextTextMultiLine"
-                android:layout_width="0dp"
-                android:layout_height="132dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/rectangular"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:padding="10dp"
-                android:textColor="@color/text_black"
-                app:layout_constraintEnd_toEndOf="@+id/edPrintingAmount"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textView15"
-                app:layout_constraintTop_toBottomOf="@+id/textView15" />
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="29dp"
-                android:layout_marginLeft="29dp"
-                android:text="@string/title_end_day"
-                android:textColor="@color/light_black"
-                android:textFontWeight="400"
-                android:layout_marginTop="28dp"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView28" />
-
-            <View
-                android:id="@+id/view5"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginTop="30dp"
-                android:background="@color/holo_red_dark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/title_comment_issue"
-                android:textColor="@color/light_black"
-                android:textSize="15sp"
-                app:layout_constraintStart_toStartOf="@+id/edOtherAmount"
-                app:layout_constraintTop_toBottomOf="@+id/edOtherAmount" />
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title_total"
-                android:layout_marginStart="29dp"
-                android:layout_marginLeft="29dp"
-                android:layout_marginTop="27dp"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view5" />
-
-            <TextView
-                android:id="@+id/tvGameCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{model.gameCount}"
-                android:textSize="26sp"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="@+id/textView16"
-                app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-            <TextView
-                android:id="@+id/tvGameRevenue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginLeft="18dp"
-                android:text="@{`Ksh. `+model.gameRevenue+`0`}"
-                android:textColor="@color/white"
-                android:textSize="26sp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvGameCount"
-                app:layout_constraintStart_toEndOf="@+id/tvGameCount"
-                app:layout_constraintTop_toTopOf="@+id/tvGameCount"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/edHappyHour"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_drawable"
-                android:ems="10"
-                android:hint="Gaming Happy Hour Amount"
-                android:inputType="number"
-                android:padding="10dp"
-                android:textColor="#424242"
-                android:textColorHint="#A9A9A9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view5" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/edMovies"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_drawable"
-                android:ems="10"
-                android:hint="Movies Amount"
-                android:inputType="number"
-                android:padding="10dp"
-                android:textColor="#424242"
-                android:textColorHint="#A9A9A9"
-                app:layout_constraintEnd_toEndOf="@+id/edHappyHour"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/edHappyHour"
-                app:layout_constraintTop_toBottomOf="@+id/edHappyHour" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/edPrintingAmount"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_drawable"
-                android:ems="10"
-                android:hint="Printing Amount"
-                android:inputType="number"
-                android:padding="10dp"
-                android:textColor="#424242"
-                android:textColorHint="#A9A9A9"
-                app:layout_constraintEnd_toEndOf="@+id/edMovies"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/edMovies"
-                app:layout_constraintTop_toBottomOf="@+id/edMovies" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/edOtherAmount"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_drawable"
-                android:ems="10"
-                android:hint="Others Amount"
-                android:inputType="number"
-                android:padding="10dp"
-                android:textColor="#424242"
-                android:textColorHint="#A9A9A9"
-                app:layout_constraintEnd_toEndOf="@+id/edPrintingAmount"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/edPrintingAmount"
-                app:layout_constraintTop_toBottomOf="@+id/edPrintingAmount" />
-
-
-            <!--    <LinearLayout
-                    android:id="@+id/editTextTextPersonName2"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textView28"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/edittext_drawable"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/press_start_2p"
+                    android:text="@string/app_name"
+                    android:textColor="@color/black"
+                    android:textFontWeight="400"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="29dp"
+                    android:layout_marginStart="29dp"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <Button
+                    android:id="@+id/btEndDay"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/green"
+                    android:text="End Day"
+                    android:layout_marginLeft="29dp"
+                    android:layout_marginStart="29dp"
+                    android:layout_marginRight="28dp"
+                    android:layout_marginEnd="28dp"
+                    app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+                <EditText
+                    android:id="@+id/editTextTextMultiLine"
+                    android:layout_width="0dp"
+                    android:layout_height="132dp"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/rectangular"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:padding="10dp"
+                    android:textColor="@color/text_black"
+                    app:layout_constraintEnd_toEndOf="@+id/edPrintingAmount"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/textView15"
+                    app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="29dp"
+                    android:layout_marginLeft="29dp"
+                    android:text="@string/title_end_day"
+                    android:textColor="@color/light_black"
+                    android:textFontWeight="400"
+                    android:layout_marginTop="28dp"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView28" />
+
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/holo_red_dark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_comment_issue"
+                    android:textColor="@color/light_black"
+                    android:textSize="15sp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="@+id/edOtherSalesAmount"
+                    app:layout_constraintTop_toBottomOf="@+id/edOtherSalesAmount" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_total"
+                    android:layout_marginStart="29dp"
+                    android:layout_marginLeft="29dp"
+                    android:layout_marginTop="27dp"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/view5" />
+
+                <TextView
+                    android:id="@+id/tvGameCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.gameCount}"
+                    android:textSize="26sp"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="@+id/textView16"
+                    app:layout_constraintTop_toBottomOf="@+id/textView16"
+                    tools:text="20 Games"/>
+
+                <TextView
+                    android:id="@+id/tvGameRevenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginLeft="18dp"
+                    android:text="@{`Ksh. `+model.gameRevenue+`0`}"
+                    android:textColor="@color/white"
+                    android:textSize="26sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvGameCount"
+                    app:layout_constraintStart_toEndOf="@+id/tvGameCount"
+                    app:layout_constraintTop_toTopOf="@+id/tvGameCount"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="Ksh. 300"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edMovies"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_drawable"
+                    android:ems="10"
+                    android:hint="Movies Total Sales"
+                    android:layout_marginTop="20dp"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="#424242"
+                    android:textColorHint="#A9A9A9"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view5">
+                    app:layout_constraintTop_toBottomOf="@+id/view5" />
 
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/edPlayer1"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edPrintingAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_drawable"
+                    android:ems="10"
+                    android:hint="Printing Total Sales"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="#424242"
+                    android:textColorHint="#A9A9A9"
+                    app:layout_constraintEnd_toEndOf="@+id/edMovies"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/edMovies"
+                    app:layout_constraintTop_toBottomOf="@+id/edMovies" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edPsHireAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_drawable"
+                    android:ems="10"
+                    android:hint="PS Hire Total Sales"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="#424242"
+                    android:textColorHint="#A9A9A9"
+                    app:layout_constraintEnd_toEndOf="@+id/edPrintingAmount"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/edPrintingAmount"
+                    app:layout_constraintTop_toBottomOf="@+id/edPrintingAmount" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edOtherSalesAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_drawable"
+                    android:ems="10"
+                    android:hint="Other Services Totals"
+                    android:layout_marginTop="10dp"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="#424242"
+                    android:textColorHint="#A9A9A9"
+                    app:layout_constraintEnd_toEndOf="@+id/edPsHireAmount"
+                    app:layout_constraintStart_toStartOf="@+id/edPsHireAmount"
+                    app:layout_constraintTop_toBottomOf="@+id/edPsHireAmount" />
+
+
+                <!--    <LinearLayout
+                        android:id="@+id/editTextTextPersonName2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/edittext_drawable"
-                        android:ems="10"
-                        android:hint="Happy Hour Amount"
-                        android:inputType="textPersonName"
-                        android:padding="10dp"
-                        android:textColor="@color/text_black"
-                        android:textColorHint="#A9A9A9" />
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view5">
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/edPlayer1"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_drawable"
+                            android:ems="10"
+                            android:hint="Happy Hour Amount"
+                            android:inputType="textPersonName"
+                            android:padding="10dp"
+                            android:textColor="@color/text_black"
+                            android:textColorHint="#A9A9A9" />
 
 
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/edPlayer2"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/edittext_drawable"
-                        android:ems="10"
-                        android:hint="Movies + Printing Amount"
-                        android:inputType="textPersonName"
-                        android:padding="10dp"
-                        android:textColor="#424242"
-                        android:textColorHint="#A9A9A9" />
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/edPlayer2"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/edittext_drawable"
+                            android:ems="10"
+                            android:hint="Movies + Printing Amount"
+                            android:inputType="textPersonName"
+                            android:padding="10dp"
+                            android:textColor="#424242"
+                            android:textColorHint="#A9A9A9" />
 
 
-                </LinearLayout>-->
+                    </LinearLayout>-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <include
+            android:id="@+id/error_bottom_sheet"
+            layout="@layout/end_day_error"
+            app:model="@{model}" />
+
+        <include
+            android:id="@+id/success_bottom_sheet"
+            layout="@layout/end_day_success"
+            app:model="@{model}" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
 
 </layout>

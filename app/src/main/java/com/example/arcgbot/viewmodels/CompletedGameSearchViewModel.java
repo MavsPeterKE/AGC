@@ -28,7 +28,7 @@ public class CompletedGameSearchViewModel extends ViewModel {
     private GameRepository gameRepository;
     private CompletedGameSearchAdapter completedGameSearchAdapter;
     private List<ScreenItem> screenList;
-    private MutableLiveData<ScreenItem> selectedGameLiveData = new MutableLiveData();
+    private MutableLiveData<CompletedGame> selectedGameLiveData = new MutableLiveData();
 
 
     @Inject
@@ -87,12 +87,12 @@ public class CompletedGameSearchViewModel extends ViewModel {
         completedGameSearchAdapter.notifyDataSetChanged();
     }
 
-    public void onCompletedGameClick(ScreenItem screenItem, int pos) {
-        selectedGameLiveData.setValue(screenItem);
+    public void onCompletedGameClick(CompletedGame completedGame) {
+        selectedGameLiveData.setValue(completedGame);
         clickEventsLiveData.setValue(Constants.Events.COMPLETED_GAME_CLICK);
     }
 
-    public MutableLiveData<ScreenItem> getSelectedGame() {
+    public MutableLiveData<CompletedGame> getSelectedGame() {
         return selectedGameLiveData;
     }
 }

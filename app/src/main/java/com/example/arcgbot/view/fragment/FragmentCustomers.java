@@ -35,6 +35,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 
+import static com.example.arcgbot.utils.Constants.Events.BACK_TO_SCREENS;
 import static com.example.arcgbot.utils.Constants.Events.CALL_GAMER;
 import static com.example.arcgbot.utils.Constants.Events.CUSTOMER_CLICK;
 import static com.example.arcgbot.utils.Constants.Events.SEND_MESSAGE;
@@ -101,6 +102,9 @@ public class FragmentCustomers extends DaggerFragment {
                     break;
                 case CUSTOMER_CLICK:
                    startCustomerDetailFragment();
+                    break;
+                case BACK_TO_SCREENS:
+                    getActivity().onBackPressed();
                     break;
             }
         });

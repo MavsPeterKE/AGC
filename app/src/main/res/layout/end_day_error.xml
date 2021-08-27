@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="loginviewmodel"
-            type="com.example.arcgbot.viewmodels.LoginViewModel" />
+            name="model"
+            type="com.example.arcgbot.viewmodels.EODViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@{loginviewmodel.errorTitle}"
+            android:text="@{model.errorTitle}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -67,7 +67,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:text="@{loginviewmodel.errorMsg}"
+            android:text="@{model.errorMsg}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +81,7 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/holo_red_dark"
             android:text="Ok"
-            android:onClick="@{() -> loginviewmodel.closeErrorBottomSheet()}"
+            android:onClick="@{() -> model.closeErrorBottomSheet()}"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -95,7 +95,7 @@
             android:text="CANCEL"
             android:focusable="true"
             android:clickable="true"
-            android:onClick="@{() -> loginviewmodel.closeErrorBottomSheet()}"
+            android:onClick="@{() -> model.closeErrorBottomSheet()}"
             android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"

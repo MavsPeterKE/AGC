@@ -16,22 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.CompletedGame;
-import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.databinding.FragmentCompletedGameSearchBinding;
-import com.example.arcgbot.databinding.FragmentSearchBinding;
 import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.view.activity.GameActivity;
 import com.example.arcgbot.viewmodels.CompletedGameSearchViewModel;
-import com.example.arcgbot.viewmodels.SearchItemViewModel;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,7 +38,7 @@ public class FragmentCompletedGameSearch extends DaggerFragment {
 
     FragmentCompletedGameSearchBinding fragmentCompletedGameSearchBinding;
     CompletedGameSearchViewModel searchItemViewModel;
-    ScreenItem selectedGame;
+    CompletedGame selectedGame;
 
     public static FragmentCompletedGameSearch newInstance() {
         return new FragmentCompletedGameSearch();
@@ -106,7 +100,7 @@ public class FragmentCompletedGameSearch extends DaggerFragment {
                     getActivity().onBackPressed();
                     break;
                 case GAME_ITEM_CLICK:
-                    //startGameActivity();
+                    startGameActivity();
                     break;
             }
 
@@ -114,10 +108,10 @@ public class FragmentCompletedGameSearch extends DaggerFragment {
     }
 
     private void startGameActivity() {
-     /*   Intent gameActivityIntent = new Intent(getActivity(), GameActivity.class);
+        Intent gameActivityIntent = new Intent(getActivity(), GameActivity.class);
         gameActivityIntent.putExtra(Constants.IntentKeys.GAME_COUNT_FRAGMENT, FragmentGameItem.class.getSimpleName());
-        gameActivityIntent.putExtra(Constants.IntentKeys.SCREEN_ID, selectedGamingScreen.screen.getId());
-        startActivity(gameActivityIntent);*/
+        //gameActivityIntent.putExtra(Constants.IntentKeys.SCREEN_ID, selectedGame.gameId);
+        startActivity(gameActivityIntent);
     }
 
 }

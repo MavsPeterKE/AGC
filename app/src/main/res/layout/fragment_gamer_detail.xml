@@ -39,6 +39,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{()->model.onBackToCustomers()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_back_black" />
@@ -210,6 +211,7 @@
             app:layout_constraintEnd_toEndOf="@+id/textView59"
             app:layout_constraintStart_toStartOf="@+id/textView67"
             app:layout_constraintTop_toBottomOf="@+id/textView67"
+            app:setAdapter="@{model.customerVisitAdapter}"
             tools:listitem="@layout/visit_item"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

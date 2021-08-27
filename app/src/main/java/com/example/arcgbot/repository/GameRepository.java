@@ -510,6 +510,20 @@ public class GameRepository {
     public LiveData<List<CustomerVisit>> getCustomerVisitThisWeek(String customerPhone, int currentWeek, String month) {
         return customerVisitDao.getCustomerVisitCurrentWeek(customerPhone,currentWeek,month);
     }
+
+    public int getActiveScreenCount() {
+        int amount = 0;
+        Callable<Integer> callable = () -> screenDao.getActiveScreenCount();
+        Future<Integer> future = executorService.submit(callable);
+        try {
+            amount = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return amount;
+    }
 }
 
 

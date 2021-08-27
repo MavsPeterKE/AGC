@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="loginviewmodel"
-            type="com.example.arcgbot.viewmodels.LoginViewModel" />
+            name="model"
+            type="com.example.arcgbot.viewmodels.EODViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/holo_red_dark"
+            android:background="@color/green"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -40,14 +40,14 @@
             app:layout_constraintEnd_toEndOf="@+id/view6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/view6"
-            app:srcCompat="@drawable/warning" />
+            app:srcCompat="@drawable/sucess" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@{loginviewmodel.errorTitle}"
+            android:text="@{model.errorTitle}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -67,7 +67,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:text="@{loginviewmodel.errorMsg}"
+            android:text="@{model.errorMsg}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,33 +75,28 @@
             tools:text="Error is here"/>
 
         <Button
-            android:id="@+id/btOk"
-            android:layout_width="80dp"
+            android:id="@+id/btSend"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/holo_red_dark"
-            android:text="Ok"
-            android:onClick="@{() -> loginviewmodel.closeErrorBottomSheet()}"
+            android:backgroundTint="@color/green"
+            android:text="Send Summary"
+            android:onClick="@{() -> model.postEndDayToWhatsapp()}"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvErrorMsg" />
 
-        <TextView
-            android:id="@+id/btCancel"
+        <Button
+            android:id="@+id/btOk2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="CANCEL"
-            android:focusable="true"
-            android:clickable="true"
-            android:onClick="@{() -> loginviewmodel.closeErrorBottomSheet()}"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/btOk"
-            app:layout_constraintEnd_toStartOf="@+id/btOk"
-            app:layout_constraintTop_toTopOf="@+id/btOk"
-            app:layout_constraintVertical_bias="0.703" />
+            android:layout_marginEnd="12dp"
+            android:backgroundTint="@color/green"
+            android:onClick="@{() -> model.closeErrorBottomSheet()}"
+            android:text="Ok"
+            app:layout_constraintBottom_toBottomOf="@+id/btSend"
+            app:layout_constraintEnd_toStartOf="@+id/btSend" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -13,11 +13,15 @@
         <entry key="app/src/main/res/layout/activity_screen.xml" value="0.2265625" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.3111413043478261" />
         <entry key="app/src/main/res/layout/completed_game_search.xml" value="0.28894927536231885" />
-        <entry key="app/src/main/res/layout/customer_item.xml" value="0.27807971014492755" />
+        <entry key="app/src/main/res/layout/customer_item.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/end_day_error.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/end_day_success.xml" value="0.34739583333333335" />
+        <entry key="app/src/main/res/layout/error_bottom_sheet.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/fragment_completed_game.xml" value="0.28306159420289856" />
         <entry key="app/src/main/res/layout/fragment_completed_game_detail.xml" value="0.33125" />
         <entry key="app/src/main/res/layout/fragment_completed_game_search.xml" value="0.28894927536231885" />
         <entry key="app/src/main/res/layout/fragment_customers.xml" value="0.27807971014492755" />
+        <entry key="app/src/main/res/layout/fragment_eod.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/fragment_game_count.xml" value="0.1947463768115942" />
         <entry key="app/src/main/res/layout/fragment_game_detail.xml" value="0.28306159420289856" />
         <entry key="app/src/main/res/layout/fragment_game_item.xml" value="0.25" />
@@ -26,6 +30,7 @@
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.19293478260869565" />
         <entry key="app/src/main/res/layout/game_item.xml" value="0.28306159420289856" />
         <entry key="app/src/main/res/layout/game_item_revamp.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/game_payment_summary.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/game_stat_item.xml" value="0.27807971014492755" />
         <entry key="app/src/main/res/layout/gamer_suggest_item.xml" value="0.31929347826086957" />
         <entry key="app/src/main/res/layout/no_customer_data.xml" value="0.25" />

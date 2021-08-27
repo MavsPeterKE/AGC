@@ -36,4 +36,7 @@ public abstract class ScreenDao extends BaseDao<Screen> {
 
     @Query("UPDATE screen_table SET active=0")
     public abstract void resetAllScreens();
+
+    @Query("SELECT COUNT(*) FROM screen_table WHERE active=1")
+    public abstract int getActiveScreenCount();
 }

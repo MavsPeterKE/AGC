@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.arcgbot.models.GameModel;
 import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.repository.GameRepository;
+import com.example.arcgbot.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ public class EODViewModel extends ViewModel {
     public ObservableField<String> gameCount = new ObservableField("O Games");
     public ObservableField<String> gameRevenue = new ObservableField("Ksh. O.00");
     public GameRepository repository;
+    public ObservableField<String> errorTitle = new ObservableField<>();
+    public ObservableField<String> errorMsg = new ObservableField<>();
 
     @Inject
     public EODViewModel(GameRepository repository) {
@@ -40,5 +43,17 @@ public class EODViewModel extends ViewModel {
 
     public MutableLiveData<String> getGameItemClickLiveData() {
         return gameItemClickLiveData;
+    }
+
+    public void closeErrorBottomSheet(){
+        gameItemClickLiveData.setValue(Constants.Events.CLOSE_SUCCESS_SHEET);
+    }
+
+    public void postEndDayToWhatsapp(){
+        gameItemClickLiveData.setValue(Constants.Events.POST_END_DAY);
+    }
+
+    public boolean isAnyScreenActive() {
+        return repository.getActiveScreenCount()>0;
     }
 }

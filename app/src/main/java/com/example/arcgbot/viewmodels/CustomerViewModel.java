@@ -21,7 +21,9 @@ import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.view.adapter.CustomerAdapter;
+import com.example.arcgbot.view.adapter.CustomerVisitAdapter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ import javax.inject.Inject;
 
 public class CustomerViewModel extends ViewModel {
     private CustomerAdapter customerAdapter;
+    private CustomerVisitAdapter customerVisitAdapter;
     private MutableLiveData<Customer> selectedCustomerItem = new MutableLiveData();
     private ObservableField<Boolean> isCustomerListSet = new ObservableField(false);
     public GameRepository gameRepository;
@@ -37,10 +40,12 @@ public class CustomerViewModel extends ViewModel {
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
     private String phoneNo;
     private List<CustomerView> customerList;
+    private List<CustomerVisit> customerVisitList = new ArrayList<>();
 
     @Inject
     public CustomerViewModel(GameRepository gameRepository) {
         customerAdapter = new CustomerAdapter(R.layout.customer_item, this);
+        customerVisitAdapter = new CustomerVisitAdapter(R.layout.visit_item, this);
         this.gameRepository = gameRepository;
         firebaseLogs = new FirebaseLogs();
     }
@@ -51,6 +56,14 @@ public class CustomerViewModel extends ViewModel {
 
     public CustomerAdapter getCustomerAdapter() {
         return customerAdapter;
+    }
+
+    public String getDate(Date date) {
+        String monthString = (String) DateFormat.format("MMM", date); // Jun
+        String day = (String) DateFormat.format("dd", date);
+        String year = (String) DateFormat.format("yyyy", date); // 2013
+        String dayOfTheWeek = (String) DateFormat.format("EEEE", date); // Thursday
+        return dayOfTheWeek + " "+day +" "+monthString + " "+year;
     }
 
     public void setCustomerList(List<CustomerView> customerList) {
@@ -69,6 +82,14 @@ public class CustomerViewModel extends ViewModel {
 
     }
 
+    public void onBack() {
+        clickEventsLiveData.setValue(Constants.Events.BACK_TO_SCREENS);
+    }
+
+    public void onBackToCustomers() {
+        clickEventsLiveData.setValue(Constants.Events.BACK_TO_CUSTOMERS);
+    }
+
     public void onCustomerClick(String phoneNo) {
         this.phoneNo = phoneNo;
         clickEventsLiveData.setValue(Constants.Events.CUSTOMER_CLICK);
@@ -78,6 +99,20 @@ public class CustomerViewModel extends ViewModel {
         this.phoneNo = phoneNo;
         clickEventsLiveData.setValue(SEND_MESSAGE);
 
+    }
+
+    public String getVisitCountThisWeek(List<CustomerVisit> customerVisitList){
+        Date todayDate = Utils.convertToDate(Utils.getTodayDate(DATE_FORMAT), Constants.DATE_FORMAT);
+        String monthString = (String) DateFormat.format("MMM", todayDate); // Jun
+        String year = (String) DateFormat.format("yyyy", todayDate); // 2013
+        int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
+        int count = 0;
+        for (CustomerVisit visit:customerVisitList){
+            if (visit.getWeek() == currentWeek && visit.getMonth().equals(monthString+"_"+year)){
+                count+=1;
+            }
+        }
+        return count+"";
     }
 
     public String getPhoneNo() {
@@ -102,6 +137,17 @@ public class CustomerViewModel extends ViewModel {
         String monthString = (String) DateFormat.format("MMM", todayDate); // Jun
         String year = (String) DateFormat.format("yyyy", todayDate); // 2013
         int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
-        return gameRepository.getCustomerVisitThisWeek(customerPhone,currentWeek,monthString+"_"+year);
+        return gameRepository.getCustomerVisitThisWeek(customerPhone, currentWeek, monthString + "_" + year);
+    }
+
+    public void setCustomerVisitList(List<CustomerVisit> customerVisitList) {
+        this.customerVisitList.removeAll(customerVisitList);
+        this.customerVisitList.addAll(customerVisitList);
+        customerVisitAdapter.setCustomerVisitList(customerVisitList);
+        customerVisitAdapter.notifyDataSetChanged();
+    }
+
+    public CustomerVisitAdapter getCustomerVisitAdapter() {
+        return customerVisitAdapter;
     }
 }

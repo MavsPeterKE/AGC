@@ -17,7 +17,7 @@ public class Constants {
     public static final class Events {
         public static final String GAME_ITEM_CLICK = "game_item";
         public static final String COMPLETED_GAME_CLICK = "game_item";
-        public static final String SCREEN_ITEM_CLICK = "game_item";
+        public static final String SCREEN_ITEM_CLICK = "scree_game_item";
         public static final String BOTTOM_SHEET = "close_sheet";
         public static final String MINUS_GAME_COUNT = "minus";
         public static final String ADD_GAME_COUNT = "add";
@@ -27,6 +27,7 @@ public class Constants {
         public static final String END_GAME = "END GAME";
         public static final String LOGIN = "login";
         public static final String CLOSE_ERROR_SHEET = "close_error_sheet";
+        public static final String POST_END_DAY = "post_end_day";
         public static final String SEARCH_GAME = "search game";
         public static final String BACK_TO_GAME_COUNT = "back_to_game_count";
         public static final String GAME_STARTED = "game_started";
@@ -35,6 +36,8 @@ public class Constants {
         public static final String SEND_MESSAGE = "send_message";
         public static final String BACK_TO_SCREENS = "back to screens";
         public static final String CUSTOMER_CLICK = "on customer click";
+        public static final String BACK_TO_CUSTOMERS = "back to customers";
+        public static final String CLOSE_SUCCESS_SHEET = "close_success_sheet";
     }
 
     public static final class RoomConfigs {

@@ -55,6 +55,6 @@ public abstract class CustomerVisitDao extends BaseDao<CustomerVisit> {
     @Query("SELECT * FROM customer_visit_table WHERE customer_id IN(:customers) AND week_number=:week AND month=:month")
     public abstract List<CustomerVisit> getWeeklyCustomerVisit(List<String> customers,int week,String month);
 
-    @Query("SELECT * FROM customer_visit_table WHERE customer_id=:customerPhone AND week_number=:currentWeek AND month=:month")
+    @Query("SELECT * FROM customer_visit_table WHERE customer_id=:customerPhone AND week_number=:currentWeek AND month=:month ORDER BY date DESC")
     public abstract LiveData<List<CustomerVisit>> getCustomerVisitCurrentWeek(String customerPhone, int currentWeek, String month);
 }
