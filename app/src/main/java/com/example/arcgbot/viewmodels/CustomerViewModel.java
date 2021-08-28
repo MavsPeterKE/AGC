@@ -16,6 +16,8 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.views.CustomerView;
+import com.example.arcgbot.database.views.GameView;
+import com.example.arcgbot.models.GamerDetailModel;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
@@ -41,6 +43,8 @@ public class CustomerViewModel extends ViewModel {
     private String phoneNo;
     private List<CustomerView> customerList;
     private List<CustomerVisit> customerVisitList = new ArrayList<>();
+    private ObservableField<GamerDetailModel> gamerDetailModelObservableField = new ObservableField<>();
+    private String customerPhone;
 
     @Inject
     public CustomerViewModel(GameRepository gameRepository) {
@@ -63,7 +67,7 @@ public class CustomerViewModel extends ViewModel {
         String day = (String) DateFormat.format("dd", date);
         String year = (String) DateFormat.format("yyyy", date); // 2013
         String dayOfTheWeek = (String) DateFormat.format("EEEE", date); // Thursday
-        return dayOfTheWeek + " "+day +" "+monthString + " "+year;
+        return dayOfTheWeek + " " + day + " " + monthString + " " + year;
     }
 
     public void setCustomerList(List<CustomerView> customerList) {
@@ -74,6 +78,37 @@ public class CustomerViewModel extends ViewModel {
         customerAdapter.setCustomerList(customerList);
         customerAdapter.notifyDataSetChanged();
 
+    }
+
+    private void addGameDetail(List<CustomerVisit> customerVisitList) {
+        Customer customer = gameRepository.getCustomerById(customerPhone);
+        int averageVisitPerWeek = customerVisitList.size();
+        int totalGamesPlayed = 0;
+        double totalAmountSpend  =0;
+        for (CustomerVisit visit:customerVisitList){
+            totalAmountSpend+=visit.getAmountPaidToShop();
+            totalGamesPlayed+=visit.getTotalGamesPlayed();
+        }
+        if (totalGamesPlayed%2!=0){
+            totalGamesPlayed-=1;
+        }
+
+        Date todayDate = Utils.convertToDate(Utils.getTodayDate(DATE_FORMAT), Constants.DATE_FORMAT);
+        String monthString = (String) DateFormat.format("MMM", todayDate); // Jun
+        int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
+
+        GamerDetailModel gamerDetailModel = new GamerDetailModel();
+        gamerDetailModel.titleName =  "Total Spend "+monthString +" Week "+currentWeek;
+        gamerDetailModel.payableAmount = "KSh. "+totalAmountSpend+"0";
+        gamerDetailModel.averageWeekSpend = "Ksh. "+totalAmountSpend/averageVisitPerWeek+"0";
+        gamerDetailModel.averageVisitPerWeek = averageVisitPerWeek+(averageVisitPerWeek>1?" Visits":" Visit");
+        gamerDetailModel.averageGamesPerDay = (totalGamesPlayed/averageVisitPerWeek)+" Games";
+        gamerDetailModel.customerCategory = customer.getCustomerType()!=null?customer.getCustomerType():"NEW CUSTOMER";
+        gamerDetailModelObservableField.set(gamerDetailModel);
+    }
+
+    public ObservableField<GamerDetailModel> getGamerDetailModelObservableField() {
+        return gamerDetailModelObservableField;
     }
 
     public void onCallClick(String phoneNo) {
@@ -90,8 +125,8 @@ public class CustomerViewModel extends ViewModel {
         clickEventsLiveData.setValue(Constants.Events.BACK_TO_CUSTOMERS);
     }
 
-    public void onCustomerClick(String phoneNo) {
-        this.phoneNo = phoneNo;
+    public void onCustomerClick(Customer customer) {
+        this.phoneNo = customer.getCustomerPhone();
         clickEventsLiveData.setValue(Constants.Events.CUSTOMER_CLICK);
     }
 
@@ -101,18 +136,18 @@ public class CustomerViewModel extends ViewModel {
 
     }
 
-    public String getVisitCountThisWeek(List<CustomerVisit> customerVisitList){
+    public String getVisitCountThisWeek(List<CustomerVisit> customerVisitList) {
         Date todayDate = Utils.convertToDate(Utils.getTodayDate(DATE_FORMAT), Constants.DATE_FORMAT);
         String monthString = (String) DateFormat.format("MMM", todayDate); // Jun
         String year = (String) DateFormat.format("yyyy", todayDate); // 2013
         int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
         int count = 0;
-        for (CustomerVisit visit:customerVisitList){
-            if (visit.getWeek() == currentWeek && visit.getMonth().equals(monthString+"_"+year)){
-                count+=1;
+        for (CustomerVisit visit : customerVisitList) {
+            if (visit.getWeek() == currentWeek && visit.getMonth().equals(monthString + "_" + year)) {
+                count += 1;
             }
         }
-        return count+"";
+        return count + "";
     }
 
     public String getPhoneNo() {
@@ -144,10 +179,15 @@ public class CustomerViewModel extends ViewModel {
         this.customerVisitList.removeAll(customerVisitList);
         this.customerVisitList.addAll(customerVisitList);
         customerVisitAdapter.setCustomerVisitList(customerVisitList);
+        addGameDetail(customerVisitList);
         customerVisitAdapter.notifyDataSetChanged();
     }
 
     public CustomerVisitAdapter getCustomerVisitAdapter() {
         return customerVisitAdapter;
+    }
+
+    public void setCustomer(String customerPhone) {
+        this.customerPhone = customerPhone;
     }
 }

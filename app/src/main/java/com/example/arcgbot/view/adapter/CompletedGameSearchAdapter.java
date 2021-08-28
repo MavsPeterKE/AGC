@@ -10,6 +10,8 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arcgbot.BR;
+import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.CompletedGame;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.viewmodels.CompletedGameSearchViewModel;
@@ -20,7 +22,7 @@ import java.util.List;
 public class CompletedGameSearchAdapter extends RecyclerView.Adapter<CompletedGameSearchAdapter.GenericViewHolder> {
 
     private int layoutId;
-    private List<ScreenItem> screenItemList;
+    private List<CompletedGame> screenItemList;
     private CompletedGameSearchViewModel viewModel;
 
     public CompletedGameSearchAdapter(@LayoutRes int layoutId, CompletedGameSearchViewModel viewModel) {
@@ -55,7 +57,7 @@ public class CompletedGameSearchAdapter extends RecyclerView.Adapter<CompletedGa
         return getLayoutIdForPosition(position);
     }
 
-    public void setScreenList(List<ScreenItem> screenList) {
+    public void setScreenList(List<CompletedGame> screenList) {
         this.screenItemList = screenList;
         notifyDataSetChanged();
     }
@@ -73,6 +75,9 @@ public class CompletedGameSearchAdapter extends RecyclerView.Adapter<CompletedGa
             binding.setVariable(BR.screen, screenItemList.get(position));
             binding.setVariable(BR.position, position);
             binding.executePendingBindings();
+            binding.getRoot().findViewById(R.id.layout_main).setOnClickListener(view -> {
+                viewModel.onCompletedGameClick(screenItemList.get(position));
+            });
         }
 
     }

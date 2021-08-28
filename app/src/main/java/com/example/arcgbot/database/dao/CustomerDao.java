@@ -44,4 +44,7 @@ public abstract class CustomerDao extends BaseDao<Customer> {
 
     @Query("SELECT count(*) FROM customer_table WHERE id IN (:customerVisitList) AND loyalty_bonus=1 AND loyalty_bonus_week=:loyaltyBonusWeek")
     public abstract int getLoyaltyBonusCount(List<String> customerVisitList,int loyaltyBonusWeek);
+
+    @Query("SELECT * FROM customer_table WHERE id=:customerPhone")
+    public abstract Customer getCustomerLiveDataById(String customerPhone);
 }

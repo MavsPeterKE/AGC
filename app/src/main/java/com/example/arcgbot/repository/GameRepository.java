@@ -524,6 +524,20 @@ public class GameRepository {
         }
         return amount;
     }
+
+    public Customer getCustomerById(String customerPhone) {
+        Customer customer = null;
+        Callable<Customer> callable = () -> customerDao.getCustomerLiveDataById(customerPhone);
+        Future<Customer> future = executorService.submit(callable);
+        try {
+            customer = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
 }
 
 

@@ -46,8 +46,14 @@ public class FragmentGamerDetails extends DaggerFragment {
     }
 
     private void init() {
+        setCustomerPhone();
         observeCustomerVisitData();
         observeClickEvents();
+    }
+
+    private void setCustomerPhone() {
+        String customerPhone = ((ScreenActivity) getActivity()).customerPhone;
+        customerViewModel.setCustomer(customerPhone);
     }
 
     private void observeCustomerVisitData(){
