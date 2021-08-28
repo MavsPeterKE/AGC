@@ -118,6 +118,7 @@
             android:layout_marginStart="5dp"
             android:text="@{gameCountModel.totalGameCount>1?`Games`:`Game`}"
             android:textSize="16sp"
+            android:textColor="@color/text_black"
             app:layout_constraintBottom_toBottomOf="@+id/textView33"
             app:layout_constraintStart_toEndOf="@+id/textView33"
             app:layout_constraintTop_toTopOf="@+id/textView33"

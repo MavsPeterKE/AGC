@@ -46,6 +46,10 @@ public class EODViewModel extends ViewModel {
     }
 
     public void closeErrorBottomSheet(){
+        gameItemClickLiveData.setValue(Constants.Events.CLOSE_ERROR_SHEET);
+    }
+
+    public void closeSuccessBottomSheet(){
         gameItemClickLiveData.setValue(Constants.Events.CLOSE_SUCCESS_SHEET);
     }
 

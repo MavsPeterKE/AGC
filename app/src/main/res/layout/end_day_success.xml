@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:backgroundTint="@color/green"
-            android:onClick="@{() -> model.closeErrorBottomSheet()}"
+            android:onClick="@{() -> model.closeSuccessBottomSheet()}"
             android:text="Ok"
             app:layout_constraintBottom_toBottomOf="@+id/btSend"
             app:layout_constraintEnd_toStartOf="@+id/btSend" />
