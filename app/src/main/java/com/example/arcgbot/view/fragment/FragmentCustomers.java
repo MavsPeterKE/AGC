@@ -104,7 +104,7 @@ public class FragmentCustomers extends DaggerFragment {
                    startCustomerDetailFragment();
                     break;
                 case BACK_TO_SCREENS:
-                    getActivity().onBackPressed();
+                    //getActivity().onBackPressed();
                     break;
             }
         });

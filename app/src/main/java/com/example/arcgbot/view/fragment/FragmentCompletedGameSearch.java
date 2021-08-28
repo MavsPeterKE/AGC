@@ -25,6 +25,7 @@ import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.view.activity.GameActivity;
+import com.example.arcgbot.view.activity.ScreenActivity;
 import com.example.arcgbot.viewmodels.CompletedGameSearchViewModel;
 
 import javax.inject.Inject;
@@ -108,10 +109,11 @@ public class FragmentCompletedGameSearch extends DaggerFragment {
     }
 
     private void startGameActivity() {
-        Intent gameActivityIntent = new Intent(getActivity(), GameActivity.class);
-        gameActivityIntent.putExtra(Constants.IntentKeys.GAME_COUNT_FRAGMENT, FragmentGameItem.class.getSimpleName());
-        //gameActivityIntent.putExtra(Constants.IntentKeys.SCREEN_ID, selectedGame.gameId);
-        startActivity(gameActivityIntent);
+        CompletedGame screen = selectedGame;
+        Intent screenIntent = new Intent(getActivity(), ScreenActivity.class);
+        screenIntent.putExtra(Constants.IntentKeys.DESTINATION_FRAGMENT, FragmentCompletedGameDetail.class.getSimpleName());
+        screenIntent.putExtra(Constants.IntentKeys.SCREEN_ID, screen.getId());
+        startActivity(screenIntent);
     }
 
 }
