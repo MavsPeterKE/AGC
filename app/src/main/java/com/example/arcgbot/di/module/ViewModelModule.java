@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.arcgbot.di.util.ViewModelKey;
 import com.example.arcgbot.viewmodels.CompletedGameSearchViewModel;
+import com.example.arcgbot.viewmodels.CompletedGameViewModel;
 import com.example.arcgbot.viewmodels.CustomerViewModel;
 import com.example.arcgbot.viewmodels.EODViewModel;
 import com.example.arcgbot.viewmodels.GameCountViewModel;
@@ -58,4 +59,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CompletedGameSearchViewModel.class)
     abstract ViewModel bindCompletedGameSearchViewModel(CompletedGameSearchViewModel completedGameSearchViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CompletedGameViewModel.class)
+    abstract ViewModel bindCompletedGameViewModel(CompletedGameViewModel completedGameViewModel);
 }

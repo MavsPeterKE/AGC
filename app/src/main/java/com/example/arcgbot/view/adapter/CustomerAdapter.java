@@ -10,6 +10,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arcgbot.BR;
+import com.example.arcgbot.R;
 import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.viewmodels.CustomerViewModel;
 
@@ -70,7 +71,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Generi
             binding.setVariable(BR.model, viewModel);
             binding.setVariable(BR.customer, customerList.get(position));
             binding.executePendingBindings();
-            //binding.getRoot().findViewById(R.id.layout_main).setOnClickListener(view -> viewModel.onScreenItemClick(screenItemList.get(position)));
+           /* binding.getRoot().findViewById(R.id.layout_main).setOnClickListener(view -> viewModel.onCustomerClick(customerList.get(position)));*/
         }
 
     }

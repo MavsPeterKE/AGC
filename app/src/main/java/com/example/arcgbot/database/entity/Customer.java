@@ -25,12 +25,21 @@ public class Customer extends BaseObservable {
     @ColumnInfo(name = "loyalty_bonus_week")
     private int loyaltyBonusWeek;
 
-
     @ColumnInfo(name = "review_comment")
     private double reviewComment;
 
     @ColumnInfo(name = "gender")
     private String gender;
+
+    @ColumnInfo(name = "customer_type")
+    private String customerType;
+
+    @ColumnInfo(name = "is_loyalty_discount_applicable")
+    private boolean isLoyalFullTimeDiscountApplied;
+
+    @ColumnInfo(name = "is_new_customer_discount_applied")
+    private boolean isNewCustomerDiscountApplied;
+
 
     @NonNull
     public String getCustomerPhone() {
@@ -95,5 +104,29 @@ public class Customer extends BaseObservable {
 
     public void setLoyaltyBonusWeek(int loyaltyBonusWeek) {
         this.loyaltyBonusWeek = loyaltyBonusWeek;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
+    }
+
+    public boolean isLoyalFullTimeDiscountApplied() {
+        return isLoyalFullTimeDiscountApplied;
+    }
+
+    public void setLoyalFullTimeDiscountApplied(boolean loyalFullTimeDiscountApplied) {
+        isLoyalFullTimeDiscountApplied = loyalFullTimeDiscountApplied;
+    }
+
+    public boolean isNewCustomerDiscountApplied() {
+        return isNewCustomerDiscountApplied;
+    }
+
+    public void setNewCustomerDiscountApplied(boolean newCustomerDiscountApplied) {
+        isNewCustomerDiscountApplied = newCustomerDiscountApplied;
     }
 }

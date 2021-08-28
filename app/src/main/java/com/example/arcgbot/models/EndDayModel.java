@@ -11,6 +11,7 @@ public class EndDayModel {
     public double happyHourAmount;
     public double moviesAmount;
     public double printingSales;
+    public double psHireAmount;
     public double otherSales;
     public double normalGamingRateSales;
 }

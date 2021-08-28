@@ -1,7 +1,9 @@
 package com.example.arcgbot.repository;
 
+import static com.example.arcgbot.utils.Constants.CustomerTypes.*;
 import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
 import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_LOYALTY_BONUS_ENABLED;
+import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_LOYAL_FULL_TIME_DISCOUNT_ENABLED;
 import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_SPEND_AMOUNT_BONUS_ENABLED;
 import static com.example.arcgbot.utils.Constants.PrefsKeys.LOYALTY_VISIT_COUNT;
 
@@ -294,7 +296,7 @@ public class GameRepository {
                 } else {
                     if (customerViewList.size() > customerViewsInDb.size()) {
                         for (CustomerView customerView : customerViewList) {
-                            customerDao.insert(customerView.screen);
+                            customerDao.insert(customerView.gamer);
                             customerVisitDao.insert(customerView.customerVisitList);
                         }
                     } else {
@@ -382,7 +384,8 @@ public class GameRepository {
                     if (customerDao.getLoyaltyBonusCount(customerPhoneList,currentWeek)==0){
                         completedGame.setPayableAmount(completedGame.getPayableAmount()-gameView.promotion.getLoyaltyDiscount());
                         completedGame.setBonusAmount(completedGame.getBonusAmount()+gameView.promotion.getLoyaltyDiscount());
-                        customerDao.updateLoyaltyBonusAwarded(customerPhoneList);
+                        customerDao.updateLoyaltyBonusAwarded(customerPhoneList, LOYAL_CUSTOMER.name(),currentWeek);
+                        updateCustomerOnFireBase();
                     }
                 }
             }
@@ -392,6 +395,7 @@ public class GameRepository {
                 if (totalAmount>=gameView.promotion.getSpendingDiscount()){
                     completedGame.setPayableAmount(completedGame.getPayableAmount()-gameView.promotion.getSpendingDiscount());
                     completedGame.setBonusAmount(completedGame.getBonusAmount()+gameView.promotion.getSpendingDiscount());
+                    updateCustomerOnFireBase();
                 }
             }
 
@@ -402,6 +406,10 @@ public class GameRepository {
             firebaseLogs.setAllGameList(Utils.getTodayDate(DATE_FORMAT), "all-completed-Games", completeGameDao.getAllCompletedGameList());
         });
 
+    }
+
+    private void updateCustomerOnFireBase() {
+        firebaseLogs.setCustomerList(customerDao.getSavedCustomers());
     }
 
     private void updatedCustomerVisit(GameView gameView, CompletedGame completedGame) {
@@ -420,12 +428,27 @@ public class GameRepository {
     @NonNull
     private CompletedGame createCompletedGame(GameView gameView) {
         CompletedGame completedGame = new CompletedGame();
+        completedGame.setPlayer1Id(gameView.gameCount.getPlayer1Id());
+        completedGame.setPlayer2Id(gameView.gameCount.getPlayer1Id());
+        completedGame.setScreenLable(gameView.screen.getScreenLable());
         completedGame.setDuration(gameView.gameCount.getStartTime() + " - " + gameView.gameCount.getStopTime());
         completedGame.setGamesCount(gameView.totalGameCount);
-        completedGame.setScreenLable(gameView.screen.getScreenLable() + " - " + gameView.gameCount.getPlayerNames());
+        completedGame.setNormalGamesCount(gameView.gameCount.getGamesCount());
+        completedGame.setNormalGamingRateAmount(gameView.gameCount.getNormalGamingRateAmount());
+        completedGame.setNormalGamingBonus(gameView.gameCount.getGamesBonus());
+        completedGame.setNormalGamesBonusAmount(gameView.gameCount.getNormalGamingRateBonusAmount());
+        completedGame.setHappyHourGamesCount(gameView.gameCount.getHappyHourGameCount());
+        completedGame.setHappyHourGamesBonus(gameView.gameCount.getHappyHourBonusCount());
+        completedGame.setHappyHourAmount(gameView.gameCount.getHappyHourAmount());
+        completedGame.setHappyHourBonusAmount(gameView.gameCount.getHappyHourBonusAmount());
+        completedGame.setLoyaltyBonusAmount(gameView.promotion.getLoyaltyDiscount());
+        completedGame.setStartTime(gameView.gameCount.getStartTime());
+        completedGame.setGameType(gameView.gameType.getGameName());
+        completedGame.setStopTime(gameView.gameCount.getStopTime());
+        completedGame.setPlayerNames(gameView.gameCount.getPlayerNames());
         completedGame.setEndTimeSeconds(Utils.getSeconds(gameView.gameCount.getStopTime()));
-        completedGame.setPayableAmount(gameView.payableAmount);
-        completedGame.setBonusAmount(gameView.bonusAmount);
+        completedGame.setPayableAmount(gameView.payableAmount-gameView.promotion.getLoyaltyDiscount());
+        completedGame.setBonusAmount((gameView.bonusAmount)+gameView.promotion.getLoyaltyDiscount());
         return completedGame;
     }
 
@@ -453,18 +476,8 @@ public class GameRepository {
         return completeGameDao.getTotalAmountPlayed();
     }
 
-    public GameCount getSelectedGameScreen(long gameId) {
-        Callable<GameCount> callable = () -> gameCountDao.getGameById(gameId);
-        GameCount gameCount = null;
-        Future<GameCount> future = executorService.submit(callable);
-        try {
-            gameCount = future.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return gameCount;
+    public LiveData<CompletedGame> getCompletedGameById(long gameId) {
+        return completeGameDao.getCompletedGameById(gameId);
     }
 
     public GameView getGameViewById(long gameId) {
@@ -492,6 +505,38 @@ public class GameRepository {
             e.printStackTrace();
         }
         return amount;
+    }
+
+    public LiveData<List<CustomerVisit>> getCustomerVisitThisWeek(String customerPhone, int currentWeek, String month) {
+        return customerVisitDao.getCustomerVisitCurrentWeek(customerPhone,currentWeek,month);
+    }
+
+    public int getActiveScreenCount() {
+        int amount = 0;
+        Callable<Integer> callable = () -> screenDao.getActiveScreenCount();
+        Future<Integer> future = executorService.submit(callable);
+        try {
+            amount = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return amount;
+    }
+
+    public Customer getCustomerById(String customerPhone) {
+        Customer customer = null;
+        Callable<Customer> callable = () -> customerDao.getCustomerLiveDataById(customerPhone);
+        Future<Customer> future = executorService.submit(callable);
+        try {
+            customer = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return customer;
     }
 }
 

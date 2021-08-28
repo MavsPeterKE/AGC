@@ -23,7 +23,7 @@ import java.util.List;
         "GROUP BY ct.id")
 public class CustomerView {
     @Embedded
-    public Customer screen;
+    public Customer gamer;
 
     public double totalSpentAmount;
     public int totalGamesPlayed;

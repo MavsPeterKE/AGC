@@ -28,6 +28,8 @@
     <string name="no_customer_data">No Gamers Data to show</string>
     <string name="syncing_data">Syncing gaming data. Please wait...</string>
     <string name="title_bonus">Bonus Games: </string>
+    <string name="title_game_details">Game Details</string>
+    <string name="title_amount">Amount</string>
 
     <string-array name="games">
         <item>FiFa</item>

@@ -68,6 +68,8 @@ public class FragmentGameCount extends DaggerFragment {
                 Prefs.putInt(Constants.PrefsKeys.LOYALTY_VISIT_COUNT,configs.loyalty_visit_count);
                 Prefs.putBoolean(Constants.PrefsKeys.IS_SPEND_AMOUNT_BONUS_ENABLED,configs.spent_amount_bonus_enabled);
                 Prefs.putBoolean(Constants.PrefsKeys.IS_LOYALTY_BONUS_ENABLED,configs.loyalty_discount_enabled);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_LOYAL_FULL_TIME_DISCOUNT_ENABLED,configs.is_fulltime_loyal_discount_enabled);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_NEW_CUSTOMER_DISCOUNT_ENABLED,configs.is_new_customer_discount_enabled);
             }
 
             @Override

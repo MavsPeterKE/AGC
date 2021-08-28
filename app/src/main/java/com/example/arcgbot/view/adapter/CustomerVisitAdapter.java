@@ -10,22 +10,19 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arcgbot.BR;
-import com.example.arcgbot.R;
-import com.example.arcgbot.database.entity.CompletedGame;
-import com.example.arcgbot.database.views.GameView;
-import com.example.arcgbot.models.ScreenItem;
-import com.example.arcgbot.viewmodels.CompletedGameSearchViewModel;
-import com.example.arcgbot.viewmodels.SearchItemViewModel;
+import com.example.arcgbot.database.entity.CustomerVisit;
+import com.example.arcgbot.database.views.CustomerView;
+import com.example.arcgbot.viewmodels.CustomerViewModel;
 
 import java.util.List;
 
-public class CompletedGameSearchAdapter extends RecyclerView.Adapter<CompletedGameSearchAdapter.GenericViewHolder> {
+public class CustomerVisitAdapter extends RecyclerView.Adapter<CustomerVisitAdapter.GenericViewHolder> {
 
     private int layoutId;
-    private List<CompletedGame> screenItemList;
-    private CompletedGameSearchViewModel viewModel;
+    private List<CustomerVisit> customerVisitList;
+    private CustomerViewModel viewModel;
 
-    public CompletedGameSearchAdapter(@LayoutRes int layoutId, CompletedGameSearchViewModel viewModel) {
+    public CustomerVisitAdapter(@LayoutRes int layoutId, CustomerViewModel viewModel) {
         this.layoutId = layoutId;
         this.viewModel = viewModel;
     }
@@ -36,7 +33,7 @@ public class CompletedGameSearchAdapter extends RecyclerView.Adapter<CompletedGa
 
     @Override
     public int getItemCount() {
-        return screenItemList == null ? 0 : screenItemList.size();
+        return customerVisitList == null ? 0 : customerVisitList.size();
     }
 
     @NonNull
@@ -57,8 +54,8 @@ public class CompletedGameSearchAdapter extends RecyclerView.Adapter<CompletedGa
         return getLayoutIdForPosition(position);
     }
 
-    public void setScreenList(List<CompletedGame> screenList) {
-        this.screenItemList = screenList;
+    public void setCustomerVisitList(List<CustomerVisit> customerVisitList) {
+        this.customerVisitList = customerVisitList;
         notifyDataSetChanged();
     }
 
@@ -70,14 +67,11 @@ public class CompletedGameSearchAdapter extends RecyclerView.Adapter<CompletedGa
             this.binding = binding;
         }
 
-        void bind(CompletedGameSearchViewModel viewModel, Integer position) {
+        void bind(CustomerViewModel viewModel, Integer position) {
             binding.setVariable(BR.model, viewModel);
-            binding.setVariable(BR.screen, screenItemList.get(position));
-            binding.setVariable(BR.position, position);
+            binding.setVariable(BR.visit, customerVisitList.get(position));
             binding.executePendingBindings();
-            binding.getRoot().findViewById(R.id.layout_main).setOnClickListener(view -> {
-                viewModel.onCompletedGameClick(screenItemList.get(position));
-            });
+           /* binding.getRoot().findViewById(R.id.layout_main).setOnClickListener(view -> viewModel.onCustomerClick(customerList.get(position)));*/
         }
 
     }

@@ -1,11 +1,11 @@
 package com.example.arcgbot.view.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,16 +14,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
+import com.example.arcgbot.database.entity.CompletedGame;
 import com.example.arcgbot.databinding.FragmentScreensBinding;
 import com.example.arcgbot.models.ScreenItem;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.ViewModelFactory;
+import com.example.arcgbot.view.activity.ScreenActivity;
 import com.example.arcgbot.view.activity.SearchActivity;
 import com.example.arcgbot.viewmodels.ScreensViewModel;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.net.URLEncoder;
 
 import javax.inject.Inject;
 
@@ -35,7 +33,7 @@ public class FragmentScreens extends DaggerFragment {
     ViewModelFactory viewModelFactory;
     private ScreensViewModel mViewModel;
     private FragmentScreensBinding fragmentScreensBinding;
-    boolean isWhatsappException;
+    private CompletedGame clickedScreen;
 
     public static FragmentScreens newInstance() {
         return new FragmentScreens();
@@ -49,37 +47,22 @@ public class FragmentScreens extends DaggerFragment {
         mViewModel = new ViewModelProvider(this, viewModelFactory).get(ScreensViewModel.class);
         fragmentScreensBinding.setScreenviewmodel(mViewModel);
         fragmentScreensBinding.executePendingBindings();
-
-        mViewModel.gameRepository.getCompletedGames().observe(getViewLifecycleOwner(), completedGames -> mViewModel.setGameCountdapter(completedGames));
-
-       /* mViewModel.getSelectedScreenItem().observe(getViewLifecycleOwner(), new Observer<ScreenItem>() {
-            @Override
-            public void onChanged(ScreenItem screenItem) {
-                if (screenItem!=null){
-                    StringBuilder stringBuilder = getStringBuilder(screenItem);
-                    try {
-                        isWhatsappException = false;
-                        Intent sendMsg = new Intent(Intent.ACTION_VIEW);
-                        String url = "https://api.whatsapp.com/send?phone=" + "+254"+screenItem.phoneNumber.substring(0) + "&text=" + URLEncoder.encode(stringBuilder.toString(), "UTF-8");
-                        sendMsg.setPackage("com.whatsapp");
-                        sendMsg.setData(Uri.parse(url));
-                        if (sendMsg.resolveActivity(getActivity().getPackageManager()) != null) {
-                            startActivity(sendMsg);
-                        }
-                    } catch (Exception e) {
-                        isWhatsappException = true;
-                        e.printStackTrace();
-                        Uri uri = Uri.parse("smsto:"+screenItem.phoneNumber);
-                        Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                        it.putExtra("sms_body", stringBuilder.toString());
-                        startActivity(it);
-                    }
-
-                }
-            }
-        });*/
-        observeClickEvents();
+        init();
         return fragmentScreensBinding.getRoot();
+    }
+
+    private void init() {
+        observeCompletedGames();
+        observeClickEvents();
+        mViewModel.getSelectedScreenItem().observe(getViewLifecycleOwner(),
+                screenItem -> {
+                    clickedScreen = screenItem;
+                });
+    }
+
+    private void observeCompletedGames() {
+        mViewModel.gameRepository.getCompletedGames().observe(getViewLifecycleOwner(), completedGames ->
+                mViewModel.setGameCountAdapter(completedGames));
     }
 
 
@@ -89,6 +72,9 @@ public class FragmentScreens extends DaggerFragment {
                 case Constants.Events.SEARCH_GAME:
                     startSearchActivity();
                     break;
+                case Constants.Events.GAME_ITEM_CLICK:
+                    startScreenDetail();
+                    break;
 
 
             }
@@ -97,21 +83,16 @@ public class FragmentScreens extends DaggerFragment {
 
     private void startSearchActivity() {
         Intent searchIntent = new Intent(getActivity(), SearchActivity.class);
-        searchIntent.putExtra(Constants.IntentKeys.ORIGIN_FRAGMENT,FragmentScreens.class.getSimpleName());
+        searchIntent.putExtra(Constants.IntentKeys.ORIGIN_FRAGMENT, FragmentScreens.class.getSimpleName());
         startActivity(searchIntent);
     }
 
-    @NotNull
-    private StringBuilder getStringBuilder(ScreenItem screenItem) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(isWhatsappException?"Arcade Gaming Lounge":"*Arcade Gaming Lounge*");
-        stringBuilder.append("\n");
-        stringBuilder.append(isWhatsappException? "Please Pay: ":"*Please Pay: *"+screenItem.payableAmount);
-        stringBuilder.append("\n");
-        stringBuilder.append(isWhatsappException?"Games Played: ":"*Games Played: *"+screenItem.GameCount);
-        stringBuilder.append("\n");
-        stringBuilder.append("Welcome Again Thanks.");
-        return stringBuilder;
+    private void startScreenDetail() {
+        CompletedGame screen = clickedScreen;
+        Intent screenIntent = new Intent(getActivity(), ScreenActivity.class);
+        screenIntent.putExtra(Constants.IntentKeys.DESTINATION_FRAGMENT, FragmentCompletedGameDetail.class.getSimpleName());
+        screenIntent.putExtra(Constants.IntentKeys.SCREEN_ID, screen.getId());
+        startActivity(screenIntent);
     }
 
 }

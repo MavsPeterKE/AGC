@@ -27,8 +27,8 @@ public class CompletedGameSearchViewModel extends ViewModel {
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData<>();
     private GameRepository gameRepository;
     private CompletedGameSearchAdapter completedGameSearchAdapter;
-    private List<ScreenItem> screenList;
-    private MutableLiveData<ScreenItem> selectedGameLiveData = new MutableLiveData();
+    private List<CompletedGame> screenList;
+    private MutableLiveData<CompletedGame> selectedGameLiveData = new MutableLiveData();
 
 
     @Inject
@@ -55,44 +55,26 @@ public class CompletedGameSearchViewModel extends ViewModel {
     }
 
     public void setScreenList(List<CompletedGame> screens) {
-        screenList = getScreenList(screens);
+        this.screenList = screens;
         completedGameSearchAdapter.setScreenList(screenList);
         completedGameSearchAdapter.notifyDataSetChanged();
     }
 
-    private List<ScreenItem> getScreenList(List<CompletedGame> completedGameList){
-        List<ScreenItem> screenItemList = new ArrayList<>();
-        int totalGameCount = 0;
-        for (CompletedGame game : completedGameList){
-            ScreenItem screenItem = new ScreenItem();
-            screenItem.GameCount = String.valueOf(game.getGamesCount());
-            screenItem.duration = game.getDuration();
-            screenItem.payableAmount = game.getPayableAmount()+"0";
-            screenItem.bonusAmount = game.getBonusAmount()+"0";
-            screenItem.phoneNumber = game.getPlayerPhone();
-            screenItem.screenLable = game.getScreenLable();
-            screenItem.isBonusActive = game.getBonusAmount()>0;
-            screenItemList.add(screenItem);
-            totalGameCount+=game.getGamesCount();
-
-        }
-        return screenItemList;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void searchScreen(String searchText) {
-        List<ScreenItem> gameViewList = screenList.stream().filter(screenItem ->
-                screenItem.screenLable.toLowerCase().contains(searchText)).collect(Collectors.toList());
-        completedGameSearchAdapter.setScreenList(gameViewList);
+        List<CompletedGame> completedGameList = screenList.stream().filter(screenItem -> {
+            return screenItem.getScreenLable().toLowerCase().contains(searchText)|screenItem.getPlayerNames().toLowerCase().contains(searchText);
+        }).collect(Collectors.toList());
+        completedGameSearchAdapter.setScreenList(completedGameList);
         completedGameSearchAdapter.notifyDataSetChanged();
     }
 
-    public void onCompletedGameClick(ScreenItem screenItem, int pos) {
-        selectedGameLiveData.setValue(screenItem);
+    public void onCompletedGameClick(CompletedGame completedGame) {
+        selectedGameLiveData.setValue(completedGame);
         clickEventsLiveData.setValue(Constants.Events.COMPLETED_GAME_CLICK);
     }
 
-    public MutableLiveData<ScreenItem> getSelectedGame() {
+    public MutableLiveData<CompletedGame> getSelectedGame() {
         return selectedGameLiveData;
     }
 }

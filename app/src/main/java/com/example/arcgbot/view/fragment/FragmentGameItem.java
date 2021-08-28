@@ -63,16 +63,16 @@ public class FragmentGameItem extends DaggerFragment {
         gameItemViewModel.getSelectedGamerLiveData().observe(getViewLifecycleOwner(), customer -> {
             if (customer!=null){
                 if (gameItemViewModel.getIsPlayerOneEnabled().get()){
-                    fragmentGameItemBinding.edPlayer1Name.setText(customer.screen.getCustomerName());
-                    fragmentGameItemBinding.edPlayer1Phone.setText(customer.screen.getCustomerPhone());
+                    fragmentGameItemBinding.edPlayer1Name.setText(customer.gamer.getCustomerName());
+                    fragmentGameItemBinding.edPlayer1Phone.setText(customer.gamer.getCustomerPhone());
                     gameItemViewModel.getIsPlayerOneEnabled().set(false);
                     fragmentGameItemBinding.player2layout.setVisibility(View.VISIBLE);
                     fragmentGameItemBinding.spinner.setVisibility(View.VISIBLE);
                 }
 
                 if (gameItemViewModel.getIsPlayerTwoEnabled().get()){
-                    fragmentGameItemBinding.edPlayer2Name.setText(customer.screen.getCustomerName());
-                    fragmentGameItemBinding.edPlayer2Phone.setText(customer.screen.getCustomerPhone());
+                    fragmentGameItemBinding.edPlayer2Name.setText(customer.gamer.getCustomerName());
+                    fragmentGameItemBinding.edPlayer2Phone.setText(customer.gamer.getCustomerPhone());
                     gameItemViewModel.getIsPlayerTwoEnabled().set(false);
                     fragmentGameItemBinding.spinner.setVisibility(View.VISIBLE);
                 }

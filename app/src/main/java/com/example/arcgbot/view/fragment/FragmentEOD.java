@@ -1,6 +1,9 @@
 package com.example.arcgbot.view.fragment;
 
-import android.content.DialogInterface;
+import static com.example.arcgbot.utils.Constants.Events.CLOSE_ERROR_SHEET;
+import static com.example.arcgbot.utils.Constants.Events.CLOSE_SUCCESS_SHEET;
+import static com.example.arcgbot.utils.Constants.Events.POST_END_DAY;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.arcgbot.R;
 import com.example.arcgbot.databinding.FragmentEodBinding;
 import com.example.arcgbot.models.EndDayModel;
@@ -21,12 +23,11 @@ import com.example.arcgbot.utils.FirebaseLogs;
 import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.EODViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
-import java.util.regex.Matcher;
 
 import javax.inject.Inject;
 
@@ -38,6 +39,10 @@ public class FragmentEOD extends DaggerFragment {
     ViewModelFactory viewModelFactory;
     private EODViewModel mViewModel;
     private FragmentEodBinding fragmentEodBinding;
+    private BottomSheetBehavior sheetErrorBehavior;
+    private BottomSheetBehavior sheetSuccessBehavior;
+    private Intent sendIntent = new Intent();
+    private boolean isWhatsappException = false;
 
     public static FragmentEOD newInstance() {
         return new FragmentEOD();
@@ -53,50 +58,157 @@ public class FragmentEOD extends DaggerFragment {
         mViewModel = new ViewModelProvider(this, viewModelFactory).get(EODViewModel.class);
         fragmentEodBinding.setModel(mViewModel);
         fragmentEodBinding.executePendingBindings();
-        observeGameData();
-        return fragmentEodBinding.getRoot();
-    }
-
-    private void observeGameData() {
         mViewModel.repository.getTotalRevenue().observe(getViewLifecycleOwner(), aDouble -> {
             mViewModel.gameRevenue.set(String.valueOf(aDouble != null ? aDouble : 0.00));
         });
 
-        mViewModel.repository.getGameTotal().observe(getViewLifecycleOwner(), integer -> mViewModel.gameCount.set((integer != null ? integer : 0) + " Games"));
-        fragmentEodBinding.button2.setOnClickListener(view -> {
+        fragmentEodBinding.btEndDay.setOnClickListener(view -> {
             startEndOfDay();
         });
 
         firebaseLogs = new FirebaseLogs();
+        initBottomSheet();
+        observeButtonEvents();
+        return fragmentEodBinding.getRoot();
+    }
+
+    private void observeButtonEvents() {
+        mViewModel.getGameItemClickLiveData().observe(getViewLifecycleOwner(), action -> {
+            switch (action) {
+                case CLOSE_ERROR_SHEET:
+                    showErrorBottomSheetAction();
+                    break;
+                case CLOSE_SUCCESS_SHEET:
+                    showSuccessBottomSheetAction();
+                    break;
+                case POST_END_DAY:
+                    if (isWhatsappException){
+                        startActivity(Intent.createChooser(sendIntent, "AGC Summary"));
+                        startActivity(sendIntent);
+                    }else{
+                        Intent shareIntent = Intent.createChooser(sendIntent, "AGC End Day");
+                        startActivity(shareIntent);
+                    }
+                    break;
+            }
+        });
+    }
+
+    private void initBottomSheet() {
+        sheetErrorBehavior = BottomSheetBehavior.from(fragmentEodBinding.errorBottomSheet.getRoot());
+        sheetErrorBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        sheetSuccessBehavior = BottomSheetBehavior.from(fragmentEodBinding.successBottomSheet.getRoot());
+        sheetSuccessBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+    }
+
+    private void setBottomSheetError(String s, String message) {
+        fragmentEodBinding.errorBottomSheet.tvTitle.setText(s);
+        fragmentEodBinding.errorBottomSheet.tvErrorMsg.setText(message);
+    }
+
+    private void setBottomSheetSuccess(String title, String message) {
+        fragmentEodBinding.successBottomSheet.tvTitle.setText(title);
+        fragmentEodBinding.successBottomSheet.tvErrorMsg.setText(message);
+    }
+
+    private void showErrorBottomSheetAction() {
+        if (sheetErrorBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetErrorBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            sheetErrorBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+    }
+
+    private void showSuccessBottomSheetAction() {
+        if (sheetSuccessBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetSuccessBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            sheetSuccessBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
     }
 
 
     private void startEndOfDay() {
-        StringBuilder stringBuilder = getMsgStringBuilder();
-        // Performs action on click
-        try {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
-            sendIntent.setType("text/plain");
-            sendIntent.setPackage("com.whatsapp");
-            startActivity(Intent.createChooser(sendIntent, ""));
-            startActivity(sendIntent);
-        }catch (Exception e){
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
-            sendIntent.setType("text/plain");
-            Intent shareIntent = Intent.createChooser(sendIntent, "AGC End Day");
-            startActivity(shareIntent);
+        if (mViewModel.isAnyScreenActive()) {
+            setBottomSheetError("Active Game", "End any active game before you can end day");
+            showErrorBottomSheetAction();
+        } else {
+            StringBuilder stringBuilder = getMsgStringBuilder();
+            // Performs action on click
+            try {
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+                sendIntent.setType("text/plain");
+                sendIntent.setPackage("com.whatsapp");
+                showSuccessDialog();
+            } catch (Exception e) {
+                isWhatsappException = true;
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+                sendIntent.setType("text/plain");
+                showSuccessDialog();
+            }
         }
 
+
+    }
+
+    private void showSuccessDialog() {
+        setBottomSheetSuccess("Sales End Day","Sales Summary Posted Successfully");
+        showSuccessBottomSheetAction();
     }
 
     @NotNull
     private StringBuilder getMsgStringBuilder() {
         String issues = fragmentEodBinding.editTextTextMultiLine.getText().toString().trim();
-        String time = Utils.getTodayDate(" "+Constants.GENERIC_DATE_TIME_FORMAT);
+        String time = Utils.getTodayDate(" " + Constants.GENERIC_DATE_TIME_FORMAT);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*Arcade Gaming EOD*");
         stringBuilder.append("\n");
@@ -112,29 +224,30 @@ public class FragmentEOD extends DaggerFragment {
 
 
         //Added
-        String happyHour = fragmentEodBinding.edHappyHour.getText().toString().trim();
         String moviesAmount = fragmentEodBinding.edMovies.getText().toString().trim();
         String printingAmount = fragmentEodBinding.edPrintingAmount.getText().toString().trim();
-        String otherAmount = fragmentEodBinding.edOtherAmount.getText().toString().trim();
+        String psSalesTotals = fragmentEodBinding.edPsHireAmount.getText().toString().trim();
+        String otherServicesAmount = fragmentEodBinding.edOtherSalesAmount.getText().toString().trim();
         String normalGamingSalesRate = fragmentEodBinding.tvGameRevenue.getText().toString().trim().substring(5);
-        double happyHourSale = !happyHour.isEmpty()?Double.parseDouble(happyHour):0.00;
-        double moviesSaleAmount = !moviesAmount.isEmpty()?Double.parseDouble(moviesAmount):0.00;
-        double printingSaleAmount = !printingAmount.isEmpty()?Double.parseDouble(printingAmount):0.00;
-        double otherSaleAmount =  !otherAmount.isEmpty()?Double.parseDouble(otherAmount):0.00;
-        double normalGamingSalesAmount = !normalGamingSalesRate.isEmpty()?Double.parseDouble(normalGamingSalesRate):0.00;
-        double totals = happyHourSale+moviesSaleAmount+printingSaleAmount+otherSaleAmount+normalGamingSalesAmount;
+        double moviesSaleAmount = !moviesAmount.isEmpty() ? Double.parseDouble(moviesAmount) : 0.00;
+        double printingSaleAmount = !printingAmount.isEmpty() ? Double.parseDouble(printingAmount) : 0.00;
+        double psHireSalesAmount = !psSalesTotals.isEmpty() ? Double.parseDouble(psSalesTotals) : 0.00;
+        double otherServicesSalesAmount = !otherServicesAmount.isEmpty() ? Double.parseDouble(otherServicesAmount) : 0.00;
+        double normalGamingSalesAmount = !normalGamingSalesRate.isEmpty() ? Double.parseDouble(normalGamingSalesRate) : 0.00;
+        double totals = moviesSaleAmount + printingSaleAmount + psHireSalesAmount + normalGamingSalesAmount;
+
 
         //Format Issues;
         StringBuilder issuesString = new StringBuilder();
-        issuesString.append("Happy Hour Gaming Sales: "+happyHour);
+        issuesString.append("Total Gaming Sales: " + normalGamingSalesRate);
         issuesString.append("\n");
-        issuesString.append("Normal Rate Gaming Sales: "+normalGamingSalesAmount);
+        issuesString.append("Movies Total Sales: " + moviesAmount);
         issuesString.append("\n");
-        issuesString.append("Movies  Sales: "+moviesAmount);
+        issuesString.append("Printing Total Sales: " + printingAmount);
         issuesString.append("\n");
-        issuesString.append("Printing  Sales: "+printingAmount);
+        issuesString.append("PS Hire Total Sales: " + psSalesTotals);
         issuesString.append("\n");
-        issuesString.append("Others  Sales: "+otherAmount);
+        issuesString.append("Other Services Totals: " + otherServicesSalesAmount);
         issuesString.append("\n");
         issuesString.append("\n");
         issuesString.append("Business Issue");
@@ -143,17 +256,18 @@ public class FragmentEOD extends DaggerFragment {
 
         EndDayModel endDayModel = new EndDayModel();
         endDayModel.endOfDayTime = time;
-        endDayModel.happyHourAmount = happyHourSale;
+        endDayModel.happyHourAmount = 0;
         endDayModel.moviesAmount = moviesSaleAmount;
-        endDayModel.otherSales = otherSaleAmount;
-        endDayModel.printingSales = normalGamingSalesAmount;
-        endDayModel.normalGamingRateSales = printingSaleAmount;
+        endDayModel.otherSales = otherServicesSalesAmount;
+        endDayModel.psHireAmount = psHireSalesAmount;
+        endDayModel.printingSales = printingSaleAmount;
+        endDayModel.normalGamingRateSales = normalGamingSalesAmount;
         endDayModel.issues = issuesString.toString();
         endDayModel.date = new Date().getTime();
         endDayModel.totalGamesPlayed = fragmentEodBinding.tvGameCount.getText().toString().trim();
-        endDayModel.totalSales = totals +"";
+        endDayModel.totalSales = totals + "";
 
-        firebaseLogs.setEndDayLog(Utils.getTodayDate(Constants.DATE_FORMAT),"-all-end-days",endDayModel);
+        firebaseLogs.setEndDayLog(Utils.getTodayDate(Constants.DATE_FORMAT), "-all-end-days", endDayModel);
         return stringBuilder;
     }
 

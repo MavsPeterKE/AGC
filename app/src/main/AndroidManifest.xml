@@ -15,6 +15,7 @@
         android:theme="@style/Theme.ArcGBot">
         <activity android:name=".view.activity.HomeActivity"
             android:windowSoftInputMode="adjustPan"> </activity>
+        <activity android:name=".view.activity.ScreenActivity"></activity>
         <activity android:name=".view.activity.GameActivity"
             android:windowSoftInputMode="adjustPan"> </activity>
         <activity android:name=".view.activity.SearchActivity"
