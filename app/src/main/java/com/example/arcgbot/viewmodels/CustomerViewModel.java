@@ -37,6 +37,7 @@ public class CustomerViewModel extends ViewModel {
     private CustomerVisitAdapter customerVisitAdapter;
     private MutableLiveData<Customer> selectedCustomerItem = new MutableLiveData();
     private ObservableField<Boolean> isCustomerListSet = new ObservableField(false);
+    private ObservableField<Boolean> isVisitDataAvailable = new ObservableField(false);
     public GameRepository gameRepository;
     FirebaseLogs firebaseLogs;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
@@ -81,30 +82,30 @@ public class CustomerViewModel extends ViewModel {
     }
 
     private void addGameDetail(List<CustomerVisit> customerVisitList) {
-        Customer customer = gameRepository.getCustomerById(customerPhone);
-        int averageVisitPerWeek = customerVisitList.size();
-        int totalGamesPlayed = 0;
-        double totalAmountSpend  =0;
-        for (CustomerVisit visit:customerVisitList){
-            totalAmountSpend+=visit.getAmountPaidToShop();
-            totalGamesPlayed+=visit.getTotalGamesPlayed();
-        }
-        if (totalGamesPlayed%2!=0){
-            totalGamesPlayed-=1;
-        }
-
         Date todayDate = Utils.convertToDate(Utils.getTodayDate(DATE_FORMAT), Constants.DATE_FORMAT);
         String monthString = (String) DateFormat.format("MMM", todayDate); // Jun
         int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
 
         GamerDetailModel gamerDetailModel = new GamerDetailModel();
         gamerDetailModel.titleName =  "Total Spend "+monthString +" Week "+currentWeek;
-        gamerDetailModel.payableAmount = "KSh. "+totalAmountSpend+"0";
-        gamerDetailModel.averageWeekSpend = "Ksh. "+totalAmountSpend/averageVisitPerWeek+"0";
-        gamerDetailModel.averageVisitPerWeek = averageVisitPerWeek+(averageVisitPerWeek>1?" Visits":" Visit");
-        gamerDetailModel.averageGamesPerDay = (totalGamesPlayed/averageVisitPerWeek)+" Games";
-        gamerDetailModel.customerCategory = customer.getCustomerType()!=null?customer.getCustomerType():"NEW CUSTOMER";
-        gamerDetailModelObservableField.set(gamerDetailModel);
+            Customer customer = gameRepository.getCustomerById(customerPhone);
+            int averageVisitPerWeek = customerVisitList.size();
+            int totalGamesPlayed = 0;
+            double totalAmountSpend  =0;
+            for (CustomerVisit visit:customerVisitList){
+                totalAmountSpend+=visit.getAmountPaidToShop();
+                totalGamesPlayed+=visit.getTotalGamesPlayed();
+            }
+            if (totalGamesPlayed%2!=0){
+                totalGamesPlayed-=1;
+            }
+            gamerDetailModel.payableAmount = "KSh. "+totalAmountSpend+"0";
+            gamerDetailModel.averageWeekSpend = totalAmountSpend!=0?"Ksh. "+totalAmountSpend/averageVisitPerWeek+"0":"Ksh. 0.00";
+            gamerDetailModel.averageVisitPerWeek = averageVisitPerWeek+(averageVisitPerWeek>1?" Visits":" Visit");
+            gamerDetailModel.averageGamesPerDay = totalGamesPlayed!=0?(totalGamesPlayed/averageVisitPerWeek)+" Games" : "0 Games";
+            gamerDetailModel.customerCategory = customer.getCustomerType()!=null?customer.getCustomerType():"NEW CUSTOMER";
+            gamerDetailModelObservableField.set(gamerDetailModel);
+
     }
 
     public ObservableField<GamerDetailModel> getGamerDetailModelObservableField() {
@@ -175,7 +176,12 @@ public class CustomerViewModel extends ViewModel {
         return gameRepository.getCustomerVisitThisWeek(customerPhone, currentWeek, monthString + "_" + year);
     }
 
+    public ObservableField<Boolean> getIsVisitDataAvailable() {
+        return isVisitDataAvailable;
+    }
+
     public void setCustomerVisitList(List<CustomerVisit> customerVisitList) {
+        isVisitDataAvailable.set(customerVisitList.size()>0);
         this.customerVisitList.removeAll(customerVisitList);
         this.customerVisitList.addAll(customerVisitList);
         customerVisitAdapter.setCustomerVisitList(customerVisitList);

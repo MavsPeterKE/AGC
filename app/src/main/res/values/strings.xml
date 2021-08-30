@@ -25,6 +25,7 @@
     <string name="title_total">Total</string>
     <string name="loading_game_date">No Game Data to show. Please Sync Data</string>
     <string name="no_screens_data">No Data to show. You have not ended any games</string>
+    <string name="no_customer_visit_data">No Customer Visit Data for this week. Data will be added once customer visits the shop</string>
     <string name="no_customer_data">No Gamers Data to show</string>
     <string name="syncing_data">Syncing gaming data. Please wait...</string>
     <string name="title_bonus">Bonus Games: </string>
