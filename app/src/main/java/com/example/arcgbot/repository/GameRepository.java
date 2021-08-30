@@ -382,8 +382,9 @@ public class GameRepository {
             if (Prefs.getBoolean(IS_LOYALTY_BONUS_ENABLED)){
                 if (weekCustomerVisit.size()>Prefs.getInt(LOYALTY_VISIT_COUNT)){
                     if (customerDao.getLoyaltyBonusCount(customerPhoneList,currentWeek)==0){
-                        completedGame.setPayableAmount(completedGame.getPayableAmount()-gameView.promotion.getLoyaltyDiscount());
-                        completedGame.setBonusAmount(completedGame.getBonusAmount()+gameView.promotion.getLoyaltyDiscount());
+                        completedGame.setLoyaltyBonusAmount(gameView.promotion.getLoyaltyDiscount());
+                        completedGame.setPayableAmount(completedGame.getPayableAmount()-completedGame.getLoyaltyBonusAmount());
+                        completedGame.setBonusAmount(completedGame.getBonusAmount()+completedGame.getLoyaltyBonusAmount());
                         customerDao.updateLoyaltyBonusAwarded(customerPhoneList, LOYAL_CUSTOMER.name(),currentWeek);
                         updateCustomerOnFireBase();
                     }
@@ -441,14 +442,13 @@ public class GameRepository {
         completedGame.setHappyHourGamesBonus(gameView.gameCount.getHappyHourBonusCount());
         completedGame.setHappyHourAmount(gameView.gameCount.getHappyHourAmount());
         completedGame.setHappyHourBonusAmount(gameView.gameCount.getHappyHourBonusAmount());
-        completedGame.setLoyaltyBonusAmount(gameView.promotion.getLoyaltyDiscount());
         completedGame.setStartTime(gameView.gameCount.getStartTime());
         completedGame.setGameType(gameView.gameType.getGameName());
         completedGame.setStopTime(gameView.gameCount.getStopTime());
         completedGame.setPlayerNames(gameView.gameCount.getPlayerNames());
         completedGame.setEndTimeSeconds(Utils.getSeconds(gameView.gameCount.getStopTime()));
-        completedGame.setPayableAmount(gameView.payableAmount-gameView.promotion.getLoyaltyDiscount());
-        completedGame.setBonusAmount((gameView.bonusAmount)+gameView.promotion.getLoyaltyDiscount());
+        completedGame.setPayableAmount(gameView.payableAmount);
+        completedGame.setBonusAmount(gameView.bonusAmount);
         return completedGame;
     }
 

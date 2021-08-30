@@ -16,6 +16,7 @@ import com.example.arcgbot.database.views.CustomerView;
 import com.example.arcgbot.viewmodels.CustomerViewModel;
 import com.example.arcgbot.viewmodels.GameItemViewModel;
 
+import java.util.Collections;
 import java.util.List;
 
 public class GamerSuggestAdapter extends RecyclerView.Adapter<GamerSuggestAdapter.GenericViewHolder> {
