@@ -263,6 +263,7 @@
             android:backgroundTint="@{model.selectedGamingScreen.screen.active?@color/holo_red_dark:@color/grey}"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="End Game"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="@+id/spinner"
             tools:text="Start Game" />
@@ -282,6 +283,7 @@
             app:layout_constraintEnd_toEndOf="@+id/spinner"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toTopOf="@+id/btStartGame"
+            android:textColor="@color/white"
             tools:text="Start Game" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
