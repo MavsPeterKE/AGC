@@ -1,5 +1,8 @@
 package com.example.arcgbot.utils;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+
 import com.example.arcgbot.retrofit.responseStructures.APIListResponse;
 import com.example.arcgbot.retrofit.responseStructures.APIResponse;
 import com.google.gson.Gson;
@@ -143,6 +146,17 @@ public class Utils {
         return seconds;
     }
 
+
+    public static PackageInfo getPackageInfo(Context context) {
+        PackageInfo pInfo = null;
+        try {
+            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName
+                    (), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pInfo;
+    }
 
 
 }

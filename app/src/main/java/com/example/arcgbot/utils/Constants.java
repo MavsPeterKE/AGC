@@ -1,12 +1,12 @@
 package com.example.arcgbot.utils;
 
 public class Constants {
-    public static final String BASE_URL = "https://ba7c-41-90-40-28.ngrok.io/";
+    public static final String BASE_URL = "https://6173-105-163-51-130.ngrok.io/";
     public static final String SUCCESS = "success";
     public static final String GENERIC_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String MPESA_DEPOSIT_REGEX = "^(\\w+\\s+\\d+\\.\\d+)(\\s+\\w+\\s\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\d+\\s+\\w+\\s+\\w+\\s+\\w+\\s+\\w+\\s+)(\\d+\\/\\d+\\/+\\d+)\\s\\w+\\s+(\\d+\\:\\d+\\s+\\w+)\\.\\s+\\w+\\-\\w+\\s+\\w+\\s+(\\w+)";
-    public static final String DEFAULT_USER = "juja_cross_roads";
+    public static final String DEFAULT_USER = "juja_cross_roads_test";
 
     public static String getBaseUrl() {
         String url = Prefs.getString(PrefsKeys.BASE_URL);
