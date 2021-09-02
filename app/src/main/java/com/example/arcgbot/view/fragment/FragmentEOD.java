@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.arcgbot.R;
@@ -60,6 +61,13 @@ public class FragmentEOD extends DaggerFragment {
         fragmentEodBinding.executePendingBindings();
         mViewModel.repository.getTotalRevenue().observe(getViewLifecycleOwner(), aDouble -> {
             mViewModel.gameRevenue.set(String.valueOf(aDouble != null ? aDouble : 0.00));
+        });
+
+        mViewModel.repository.getGameTotal().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer count) {
+                mViewModel.gameCount.set(count+" Games");
+            }
         });
 
         fragmentEodBinding.btEndDay.setOnClickListener(view -> {

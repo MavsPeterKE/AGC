@@ -5,9 +5,11 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.36974358974358973" />
         <entry key="app/src/main/res/drawable/layout_border.xml" value="0.3425641025641026" />
+        <entry key="app/src/main/res/drawable/rectangular_border_circular.xml" value="0.23489583333333333" />
         <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.3425641025641026" />
         <entry key="app/src/main/res/drawable/strikethrough.xml" value="0.3328125" />
         <entry key="app/src/main/res/drawable/strikethrough_detail.xml" value="0.3328125" />
+        <entry key="app/src/main/res/font/press_start_2p.xml" value="0.20572916666666666" />
         <entry key="app/src/main/res/layout/activity_game_main.xml" value="0.1947463768115942" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.1947463768115942" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.33" />
@@ -20,7 +22,7 @@
         <entry key="app/src/main/res/layout/end_day_success.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/error_bottom_sheet.xml" value="0.34739583333333335" />
         <entry key="app/src/main/res/layout/fragment_completed_game.xml" value="0.28306159420289856" />
-        <entry key="app/src/main/res/layout/fragment_completed_game_detail.xml" value="0.33125" />
+        <entry key="app/src/main/res/layout/fragment_completed_game_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_completed_game_search.xml" value="0.28894927536231885" />
         <entry key="app/src/main/res/layout/fragment_customers.xml" value="0.27807971014492755" />
         <entry key="app/src/main/res/layout/fragment_eod.xml" value="0.33177083333333335" />
