@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Query;
 
 import com.example.arcgbot.database.entity.Customer;
@@ -47,4 +48,7 @@ public abstract class CustomerDao extends BaseDao<Customer> {
 
     @Query("SELECT * FROM customer_table WHERE id=:customerPhone")
     public abstract Customer getCustomerLiveDataById(String customerPhone);
+
+    @Query("DELETE FROM customer_table")
+    public abstract void clearAllCustomers();
 }

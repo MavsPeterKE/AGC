@@ -89,7 +89,7 @@ public class CustomerViewModel extends ViewModel {
         int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
 
         GamerDetailModel gamerDetailModel = new GamerDetailModel();
-        gamerDetailModel.titleName =  "Total Spend "+monthString +" Week "+currentWeek;
+        gamerDetailModel.titleName =  "Total Spend: "+monthString +" Week "+currentWeek;
             Customer customer = gameRepository.getCustomerById(customerPhone);
             int averageVisitPerWeek = customerVisitList.size();
             int totalGamesPlayed = 0;

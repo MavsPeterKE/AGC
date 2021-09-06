@@ -1,10 +1,14 @@
 package com.example.arcgbot.view.fragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +19,9 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.databinding.FragmentGameCountBinding;
 import com.example.arcgbot.models.Configs;
+import com.example.arcgbot.utils.AlarmBroadCastReceiver;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.Prefs;
-import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.view.activity.GameActivity;
 import com.example.arcgbot.view.activity.SearchActivity;
@@ -27,6 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
 
 import javax.inject.Inject;
 
@@ -53,10 +59,11 @@ public class FragmentGameCount extends DaggerFragment {
         fragmentGameCountBinding.setModel(mViewModel);
         fragmentGameCountBinding.executePendingBindings();
         init();
+        //setAlarmReminder();
         return fragmentGameCountBinding.getRoot();
     }
 
-    private void observeAppConfigs(){
+    private void observeAppConfigs() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(Constants.DEFAULT_USER).child("gamelogs").child("configs");
         // Read from the database
@@ -64,12 +71,12 @@ public class FragmentGameCount extends DaggerFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Configs configs = dataSnapshot.getValue(Configs.class);
-                Prefs.putLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX,configs.happy_hour_max_seconds);
-                Prefs.putInt(Constants.PrefsKeys.LOYALTY_VISIT_COUNT,configs.loyalty_visit_count);
-                Prefs.putBoolean(Constants.PrefsKeys.IS_SPEND_AMOUNT_BONUS_ENABLED,configs.spent_amount_bonus_enabled);
-                Prefs.putBoolean(Constants.PrefsKeys.IS_LOYALTY_BONUS_ENABLED,configs.loyalty_discount_enabled);
-                Prefs.putBoolean(Constants.PrefsKeys.IS_LOYAL_FULL_TIME_DISCOUNT_ENABLED,configs.is_fulltime_loyal_discount_enabled);
-                Prefs.putBoolean(Constants.PrefsKeys.IS_NEW_CUSTOMER_DISCOUNT_ENABLED,configs.is_new_customer_discount_enabled);
+                Prefs.putLong(Constants.PrefsKeys.HAPPY_HOUR_TIME_MAX, configs.happy_hour_max_seconds);
+                Prefs.putInt(Constants.PrefsKeys.LOYALTY_VISIT_COUNT, configs.loyalty_visit_count);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_SPEND_AMOUNT_BONUS_ENABLED, configs.spent_amount_bonus_enabled);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_LOYALTY_BONUS_ENABLED, configs.loyalty_discount_enabled);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_LOYAL_FULL_TIME_DISCOUNT_ENABLED, configs.is_fulltime_loyal_discount_enabled);
+                Prefs.putBoolean(Constants.PrefsKeys.IS_NEW_CUSTOMER_DISCOUNT_ENABLED, configs.is_new_customer_discount_enabled);
             }
 
             @Override
@@ -149,7 +156,30 @@ public class FragmentGameCount extends DaggerFragment {
 
     private void startSearchActivity() {
         Intent searchIntent = new Intent(getActivity(), SearchActivity.class);
-        searchIntent.putExtra(Constants.IntentKeys.ORIGIN_FRAGMENT,FragmentGameCount.class.getSimpleName());
+        searchIntent.putExtra(Constants.IntentKeys.ORIGIN_FRAGMENT, FragmentGameCount.class.getSimpleName());
         startActivity(searchIntent);
+    }
+
+    private void setAlarmReminder() {
+        AlarmManager alarmMgr;
+        PendingIntent alarmIntent;
+        alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlarmBroadCastReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
+
+        // Set the alarm to start at 8:30 a.m.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.MINUTE, 02);
+
+        // setRepeating() lets you specify a precise custom interval--in this case,
+        // 20 minutes.
+  /*      alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                1000 * 60 * 20, alarmIntent);*/
+
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
+
+        Toast.makeText(getActivity(), "Alarm Set in 1 minute", Toast.LENGTH_SHORT).show();
     }
 }

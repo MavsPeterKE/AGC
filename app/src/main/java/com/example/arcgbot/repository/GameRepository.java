@@ -3,7 +3,6 @@ package com.example.arcgbot.repository;
 import static com.example.arcgbot.utils.Constants.CustomerTypes.*;
 import static com.example.arcgbot.utils.Constants.DATE_FORMAT;
 import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_LOYALTY_BONUS_ENABLED;
-import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_LOYAL_FULL_TIME_DISCOUNT_ENABLED;
 import static com.example.arcgbot.utils.Constants.PrefsKeys.IS_SPEND_AMOUNT_BONUS_ENABLED;
 import static com.example.arcgbot.utils.Constants.PrefsKeys.LOYALTY_VISIT_COUNT;
 
@@ -289,15 +288,18 @@ public class GameRepository {
                     customerViewList.add(snapshot.getValue(CustomerView.class));
                 }
 
-                List<CustomerView> customerViewsInDb = customerDao.getSavedCustomers();
+                List<CustomerView> customerViewsInDb = new ArrayList<>();
 
                 if (customerViewList.size() == 0) {
                     new FirebaseLogs().setCustomerList(customerViewsInDb);
                 } else {
                     if (customerViewList.size() > customerViewsInDb.size()) {
+                        clearAnyCustomerDataOnApp();
                         for (CustomerView customerView : customerViewList) {
                             customerDao.insert(customerView.gamer);
-                            customerVisitDao.insert(customerView.customerVisitList);
+                            if (customerView.customerVisitList!=null){
+                                customerVisitDao.insert(customerView.customerVisitList);
+                            }
                         }
                     } else {
                         if (customerViewList.size() != customerViewsInDb.size()) {
@@ -313,6 +315,11 @@ public class GameRepository {
                 // Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+    }
+
+    private void clearAnyCustomerDataOnApp() {
+        /*customerDao.clearAllCustomers();
+        customerVisitDao.clearAllCustomerVisitData();*/
     }
 
     private void updateGamersVisit(Customer gamer1, Customer gamer2) {

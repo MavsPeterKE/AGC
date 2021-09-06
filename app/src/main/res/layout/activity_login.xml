@@ -104,6 +104,7 @@
                 android:backgroundTint="@color/holo_red_dark"
                 android:onClick="@{() -> viewmodel.loginAction()}"
                 android:text="@string/title_bt_login"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/view2" />
 
