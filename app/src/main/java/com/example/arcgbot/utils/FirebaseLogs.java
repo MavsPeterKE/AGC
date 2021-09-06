@@ -72,6 +72,14 @@ public class FirebaseLogs {
                 .setValue(customerVisits);
     }
 
+    public void removeCustomerList(){
+        firebaseDatabaseReference
+                .child(Constants.DEFAULT_USER)
+                .child("gamelogs")
+                .child("all-game-customers")
+                .removeValue();
+    }
+
     public void createFirebasePromotion(List<Promotion> promotionList) {
         firebaseDatabaseReference
                 .child(Constants.DEFAULT_USER)

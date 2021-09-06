@@ -27,6 +27,7 @@ import com.example.arcgbot.view.adapter.CustomerVisitAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,7 +76,7 @@ public class CustomerViewModel extends ViewModel {
     public void setCustomerList(List<CustomerView> customerList) {
         if (customerList != null) {
             isCustomerListSet.set(!customerList.isEmpty());
-            Collections.sort(customerList, (customerView, t1) -> Integer.compare(t1.customerVisitList.size(), customerView.customerVisitList.size()));
+            Collections.sort(customerList, (customerView, t1) -> Double.compare(t1.customerVisitList.size(),customerView.customerVisitList.size()));
         }
         this.customerList = customerList;
         customerAdapter.setCustomerList(customerList);

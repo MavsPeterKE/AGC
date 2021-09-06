@@ -20,6 +20,7 @@ import javax.inject.Inject;
 public class GameCountViewModel extends ViewModel {
     private GameCountAdapter gameCountAdapter;
     private MutableLiveData<String> clickEventsLiveData = new MutableLiveData();
+    private MutableLiveData<Boolean> isScreenDataAvailable = new MutableLiveData();
     private MutableLiveData<GameView> selectedGamingScreen = new MutableLiveData();
     private ObservableField<String> gameCountObservable = new ObservableField();
     private ObservableField<String> gameCountBonusObservable = new ObservableField();
@@ -47,14 +48,19 @@ public class GameCountViewModel extends ViewModel {
         return gameCountAdapter;
     }
 
+    public MutableLiveData<Boolean> getIsScreenDataAvailable() {
+        return isScreenDataAvailable;
+    }
+
     public void setGameCountAdapter(List<GameView> screens) {
         isGamesAvailable.set(!screens.isEmpty());
+        isScreenDataAvailable.setValue(isGamesAvailable.get());
         this.gameCountAdapter.setGameCountList(screens);
         this.gameCountAdapter.notifyDataSetChanged();
         if (screens != null) {
-            if (!screens.isEmpty()) {
+           /* if (!screens.isEmpty()) {
                 firebaseLogs.setGameLogList("all-active-games", screens);
-            }
+            }*/
         }
 
     }

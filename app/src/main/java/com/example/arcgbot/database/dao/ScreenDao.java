@@ -19,6 +19,10 @@ public abstract class ScreenDao extends BaseDao<Screen> {
     public abstract LiveData<List<GameView>> getAllScreens();
 
     @Transaction
+    @Query("SELECT * FROM gameview")
+    public abstract List<GameView> getAllScreenView();
+
+    @Transaction
     @Query("SELECT * FROM gameview WHERE id=:screenId")
     public abstract LiveData<GameView> getScreenById(long screenId);
 
@@ -39,4 +43,7 @@ public abstract class ScreenDao extends BaseDao<Screen> {
 
     @Query("SELECT COUNT(*) FROM screen_table WHERE active=1")
     public abstract int getActiveScreenCount();
+
+    @Query("DELETE FROM screen_table")
+    public abstract void clear();
 }

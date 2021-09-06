@@ -209,6 +209,57 @@ public class GameRepository {
         });
     }
 
+    public void observeScreens() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(Constants.DEFAULT_USER).child("gamelogs").child("all-active-games");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<GameView> firebaseScreenView = new ArrayList<>();
+                List<Screen> firebaseScreens = new ArrayList<>();
+                List<GameCount> firebaseGameCounts = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    GameView gameView = snapshot.getValue(GameView.class);
+                    firebaseScreenView.add(gameView);
+                    if (gameView.gameCount!=null){
+                        firebaseGameCounts.add(gameView.gameCount);
+                    }
+                    firebaseScreens.add(gameView.screen);
+                }
+
+                List<GameView> screenViewFromDB = screenDao.getAllScreenView();
+                if (getActiveScreensCount(firebaseScreenView)!=getActiveScreensCount(screenViewFromDB)){
+                    screenDao.clear();
+                    gameCountDao.clearData();
+                    screenDao.insert(firebaseScreens);
+                    gameCountDao.insert(firebaseGameCounts);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                // Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    public int getActiveScreensCount(List<GameView> screens){
+        int count = 0;
+        if (screens!=null){
+            for (GameView gameView:screens){
+                if (gameView.screen.isActive()){
+                    count+=1;
+                }
+            }
+        }
+        return count;
+    }
+
+
 
     private void setGameToDB(List<GameType> gameTypeList) {
         executorService.submit(() -> {
@@ -288,13 +339,14 @@ public class GameRepository {
                     customerViewList.add(snapshot.getValue(CustomerView.class));
                 }
 
-                List<CustomerView> customerViewsInDb = new ArrayList<>();
+                List<CustomerView> customerViewsInDb = customerDao.getSavedCustomers();
 
                 if (customerViewList.size() == 0) {
                     new FirebaseLogs().setCustomerList(customerViewsInDb);
                 } else {
                     if (customerViewList.size() > customerViewsInDb.size()) {
-                        clearAnyCustomerDataOnApp();
+                        customerDao.clearAllCustomers();
+                        customerVisitDao.clearAllCustomerVisitData();
                         for (CustomerView customerView : customerViewList) {
                             customerDao.insert(customerView.gamer);
                             if (customerView.customerVisitList!=null){
@@ -305,6 +357,47 @@ public class GameRepository {
                         if (customerViewList.size() != customerViewsInDb.size()) {
                             new FirebaseLogs().setCustomerList(customerViewsInDb);
                         }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                // Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    public void setEndedGames() {
+        String todayDate = Utils.getTodayDate(DATE_FORMAT);
+        Date dataTest = Utils.convertToDate(todayDate,Constants.DATE_FORMAT);
+        String monthString  = (String) DateFormat.format("MMM",  dataTest); // Jun
+        String year         = (String) DateFormat.format("yyyy", dataTest); // 2013
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(Constants.DEFAULT_USER).child("gamelogs")
+                .child("all-completed-Games")
+                .child(monthString+"_"+year)
+                .child(todayDate);
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<CompletedGame> firebaseCompletedGameList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    firebaseCompletedGameList.add(snapshot.getValue(CompletedGame.class));
+                }
+
+                List<CompletedGame> completedGamesInDB = completeGameDao.getAllCompletedGameList();
+
+                if (firebaseCompletedGameList.size() == 0) {
+                    new FirebaseLogs().setAllGameList(todayDate, "all-completed-Games", completedGamesInDB);
+
+                } else {
+                    if (firebaseCompletedGameList.size() > completedGamesInDB.size()) {
+                        completeGameDao.clearData();
+                        completeGameDao.insert(firebaseCompletedGameList);
                     }
                 }
             }
@@ -417,6 +510,7 @@ public class GameRepository {
     }
 
     private void updateCustomerOnFireBase() {
+        firebaseLogs.removeCustomerList();
         firebaseLogs.setCustomerList(customerDao.getSavedCustomers());
     }
 
@@ -544,6 +638,20 @@ public class GameRepository {
             e.printStackTrace();
         }
         return customer;
+    }
+
+    public List<GameView> getAllScreenView() {
+        List<GameView> gameViewList = null;
+        Callable<List<GameView>> callable = () -> screenDao.getAllScreenView();
+        Future<List<GameView>> future = executorService.submit(callable);
+        try {
+            gameViewList = future.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return gameViewList;
     }
 }
 

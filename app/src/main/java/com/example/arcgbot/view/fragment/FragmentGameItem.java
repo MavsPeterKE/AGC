@@ -193,11 +193,21 @@ public class FragmentGameItem extends DaggerFragment {
         setPlayerOneTextChangeListener();
         setPlayTwoTextChangeListener();
         observePlayerSuggestListPick();
+        observeScreensData();
     }
 
     private void observeCustomerList() {
         gameItemViewModel.getGameRepository().getCustomerList().observe(getViewLifecycleOwner(), customers ->
                 gameItemViewModel.setCustomerList(customers));
+    }
+
+
+    private void observeScreensData() {
+        gameItemViewModel.getGameRepository().getScreensLiveData().observe(getViewLifecycleOwner(), screens -> {
+            if (!screens.isEmpty()){
+               gameItemViewModel.setFirebaseScreensData(screens);
+            }
+        });
     }
 
     private void observeScreenData() {

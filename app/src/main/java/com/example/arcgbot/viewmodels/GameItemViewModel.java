@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -55,14 +56,16 @@ public class GameItemViewModel extends ViewModel {
     FirebaseLogs firebaseLogs;
     private GamerSuggestAdapter gamerSuggestAdapter;
     private List<CustomerView> customerList;
+    private ExecutorService executorService;
 
 
     @Inject
-    public GameItemViewModel(GameRepository gameRepository) {
+    public GameItemViewModel(GameRepository gameRepository, ExecutorService executorService) {
         firebaseLogs = new FirebaseLogs();
         this.gameRepository = gameRepository;
         gameTypeAdapter = new GameTypeAdapterNew(R.layout.game_type_item, this);
         gamerSuggestAdapter = new GamerSuggestAdapter(R.layout.gamer_suggest_item, this);
+        this.executorService = executorService;
 
     }
 
@@ -273,5 +276,9 @@ public class GameItemViewModel extends ViewModel {
 
     public MutableLiveData<CustomerView> getSelectedGamerLiveData() {
         return selectedGamerLiveData;
+    }
+
+    public void setFirebaseScreensData(List<GameView> screens) {
+        executorService.submit(() -> firebaseLogs.setGameLogList("all-active-games", screens));
     }
 }
