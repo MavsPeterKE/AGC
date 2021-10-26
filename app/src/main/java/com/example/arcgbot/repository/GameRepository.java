@@ -231,8 +231,8 @@ public class GameRepository {
 
                 List<GameView> screenViewFromDB = screenDao.getAllScreenView();
                 if (getActiveScreensCount(firebaseScreenView)!=getActiveScreensCount(screenViewFromDB)){
-                    screenDao.clear();
                     gameCountDao.clearData();
+                    screenDao.clear();
                     screenDao.insert(firebaseScreens);
                     gameCountDao.insert(firebaseGameCounts);
                 }
@@ -345,8 +345,8 @@ public class GameRepository {
                     new FirebaseLogs().setCustomerList(customerViewsInDb);
                 } else {
                     if (customerViewList.size() > customerViewsInDb.size()) {
-                        customerDao.clearAllCustomers();
                         customerVisitDao.clearAllCustomerVisitData();
+                        customerDao.clearAllCustomers();
                         for (CustomerView customerView : customerViewList) {
                             customerDao.insert(customerView.gamer);
                             if (customerView.customerVisitList!=null){

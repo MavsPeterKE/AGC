@@ -54,7 +54,6 @@ public class LoginActivity extends DaggerAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        observeAppConfigs();
         init();
     }
 

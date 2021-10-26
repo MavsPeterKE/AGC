@@ -21,6 +21,7 @@ public class BaseApplication extends DaggerApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        observeAppConfigs();
         // Initialize the Prefs class
         new Prefs.Builder()
                 .setContext(this)
@@ -41,6 +42,27 @@ public class BaseApplication extends DaggerApplication {
         ApplicationComponent component = DaggerApplicationComponent.builder().application(this).build();
         component.inject(this);
         return component;
+    }
+
+
+    private void observeAppConfigs(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(Constants.DEFAULT_USER).child("gamelogs").child("configs");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Configs configs = dataSnapshot.getValue(Configs.class);
+                Prefs.putString(Constants.PrefsKeys.BASE_URL,configs.base_url);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                // Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
     }
 
 

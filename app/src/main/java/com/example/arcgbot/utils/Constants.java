@@ -1,7 +1,7 @@
 package com.example.arcgbot.utils;
 
 public class Constants {
-    public static final String BASE_URL = "https://6173-105-163-51-130.ngrok.io/";
+    public static final String BASE_URL = "https://arcade-agc.herokuapp.com/";
     public static final String SUCCESS = "success";
     public static final String GENERIC_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT = "yyyy-MM-dd";

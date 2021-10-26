@@ -16,7 +16,6 @@ import com.example.arcgbot.R;
 import com.example.arcgbot.database.entity.Customer;
 import com.example.arcgbot.database.entity.CustomerVisit;
 import com.example.arcgbot.database.views.CustomerView;
-import com.example.arcgbot.database.views.GameView;
 import com.example.arcgbot.models.GamerDetailModel;
 import com.example.arcgbot.repository.GameRepository;
 import com.example.arcgbot.utils.Constants;
@@ -27,7 +26,6 @@ import com.example.arcgbot.view.adapter.CustomerVisitAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,7 +74,7 @@ public class CustomerViewModel extends ViewModel {
     public void setCustomerList(List<CustomerView> customerList) {
         if (customerList != null) {
             isCustomerListSet.set(!customerList.isEmpty());
-            Collections.sort(customerList, (customerView, t1) -> Double.compare(t1.customerVisitList.size(),customerView.customerVisitList.size()));
+            Collections.sort(customerList, (customerView, t1) -> Double.compare(t1.customerVisitList.size(), customerView.customerVisitList.size()));
         }
         this.customerList = customerList;
         customerAdapter.setCustomerList(customerList);
@@ -90,24 +88,24 @@ public class CustomerViewModel extends ViewModel {
         int currentWeek = Utils.getCurrentWeekCount(Utils.getTodayDate(DATE_FORMAT));
 
         GamerDetailModel gamerDetailModel = new GamerDetailModel();
-        gamerDetailModel.titleName =  "Total Spend: "+monthString +" Week "+currentWeek;
-            Customer customer = gameRepository.getCustomerById(customerPhone);
-            int averageVisitPerWeek = customerVisitList.size();
-            int totalGamesPlayed = 0;
-            double totalAmountSpend  =0;
-            for (CustomerVisit visit:customerVisitList){
-                totalAmountSpend+=visit.getAmountPaidToShop();
-                totalGamesPlayed+=visit.getTotalGamesPlayed();
-            }
-            if (totalGamesPlayed%2!=0){
-                totalGamesPlayed-=1;
-            }
-            gamerDetailModel.payableAmount = "KSh. "+totalAmountSpend+"0";
-            gamerDetailModel.averageWeekSpend = totalAmountSpend!=0?"Ksh. "+totalAmountSpend/averageVisitPerWeek+"0":"Ksh. 0.00";
-            gamerDetailModel.averageVisitPerWeek = averageVisitPerWeek+(averageVisitPerWeek>1?" Visits":" Visit");
-            gamerDetailModel.averageGamesPerDay = totalGamesPlayed!=0?(totalGamesPlayed/averageVisitPerWeek)+" Games" : "0 Games";
-            gamerDetailModel.customerCategory = customer.getCustomerType()!=null?customer.getCustomerType():"NEW CUSTOMER";
-            gamerDetailModelObservableField.set(gamerDetailModel);
+        gamerDetailModel.titleName = "Total Spend: " + monthString + " Week " + currentWeek;
+        Customer customer = gameRepository.getCustomerById(customerPhone);
+        int averageVisitPerWeek = customerVisitList.size();
+        int totalGamesPlayed = 0;
+        double totalAmountSpend = 0;
+        for (CustomerVisit visit : customerVisitList) {
+            totalAmountSpend += visit.getAmountPaidToShop();
+            totalGamesPlayed += visit.getTotalGamesPlayed();
+        }
+        if (totalGamesPlayed % 2 != 0) {
+            totalGamesPlayed -= 1;
+        }
+        gamerDetailModel.payableAmount = "KSh. " + totalAmountSpend + "0";
+        gamerDetailModel.averageWeekSpend = totalAmountSpend != 0 ? "Ksh. " + totalAmountSpend / averageVisitPerWeek + "0" : "Ksh. 0.00";
+        gamerDetailModel.averageVisitPerWeek = averageVisitPerWeek + (averageVisitPerWeek > 1 ? " Visits" : " Visit");
+        gamerDetailModel.averageGamesPerDay = totalGamesPlayed != 0 ? (totalGamesPlayed / averageVisitPerWeek) + " Games" : "0 Games";
+        gamerDetailModel.customerCategory = customer.getCustomerType() != null ? customer.getCustomerType() : "NEW CUSTOMER";
+        gamerDetailModelObservableField.set(gamerDetailModel);
 
     }
 
@@ -164,11 +162,13 @@ public class CustomerViewModel extends ViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void searchGamer(String searchText) {
-        List<CustomerView> searchList = customerList.stream().filter(customer ->
-                customer.gamer.getCustomerName().toLowerCase().contains(searchText) ||
-                        customer.gamer.getCustomerPhone().toLowerCase().contains(searchText)).collect(Collectors.toList());
-        customerAdapter.setCustomerList(searchList);
-        customerAdapter.notifyDataSetChanged();
+        if (customerList != null) {
+            List<CustomerView> searchList = customerList.stream().filter(customer ->
+                    customer.gamer.getCustomerName().toLowerCase().contains(searchText) ||
+                            customer.gamer.getCustomerPhone().toLowerCase().contains(searchText)).collect(Collectors.toList());
+            customerAdapter.setCustomerList(searchList);
+            customerAdapter.notifyDataSetChanged();
+        }
     }
 
     public LiveData<List<CustomerVisit>> getThisWeekCustomerVisitsByPhone(String customerPhone) {
@@ -184,7 +184,7 @@ public class CustomerViewModel extends ViewModel {
     }
 
     public void setCustomerVisitList(List<CustomerVisit> customerVisitList) {
-        isVisitDataAvailable.set(customerVisitList.size()>0);
+        isVisitDataAvailable.set(customerVisitList.size() > 0);
         this.customerVisitList.removeAll(customerVisitList);
         this.customerVisitList.addAll(customerVisitList);
         customerVisitAdapter.setCustomerVisitList(customerVisitList);

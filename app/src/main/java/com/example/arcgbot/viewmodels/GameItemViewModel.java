@@ -279,6 +279,8 @@ public class GameItemViewModel extends ViewModel {
     }
 
     public void setFirebaseScreensData(List<GameView> screens) {
-        executorService.submit(() -> firebaseLogs.setGameLogList("all-active-games", screens));
+        if (screens!=null){
+            executorService.submit(() -> firebaseLogs.setGameLogList("all-active-games", screens));
+        }
     }
 }

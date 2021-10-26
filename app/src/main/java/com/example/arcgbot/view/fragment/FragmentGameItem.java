@@ -213,7 +213,9 @@ public class FragmentGameItem extends DaggerFragment {
     private void observeScreenData() {
         long screenId = ((GameActivity) getActivity()).screenId;
         gameItemViewModel.getGameRepository().getScreenById(screenId).observe(getViewLifecycleOwner(), gameView -> {
-            gameItemViewModel.setGameTitleObservable(gameView);
+            if(gameView!=null){
+                gameItemViewModel.setGameTitleObservable(gameView);
+            }
         });
     }
 

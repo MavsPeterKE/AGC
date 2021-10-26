@@ -66,7 +66,8 @@ public class FragmentEOD extends DaggerFragment {
         mViewModel.repository.getGameTotal().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer count) {
-                mViewModel.gameCount.set(count+" Games");
+                int games = count!=null?count:0;
+                mViewModel.gameCount.set(games+" Games");
             }
         });
 
