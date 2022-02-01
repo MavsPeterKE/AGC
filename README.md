@@ -3,11 +3,7 @@
 
 ![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_1.png)
 
-![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_2_1.png)
-
 ![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_2.png)
-
-![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_3_1.png)
 
 ![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_3.png)
 
@@ -16,3 +12,5 @@
 ![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_5.png)
 
 ![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_6.png)
+
+![](https://github.com/MavsPeterKE/AGC/blob/master/screenshots/agc_7.png)
