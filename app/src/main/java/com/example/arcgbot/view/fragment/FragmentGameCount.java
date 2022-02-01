@@ -91,18 +91,20 @@ public class FragmentGameCount extends DaggerFragment {
     private void init() {
         mViewModel.gameRepository().setCustomersData();
         mViewModel.gameRepository().observePromotionsData();
-        mViewModel.gameRepository().setEndedGames();
+        // TODO: 11/9/21 Revisit Logic Later 
+       // mViewModel.gameRepository().setEndedGames();
         observeClickEvents();
         observeScreenData();
         observeClickedGamingScreen();
         observeButtonClicks();
         observeAppConfigs();
 
-        mViewModel.getIsScreenDataAvailable().observe(getViewLifecycleOwner(), isScreensAvailable -> {
+        // TODO: 11/9/21 Revisit Logic 
+    /*    mViewModel.getIsScreenDataAvailable().observe(getViewLifecycleOwner(), isScreensAvailable -> {
             if (isScreensAvailable) {
                 mViewModel.gameRepository().observeScreens();
             }
-        });
+        });*/
     }
 
     private void observeClickedGamingScreen() {
