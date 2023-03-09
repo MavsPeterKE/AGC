@@ -1,11 +1,11 @@
 package com.example.arcgbot.utils;
 
 public class Constants {
-    public static final String BASE_URL = "https://arcade-agc.herokuapp.com/";
+    public static final String BASE_URL = "https://46a8-102-215-76-97.in.ngrok.io/";
     public static final String SUCCESS = "success";
     public static final String GENERIC_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
-    public static final String DEFAULT_USER = "juja_cross_roads_test";
+    public static final String DEFAULT_USER = "juja_cross_roads";
 
     public static String getBaseUrl() {
         String url = Prefs.getString(PrefsKeys.BASE_URL);
@@ -66,6 +66,7 @@ public class Constants {
         public static final String IS_SPEND_AMOUNT_BONUS_ENABLED = "spent_amount_bonus_enabled";
         public static final String IS_LOYAL_FULL_TIME_DISCOUNT_ENABLED = "loyal_full_time_discount";
         public static final String IS_NEW_CUSTOMER_DISCOUNT_ENABLED = "is_new_customer_discount_enabled";
+        public static final String END_DAY_TOKEN = "END_DAY_TOKEN";
     }
 
     public class IntentKeys {

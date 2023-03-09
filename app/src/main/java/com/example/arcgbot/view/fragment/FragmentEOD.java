@@ -21,6 +21,7 @@ import com.example.arcgbot.databinding.FragmentEodBinding;
 import com.example.arcgbot.models.EndDayModel;
 import com.example.arcgbot.utils.Constants;
 import com.example.arcgbot.utils.FirebaseLogs;
+import com.example.arcgbot.utils.Prefs;
 import com.example.arcgbot.utils.Utils;
 import com.example.arcgbot.utils.ViewModelFactory;
 import com.example.arcgbot.viewmodels.EODViewModel;
@@ -66,8 +67,8 @@ public class FragmentEOD extends DaggerFragment {
         mViewModel.repository.getGameTotal().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer count) {
-                int games = count!=null?count:0;
-                mViewModel.gameCount.set(games+" Games");
+                int games = count != null ? count : 0;
+                mViewModel.gameCount.set(games + " Games");
             }
         });
 
@@ -91,10 +92,10 @@ public class FragmentEOD extends DaggerFragment {
                     showSuccessBottomSheetAction();
                     break;
                 case POST_END_DAY:
-                    if (isWhatsappException){
+                    if (isWhatsappException) {
                         startActivity(Intent.createChooser(sendIntent, "AGC Summary"));
                         startActivity(sendIntent);
-                    }else{
+                    } else {
                         Intent shareIntent = Intent.createChooser(sendIntent, "AGC End Day");
                         startActivity(shareIntent);
                     }
@@ -189,43 +190,59 @@ public class FragmentEOD extends DaggerFragment {
             setBottomSheetError("Active Game", "End any active game before you can end day");
             showErrorBottomSheetAction();
         } else {
-            StringBuilder stringBuilder = getMsgStringBuilder();
-            // Performs action on click
-            try {
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
-                sendIntent.setType("text/plain");
-                sendIntent.setPackage("com.whatsapp");
-                showSuccessDialog();
-            } catch (Exception e) {
-                isWhatsappException = true;
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
-                sendIntent.setType("text/plain");
-                showSuccessDialog();
+            String required_token_val = fragmentEodBinding.edTokens.getText().toString().trim();
+            if (required_token_val.equals("")) {
+                setBottomSheetError("Missing EOD Token Reading", "End of Day Token Reading Must be entered");
+                showErrorBottomSheetAction();
+            } else {
+                StringBuilder stringBuilder = getMsgStringBuilder();
+                // Performs action on click
+                try {
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+                    sendIntent.setType("text/plain");
+                    sendIntent.setPackage("com.whatsapp");
+                    showSuccessDialog();
+                } catch (Exception e) {
+                    isWhatsappException = true;
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+                    sendIntent.setType("text/plain");
+                    showSuccessDialog();
+                }
             }
+
         }
 
 
     }
 
     private void showSuccessDialog() {
-        setBottomSheetSuccess("Sales End Day","Sales Summary Posted Successfully");
+        setBottomSheetSuccess("Sales End Day", "Sales Summary Posted Successfully");
         showSuccessBottomSheetAction();
     }
 
     @NotNull
     private StringBuilder getMsgStringBuilder() {
         String issues = fragmentEodBinding.editTextTextMultiLine.getText().toString().trim();
+        String token = fragmentEodBinding.edTokens.getText().toString().trim();
+        double token_value = token.equals("") ? 0 : Double.parseDouble(token);
+        String end_day_token = Prefs.getString(Constants.PrefsKeys.END_DAY_TOKEN);
+        double start_day_token = end_day_token.equals("") ? 0 : Double.parseDouble(end_day_token);
+        double token_consume = Math.round((token_value - start_day_token)*100.0)/100.0;
         String time = Utils.getTodayDate(" " + Constants.GENERIC_DATE_TIME_FORMAT);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*Arcade Gaming EOD*");
         stringBuilder.append("\n");
         stringBuilder.append(time);
-        stringBuilder.append("\n");
+        stringBuilder.append("\n\n");
         stringBuilder.append("*Games Played:* " + fragmentEodBinding.tvGameCount.getText().toString().trim());
         stringBuilder.append("\n");
         stringBuilder.append("*Total Revenue:* " + fragmentEodBinding.tvGameRevenue.getText().toString().trim());
+        stringBuilder.append("\n\n");
+        stringBuilder.append("*Token Consumption:* ");
+        stringBuilder.append("\n");
+        stringBuilder.append(" Start: " + start_day_token +" End: " + token_value + " --> " + token_consume);
         stringBuilder.append("\n\n");
         stringBuilder.append("*Business Issue:* ");
         stringBuilder.append("\n");
@@ -243,20 +260,23 @@ public class FragmentEOD extends DaggerFragment {
         double psHireSalesAmount = !psSalesTotals.isEmpty() ? Double.parseDouble(psSalesTotals) : 0.00;
         double otherServicesSalesAmount = !otherServicesAmount.isEmpty() ? Double.parseDouble(otherServicesAmount) : 0.00;
         double normalGamingSalesAmount = !normalGamingSalesRate.isEmpty() ? Double.parseDouble(normalGamingSalesRate) : 0.00;
-        double totals = moviesSaleAmount + printingSaleAmount + psHireSalesAmount + normalGamingSalesAmount;
+        double totals =  printingSaleAmount + psHireSalesAmount + normalGamingSalesAmount;
 
 
         //Format Issues;
         StringBuilder issuesString = new StringBuilder();
-        issuesString.append("Total Gaming Sales: " + normalGamingSalesRate);
+        issuesString.append("Gaming Sales: " + normalGamingSalesRate);
         issuesString.append("\n");
-        issuesString.append("Movies Total Sales: " + moviesAmount);
+//        issuesString.append("Movies Total Sales: " + moviesAmount);
+//        issuesString.append("\n");
+        issuesString.append("Printing Sales: " + printingAmount);
         issuesString.append("\n");
-        issuesString.append("Printing Total Sales: " + printingAmount);
+        issuesString.append("PS Hire Sales: " + psSalesTotals);
         issuesString.append("\n");
-        issuesString.append("PS Hire Total Sales: " + psSalesTotals);
+        issuesString.append("Software Service Sales: " + otherServicesSalesAmount);
         issuesString.append("\n");
-        issuesString.append("Other Services Totals: " + otherServicesSalesAmount);
+        issuesString.append("\n");
+        issuesString.append("Tokens Usage:  " + token_consume);
         issuesString.append("\n");
         issuesString.append("\n");
         issuesString.append("Business Issue");
@@ -270,6 +290,7 @@ public class FragmentEOD extends DaggerFragment {
         endDayModel.otherSales = otherServicesSalesAmount;
         endDayModel.psHireAmount = psHireSalesAmount;
         endDayModel.printingSales = printingSaleAmount;
+        endDayModel.endDayTokens = token_value;
         endDayModel.normalGamingRateSales = normalGamingSalesAmount;
         endDayModel.issues = issuesString.toString();
         endDayModel.date = new Date().getTime();

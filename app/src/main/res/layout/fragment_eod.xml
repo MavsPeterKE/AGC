@@ -69,6 +69,7 @@
                     android:gravity="start|top"
                     android:inputType="textMultiLine"
                     android:padding="10dp"
+                    android:hint="Comment on Pad Status, Business perfomance for the day and any issue that requires urgent attention"
                     android:textColor="@color/text_black"
                     app:layout_constraintEnd_toEndOf="@+id/edPrintingAmount"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -100,6 +101,23 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edTokens"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_drawable"
+                    android:ems="10"
+                    android:hint="EOD Tokens Reading"
+                    android:layout_marginTop="10dp"
+                    android:inputType="numberDecimal"
+                    android:padding="10dp"
+                    android:textColor="#424242"
+                    android:textColorHint="#A9A9A9"
+                    app:layout_constraintEnd_toEndOf="@+id/edPsHireAmount"
+                    app:layout_constraintStart_toStartOf="@+id/edPsHireAmount"
+                    app:layout_constraintTop_toBottomOf="@+id/edOtherSalesAmount" />
+
                 <TextView
                     android:id="@+id/textView15"
                     android:layout_width="wrap_content"
@@ -108,8 +126,8 @@
                     android:textColor="@color/light_black"
                     android:textSize="15sp"
                     android:layout_marginTop="10dp"
-                    app:layout_constraintStart_toStartOf="@+id/edOtherSalesAmount"
-                    app:layout_constraintTop_toBottomOf="@+id/edOtherSalesAmount" />
+                    app:layout_constraintStart_toStartOf="@+id/edTokens"
+                    app:layout_constraintTop_toBottomOf="@+id/edTokens" />
 
                 <TextView
                     android:id="@+id/textView16"
@@ -154,8 +172,6 @@
                     android:id="@+id/edMovies"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
                     android:layout_weight="1"
                     android:background="@drawable/edittext_drawable"
                     android:ems="10"
@@ -165,6 +181,7 @@
                     android:padding="10dp"
                     android:textColor="#424242"
                     android:textColorHint="#A9A9A9"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view5" />
@@ -173,19 +190,22 @@
                     android:id="@+id/edPrintingAmount"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/edittext_drawable"
                     android:ems="10"
                     android:hint="Printing Total Sales"
+                    app:layout_constraintTop_toBottomOf="@+id/view5"
                     android:inputType="number"
                     android:padding="10dp"
                     android:textColor="#424242"
+                    android:layout_marginTop="20dp"
                     android:textColorHint="#A9A9A9"
-                    app:layout_constraintEnd_toEndOf="@+id/edMovies"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/edMovies"
-                    app:layout_constraintTop_toBottomOf="@+id/edMovies" />
+                    />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edPsHireAmount"
@@ -212,7 +232,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/edittext_drawable"
                     android:ems="10"
-                    android:hint="Other Services Totals"
+                    android:hint="Software Services Totals"
                     android:layout_marginTop="10dp"
                     android:inputType="number"
                     android:padding="10dp"
