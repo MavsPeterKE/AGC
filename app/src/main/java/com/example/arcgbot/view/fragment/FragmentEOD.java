@@ -29,6 +29,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -226,10 +228,10 @@ public class FragmentEOD extends DaggerFragment {
     private StringBuilder getMsgStringBuilder() {
         String issues = fragmentEodBinding.editTextTextMultiLine.getText().toString().trim();
         String token = fragmentEodBinding.edTokens.getText().toString().trim();
-        double token_value = token.equals("") ? 0 : Double.parseDouble(token);
-        String end_day_token = Prefs.getString(Constants.PrefsKeys.END_DAY_TOKEN);
-        double start_day_token = end_day_token.equals("") ? 0 : Double.parseDouble(end_day_token);
-        double token_consume = Math.round((token_value - start_day_token)*100.0)/100.0;
+        double end_day_token_value = token.equals("") ? 0 : Double.parseDouble(token);
+        String start_day_token_value = Prefs.getString(Constants.PrefsKeys.END_DAY_TOKEN);
+        double start_day_token = start_day_token_value.equals("") ? 0 : Double.parseDouble(start_day_token_value);
+        double token_consume = Math.round((end_day_token_value - start_day_token) * 100.0) / 100.0;
         String time = Utils.getTodayDate(" " + Constants.GENERIC_DATE_TIME_FORMAT);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("*Arcade Gaming EOD*");
@@ -242,7 +244,7 @@ public class FragmentEOD extends DaggerFragment {
         stringBuilder.append("\n\n");
         stringBuilder.append("*Token Consumption:* ");
         stringBuilder.append("\n");
-        stringBuilder.append(" Start: " + start_day_token +" End: " + token_value + " --> " + token_consume);
+        stringBuilder.append(" Start: " + start_day_token_value + " End: " + end_day_token_value + " --> " + token_consume);
         stringBuilder.append("\n\n");
         stringBuilder.append("*Business Issue:* ");
         stringBuilder.append("\n");
@@ -260,7 +262,7 @@ public class FragmentEOD extends DaggerFragment {
         double psHireSalesAmount = !psSalesTotals.isEmpty() ? Double.parseDouble(psSalesTotals) : 0.00;
         double otherServicesSalesAmount = !otherServicesAmount.isEmpty() ? Double.parseDouble(otherServicesAmount) : 0.00;
         double normalGamingSalesAmount = !normalGamingSalesRate.isEmpty() ? Double.parseDouble(normalGamingSalesRate) : 0.00;
-        double totals =  printingSaleAmount + psHireSalesAmount + normalGamingSalesAmount;
+        double totals = printingSaleAmount + psHireSalesAmount + normalGamingSalesAmount;
 
 
         //Format Issues;
@@ -290,13 +292,13 @@ public class FragmentEOD extends DaggerFragment {
         endDayModel.otherSales = otherServicesSalesAmount;
         endDayModel.psHireAmount = psHireSalesAmount;
         endDayModel.printingSales = printingSaleAmount;
-        endDayModel.endDayTokens = token_value;
+        endDayModel.endDayTokens = token_consume;
         endDayModel.normalGamingRateSales = normalGamingSalesAmount;
         endDayModel.issues = issuesString.toString();
         endDayModel.date = new Date().getTime();
         endDayModel.totalGamesPlayed = fragmentEodBinding.tvGameCount.getText().toString().trim();
         endDayModel.totalSales = totals + "";
-
+        Prefs.putString(Constants.PrefsKeys.END_DAY_TOKEN, end_day_token_value + "");
         firebaseLogs.setEndDayLog(Utils.getTodayDate(Constants.DATE_FORMAT), "-all-end-days", endDayModel);
         return stringBuilder;
     }

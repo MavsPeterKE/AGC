@@ -49,7 +49,6 @@ public class FirebaseLogs {
     }
 
     public void setEndDayLog(String date, String tableName, EndDayModel endDayModel) {
-        Prefs.putString(Constants.PrefsKeys.END_DAY_TOKEN, String.valueOf(endDayModel.endDayTokens));
         Date dataTest = Utils.convertToDate(date, Constants.DATE_FORMAT);
         String monthString = (String) DateFormat.format("MMM", dataTest); // Jun
         String year = (String) DateFormat.format("yyyy", dataTest); // 2013
